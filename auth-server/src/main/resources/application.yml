@@ -1,0 +1,15 @@
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka
+
+server:
+  port: 8091
+
+spring:
+  profiles:
+    active: local
+    include: auth, redis
+
+  application:
+    name: auth-server
