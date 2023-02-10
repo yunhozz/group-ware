@@ -1,0 +1,13 @@
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka
+    register-with-eureka: false #자기 자신을 서비스로 등록시키지 않음
+    fetch-registry: false #서비스 목록 로컬에 캐시하지 않음
+
+server:
+  port: 8761
+
+spring:
+  application:
+    name: eureka-server
