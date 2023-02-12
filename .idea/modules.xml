@@ -2,6 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.group-ware.user-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.group-ware.user-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/api-gateway/group-ware.api-gateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/api-gateway/group-ware.api-gateway.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/eureka-server/group-ware.eureka-server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/eureka-server/group-ware.eureka-server.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/group-ware.notification-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/group-ware.notification-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/user-service/group-ware.user-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/user-service/group-ware.user-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/user-service/group-ware.user-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/user-service/group-ware.user-service.test.iml" />
     </modules>
