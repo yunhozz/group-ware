@@ -118,3 +118,11 @@ project(':user-service') {
     dependencies {
     }
 }
+
+project(':notification-service') {
+    bootJar { enabled = true }
+    jar { enabled = false }
+
+    dependencies {
+    }
+}
