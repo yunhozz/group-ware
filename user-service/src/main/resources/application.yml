@@ -7,5 +7,7 @@ server:
   port: 8090
 
 spring:
+  profiles:
+    include: jwt
   application:
     name: user-service
