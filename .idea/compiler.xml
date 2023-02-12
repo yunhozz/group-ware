@@ -8,9 +8,11 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.26/8f8cf0372abf564913e9796623aac4c8ea44025a/lombok-1.18.26.jar" />
         </processorPath>
+        <module name="group-ware.notification-service.test" />
+        <module name="group-ware.auth-server.test" />
         <module name="group-ware.api-gateway.test" />
         <module name="group-ware.eureka-server.test" />
-        <module name="group-ware.auth-server.test" />
+        <module name="com.group-ware.user-service.test" />
       </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
@@ -27,15 +29,15 @@
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mysema.commons/mysema-commons-lang/0.2.4/d09c8489d54251a6c22fbce804bdd4a070557317/mysema-commons-lang-0.2.4.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.eclipse.jdt/ecj/3.26.0/4837be609a3368a0f7e7cf0dc1bdbc7fe94993de/ecj-3.26.0.jar" />
         </processorPath>
-        <module name="group-ware.eureka-server.main" />
         <module name="group-ware.api-gateway.main" />
+        <module name="com.group-ware.user-service.main" />
+        <module name="group-ware.notification-service.main" />
+        <module name="group-ware.eureka-server.main" />
         <module name="group-ware.auth-server.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.6">
-      <module name="group-ware.user-service" target="17" />
       <module name="group-ware.user-service.main" target="17" />
-      <module name="group-ware.user-service.querydsl" target="17" />
       <module name="group-ware.user-service.test" target="17" />
     </bytecodeTargetLevel>
   </component>

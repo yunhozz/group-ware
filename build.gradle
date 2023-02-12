@@ -59,32 +59,6 @@ subprojects {
         testCompileOnly 'org.projectlombok:lombok:1.18.26'
         testAnnotationProcessor "org.projectlombok:lombok:1.18.26"
     }
-
-    def querydslDir = "$buildDir/generated/querydsl"
-
-    querydsl {
-        jpa = true
-        querydslSourcesDir = querydslDir
-    }
-
-    sourceSets {
-        main.java.srcDir querydslDir
-    }
-
-    configurations {
-        querydsl.extendsFrom compileClasspath
-    }
-
-    compileQuerydsl {
-        options.annotationProcessorPath = configurations.querydsl
-    }
-
-    configurations {
-        compileOnly {
-            extendsFrom annotationProcessor
-        }
-        querydsl.extendsFrom compileClasspath
-    }
 }
 
 project(':eureka-server') {
