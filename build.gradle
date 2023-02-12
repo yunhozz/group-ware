@@ -110,3 +110,11 @@ project(':auth-server') {
     dependencies {
     }
 }
+
+project(':user-service') {
+    bootJar { enabled = true }
+    jar { enabled = false }
+
+    dependencies {
+    }
+}

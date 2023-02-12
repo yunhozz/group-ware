@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .cors().and()
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/auth/reissue").hasRole("USER")
+                .requestMatchers("/api/auth/users").hasRole("ADMIN")
                 .anyRequest().permitAll();
 
         security
