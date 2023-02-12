@@ -1,12 +1,10 @@
 package com.apigateway.filter;
 
 import com.apigateway.filter.exception.LogoutTokenException;
+import com.apigateway.filter.exception.TokenParsingException;
 import com.apigateway.filter.exception.TokenNearExpirationException;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.lang.Strings;
 import io.jsonwebtoken.security.Keys;
@@ -53,7 +51,12 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
             String headerToken = tokens.get(0);
             resolveToken(headerToken).ifPresent(token -> {
-                if (isValidateToken(token)) {
+                try {
+                    Jwts.parserBuilder()
+                            .setSigningKey(getSecretKey())
+                            .build()
+                            .parseClaimsJws(token);
+
                     // redis 에 존재하는 로그아웃 토큰으로 요청했을 때
                     if (getValueFromRedis(token).isPresent()) {
                         throw new LogoutTokenException();
@@ -67,6 +70,9 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
                     request.mutate()
                             .header(HttpHeaders.AUTHORIZATION, token)
                             .build();
+
+                } catch (Exception e) {
+                    throw new TokenParsingException(e.getLocalizedMessage());
                 }
             });
 
@@ -81,27 +87,6 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     private Optional<String> resolveParts(String token) {
         String[] parts = token.split(" ");
         return parts.length == 2 && parts[0].equals("Bearer") ? Optional.ofNullable(parts[1]) : Optional.empty();
-    }
-
-    private boolean isValidateToken(String token) {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(getSecretKey())
-                    .build()
-                    .parseClaimsJws(token);
-            return true;
-
-        } catch (ExpiredJwtException e) {
-            log.error("만료된 토큰입니다.");
-        } catch (SecurityException | MalformedJwtException e) {
-            log.error("잘못된 Jwt 서명입니다.");
-        } catch (UnsupportedJwtException e) {
-            log.error("지원하지 않는 토큰입니다.");
-        } catch (IllegalArgumentException e) {
-            log.error("잘못된 토큰입니다.");
-        }
-
-        return false;
     }
 
     private Optional<Object> getValueFromRedis(String key) {
