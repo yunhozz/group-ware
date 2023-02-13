@@ -1,7 +1,9 @@
 package com.authserver.persistence.repository;
 
 import com.authserver.dto.response.QUserDataResponseDto;
+import com.authserver.dto.response.QUserSimpleResponseDto;
 import com.authserver.dto.response.UserDataResponseDto;
+import com.authserver.dto.response.UserSimpleResponseDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -29,6 +31,19 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
                 ))
                 .from(user)
                 .orderBy(user.id.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<UserSimpleResponseDto> findUserSimpleInfoListByUserIds(List<String> userIds) {
+        return queryFactory
+                .select(new QUserSimpleResponseDto(
+                        user.userId,
+                        user.name,
+                        user.imageUrl
+                ))
+                .from(user)
+                .where(user.userId.in(userIds))
                 .fetch();
     }
 }
