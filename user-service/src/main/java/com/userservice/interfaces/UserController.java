@@ -4,8 +4,8 @@ import com.userservice.interfaces.dto.request.JoinRequestDto;
 import com.userservice.interfaces.dto.request.LoginRequestDto;
 import com.userservice.interfaces.dto.response.TokenResponseDto;
 import com.userservice.interfaces.dto.response.UserProfileResponseDto;
-import com.userservice.interfaces.util.HeaderToken;
-import com.userservice.interfaces.util.TokenUtils;
+import com.userservice.common.annotation.HeaderToken;
+import com.userservice.common.util.TokenParser;
 import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,11 +28,11 @@ import java.net.URI;
 public class UserController {
 
     private final RestTemplate restTemplate;
-    private final TokenUtils tokenUtils;
+    private final TokenParser tokenParser;
 
     @GetMapping("/me")
     public ResponseEntity<UserProfileResponseDto> getMyInfo(@HeaderToken String token) {
-        Claims claims = tokenUtils.parseToken(token);
+        Claims claims = tokenParser.execute(token);
         return restTemplate.getForEntity(URI.create("http://localhost:8000/api/auth/users/" + claims.getSubject()), UserProfileResponseDto.class);
     }
 

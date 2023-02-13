@@ -1,5 +1,8 @@
-package com.userservice.interfaces.util;
+package com.notificationservice.common.annotation;
 
+import com.notificationservice.application.exception.NotAuthorizedException;
+import com.notificationservice.common.enums.Role;
+import com.notificationservice.common.util.TokenParser;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +19,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 public class HeaderTokenResolver implements HandlerMethodArgumentResolver {
 
-    private final TokenUtils tokenUtils;
+    private final TokenParser tokenParser;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -29,13 +32,13 @@ public class HeaderTokenResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String auth = (String) tokenUtils.parseToken(token).get("auth");
+        String auth = (String) tokenParser.execute(token).get("auth");
 
         HeaderToken headerToken = parameter.getParameterAnnotation(HeaderToken.class);
         Role[] roles = headerToken.role();
 
         if (!isAuthorized(roles, auth)) {
-            throw new IllegalStateException("권한이 없습니다.");
+            throw new NotAuthorizedException();
         }
 
         return token;

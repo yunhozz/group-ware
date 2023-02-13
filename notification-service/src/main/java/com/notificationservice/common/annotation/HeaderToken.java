@@ -1,4 +1,6 @@
-package com.userservice.interfaces.util;
+package com.notificationservice.common.annotation;
+
+import com.notificationservice.common.enums.Role;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

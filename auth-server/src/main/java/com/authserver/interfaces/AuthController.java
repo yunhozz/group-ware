@@ -6,6 +6,7 @@ import com.authserver.dto.request.LoginRequestDto;
 import com.authserver.dto.response.TokenResponseDto;
 import com.authserver.dto.response.UserDataResponseDto;
 import com.authserver.dto.response.UserProfileResponseDto;
+import com.authserver.dto.response.UserSimpleResponseDto;
 import com.authserver.persistence.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -34,6 +36,12 @@ public class AuthController {
     public ResponseEntity<List<UserDataResponseDto>> getUserListInfo() {
         List<UserDataResponseDto> userDataResponseDtoList = userRepository.findUserList();
         return ResponseEntity.ok(userDataResponseDtoList);
+    }
+
+    @GetMapping("/users/simple")
+    public ResponseEntity<List<UserSimpleResponseDto>> getUserSimpleInfoList(@RequestParam List<String> userIds) {
+        List<UserSimpleResponseDto> userSimpleResponseDtoList = userRepository.findUserSimpleInfoListByUserIds(userIds);
+        return ResponseEntity.ok(userSimpleResponseDtoList);
     }
 
     @GetMapping("/users/{userId}")
