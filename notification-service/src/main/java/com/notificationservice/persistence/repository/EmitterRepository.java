@@ -1,5 +1,6 @@
 package com.notificationservice.persistence.repository;
 
+import com.notificationservice.persistence.Notification;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -11,14 +12,14 @@ import java.util.stream.Collectors;
 public class EmitterRepository {
 
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
-    private final Map<String, Object> events = new ConcurrentHashMap<>();
+    private final Map<String, Notification> notifications = new ConcurrentHashMap<>();
 
     public void saveEmitter(String emitterId, SseEmitter emitter) {
         emitters.put(emitterId, emitter);
     }
 
-    public void saveEvent(String eventId, Object event) {
-        events.put(eventId, event);
+    public void saveNotification(String eventId, Notification notification) {
+        notifications.put(eventId, notification);
     }
 
     public Map<String, SseEmitter> findEmittersByUserId(String userId) {
@@ -27,8 +28,8 @@ public class EmitterRepository {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    public Map<String, Object> findEventsByUserId(String userId) {
-        return events.entrySet().stream()
+    public Map<String, Notification> findNotificationsByUserId(String userId) {
+        return notifications.entrySet().stream()
                 .filter(entry -> entry.getKey().startsWith(userId))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
@@ -41,8 +42,8 @@ public class EmitterRepository {
         });
     }
 
-    public void deleteEventById(String eventId) {
-        events.keySet().forEach(key -> {
+    public void deleteNotificationById(String eventId) {
+        notifications.keySet().forEach(key -> {
             if (key.equals(eventId)) {
                 emitters.remove(key);
             }
