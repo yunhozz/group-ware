@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface NotificationRepository extends JpaRepository<Notification, Long> {
+public interface NotificationRepository extends JpaRepository<Notification, Long>, NotificationCustomRepository {
 
     @Query("select n.id from Notification n where n.receiverId = :userId and n.isChecked = true")
     List<Long> findIdsByUserIdAndAlreadyChecked(@Param("userId") String userId);
