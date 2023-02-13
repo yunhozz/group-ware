@@ -1,4 +1,4 @@
-package com.userservice.interfaces.util;
+package com.userservice.common.enums;
 
 import lombok.Getter;
 

@@ -1,6 +1,6 @@
 package com.userservice.config;
 
-import com.userservice.interfaces.util.HeaderTokenResolver;
+import com.userservice.common.annotation.HeaderTokenResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

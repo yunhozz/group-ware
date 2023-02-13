@@ -1,4 +1,6 @@
-package com.userservice.interfaces.util;
+package com.userservice.common.annotation;
+
+import com.userservice.common.enums.Role;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

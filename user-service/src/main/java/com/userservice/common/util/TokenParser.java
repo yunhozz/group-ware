@@ -1,4 +1,4 @@
-package com.userservice.interfaces.util;
+package com.userservice.common.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 
 @Component
-public class TokenUtils {
+public class TokenParser {
 
     @Value("${app.jwt.secret}")
     private String secretKey;
 
-    public Claims parseToken(String token) {
+    public Claims execute(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSecretKey())
                 .build()
