@@ -61,11 +61,16 @@ public class Post extends BaseEntity {
                 .build();
     }
 
-    public Post updateInfo(String title, String content, PostType postType) {
+    public Long updateInfo(String title, String content, PostType postType) {
         this.title = title;
         this.content = content;
         this.postType = postType;
-        return this;
+
+        return id;
+    }
+
+    public boolean isUserIsWriter(String userId) {
+        return writerId.equals(userId);
     }
 
     public void delete() {

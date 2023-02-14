@@ -27,10 +27,10 @@ public class PostService {
     @Transactional
     public PostResponseDto updateInfo(Long postId, String userId, PostUpdateRequestDto postUpdateRequestDto) {
         Post post = findPost(postId);
-        validateUserIsWriter(post.getId(), userId);
-        Post updatePost = post.updateInfo(postUpdateRequestDto.getTitle(), postUpdateRequestDto.getContent(), postUpdateRequestDto.getPostType());
+        validateUserIsWriter(post, userId);
+        Long id = post.updateInfo(postUpdateRequestDto.getTitle(), postUpdateRequestDto.getContent(), postUpdateRequestDto.getPostType());
 
-        return postRepository.getPostDetailsById(updatePost.getId());
+        return postRepository.getPostDetailsById(id);
     }
 
     @Transactional(readOnly = true)
@@ -42,7 +42,7 @@ public class PostService {
     @Transactional
     public void deletePost(Long postId, String userId) {
         Post post = findPost(postId);
-        validateUserIsWriter(post.getId(), userId);
+        validateUserIsWriter(post, userId);
         post.delete();
     }
 
@@ -51,8 +51,8 @@ public class PostService {
                 .orElseThrow(PostNotFoundException::new);
     }
 
-    private void validateUserIsWriter(Long postId, String userId) {
-        if (!postRepository.existsByIdAndWriterId(postId, userId)) {
+    private void validateUserIsWriter(Post post, String userId) {
+        if (!post.isUserIsWriter(userId)) {
             throw new WriterDifferentException();
         }
     }
