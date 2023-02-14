@@ -44,4 +44,11 @@ public class UserExceptionHandler {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(ErrorCode.NOT_VALID, notValidResponseDtoList);
         return new ResponseEntity<>(errorResponseDto, HttpStatus.valueOf(errorResponseDto.getStatus()));
     }
+
+    @ExceptionHandler(NotAuthorizedException.class)
+    public ResponseEntity<ErrorResponseDto> handleNotAuthorizedException(NotAuthorizedException e) {
+        log.error("handleNotAuthorizedException", e);
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(ErrorCode.NOT_AUTHORIZED);
+        return new ResponseEntity<>(errorResponseDto, HttpStatus.valueOf(errorResponseDto.getStatus()));
+    }
 }

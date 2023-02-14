@@ -21,6 +21,13 @@ public class ErrorResponseDto {
     private String message;
     private List<NotValidResponseDto> validation;
 
+    public ErrorResponseDto(ErrorCode errorCode) {
+        this.timestamp = LocalDateTime.now();
+        this.status = errorCode.getStatus();
+        this.code = errorCode.getCode();
+        this.message = errorCode.getMessage();
+    }
+
     public ErrorResponseDto(ErrorCode errorCode, List<NotValidResponseDto> validation) {
         this.timestamp = LocalDateTime.now();
         this.status = errorCode.getStatus();

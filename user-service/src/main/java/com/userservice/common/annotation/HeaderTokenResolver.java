@@ -2,6 +2,7 @@ package com.userservice.common.annotation;
 
 import com.userservice.common.enums.Role;
 import com.userservice.common.util.TokenParser;
+import com.userservice.exception.NotAuthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,7 @@ public class HeaderTokenResolver implements HandlerMethodArgumentResolver {
         Role[] roles = headerToken.role();
 
         if (!isAuthorized(roles, auth)) {
-            throw new IllegalStateException("권한이 없습니다.");
+            throw new NotAuthorizedException();
         }
 
         return token;

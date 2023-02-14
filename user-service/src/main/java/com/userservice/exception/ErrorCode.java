@@ -5,7 +5,8 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
 
-    NOT_VALID(400, "U-001", "잘못된 요청입니다.")
+    NOT_VALID(400, "U-001", "잘못된 요청입니다."),
+    NOT_AUTHORIZED(401, "U-002", "해당 리소스에 대한 접근 권한이 없습니다.")
 
     ;
 
