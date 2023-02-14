@@ -91,3 +91,11 @@ project(':notification-service') {
     dependencies {
     }
 }
+
+project(':post-service') {
+    bootJar { enabled = true }
+    jar { enabled = false }
+
+    dependencies {
+    }
+}
