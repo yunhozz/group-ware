@@ -1,10 +1,10 @@
 package com.notificationservice.persistence.repository;
 
 import com.notificationservice.dto.response.NotificationSimpleResponseDto;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 public interface NotificationCustomRepository {
 
-    Page<NotificationSimpleResponseDto> findListByUserIdAndCheckStatus(String userId, Boolean isChecked, Long lastNotificationId, Pageable pageable);
+    Slice<NotificationSimpleResponseDto> findSliceByUserIdAndCheckStatus(String userId, Boolean isChecked, Long cursorId, Pageable pageable);
 }

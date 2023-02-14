@@ -45,7 +45,7 @@ public class EmitterRepository {
     public void deleteNotificationById(String eventId) {
         notifications.keySet().forEach(key -> {
             if (key.equals(eventId)) {
-                emitters.remove(key);
+                notifications.remove(key);
             }
         });
     }

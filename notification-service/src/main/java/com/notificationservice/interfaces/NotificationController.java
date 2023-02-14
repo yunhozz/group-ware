@@ -12,8 +12,8 @@ import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -68,10 +68,11 @@ public class NotificationController {
     }
 
     @PostMapping
-    public ResponseEntity<Page<NotificationSimpleResponseDto>> getNotificationSimpleList(@HeaderToken String token, @RequestParam(required = false) Boolean check,
-                                                                                         @RequestParam(required = false) Long lastId, Pageable pageable) {
+    public ResponseEntity<Slice<NotificationSimpleResponseDto>> getNotificationSimpleList(@HeaderToken String token, @RequestParam(required = false) Boolean check,
+                                                                                          @RequestParam(required = false) Long cursorId, Pageable pageable) {
         Claims claims = tokenParser.execute(token);
-        Page<NotificationSimpleResponseDto> notificationSimpleDtoList = notificationRepository.findListByUserIdAndCheckStatus(claims.getSubject(), check, lastId, pageable);
+        Slice<NotificationSimpleResponseDto> notificationSimpleDtoList =
+                notificationRepository.findSliceByUserIdAndCheckStatus(claims.getSubject(), check, cursorId, pageable);
         List<String> senderIds = new ArrayList<>() {{
             for (NotificationSimpleResponseDto notificationSimpleDto : notificationSimpleDtoList) {
                 add(notificationSimpleDto.getSenderId());
