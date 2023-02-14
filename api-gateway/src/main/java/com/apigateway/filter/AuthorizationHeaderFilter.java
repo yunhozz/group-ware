@@ -52,19 +52,19 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             String headerToken = tokens.get(0);
             resolveToken(headerToken).ifPresent(token -> {
                 try {
-                    Jwts.parserBuilder()
-                            .setSigningKey(getSecretKey())
-                            .build()
-                            .parseClaimsJws(token);
+                    Claims claims = parseToken(token);
 
                     // redis 에 존재하는 로그아웃 토큰으로 요청했을 때
                     if (getValueFromRedis(token).isPresent()) {
                         throw new LogoutTokenException();
                     }
+
                     // 토큰의 만료 시간이 5분 이내로 남았을 때
-                    if (getRemainingTime(token) < 300000) {
+                    long remainTime = claims.getExpiration().getTime() - new Date().getTime();
+                    if (remainTime < 300000) {
                         throw new TokenNearExpirationException();
                     }
+
                     // grant type 을 제외한 토큰 요청으로 변경
                     log.info("[ACCESS TOKEN IS OK]");
                     request.mutate()
@@ -94,14 +94,12 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         return Optional.ofNullable(ops.get(key));
     }
 
-    private Long getRemainingTime(String token) {
-        Claims claims = Jwts.parserBuilder()
+    private Claims parseToken(String token) {
+        return Jwts.parserBuilder()
                 .setSigningKey(getSecretKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-
-        return claims.getExpiration().getTime() - new Date().getTime();
     }
 
     private Key getSecretKey() {
