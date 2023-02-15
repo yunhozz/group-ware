@@ -8,5 +8,6 @@ import java.util.List;
 public interface UserCustomRepository {
 
     List<UserDataResponseDto> findUserList();
+    UserSimpleResponseDto findUserSimpleInfoByUserId(String userId);
     List<UserSimpleResponseDto> findUserSimpleInfoListByUserIds(List<String> userIds);
 }

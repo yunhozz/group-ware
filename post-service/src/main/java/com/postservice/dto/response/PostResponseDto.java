@@ -24,8 +24,6 @@ public class PostResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private UserSimpleResponseDto userInfo;
-
-    // TODO: 2023-02-14 댓글 리스트 조회
     private List<CommentResponseDto> comments;
 
     @QueryProjection

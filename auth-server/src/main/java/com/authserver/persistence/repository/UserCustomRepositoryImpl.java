@@ -35,6 +35,19 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
     }
 
     @Override
+    public UserSimpleResponseDto findUserSimpleInfoByUserId(String userId) {
+        return queryFactory
+                .select(new QUserSimpleResponseDto(
+                        user.userId,
+                        user.name,
+                        user.imageUrl
+                ))
+                .from(user)
+                .where(user.userId.eq(userId))
+                .fetchOne();
+    }
+
+    @Override
     public List<UserSimpleResponseDto> findUserSimpleInfoListByUserIds(List<String> userIds) {
         return queryFactory
                 .select(new QUserSimpleResponseDto(

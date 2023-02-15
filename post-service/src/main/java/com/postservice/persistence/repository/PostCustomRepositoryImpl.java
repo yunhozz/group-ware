@@ -1,11 +1,16 @@
 package com.postservice.persistence.repository;
 
+import com.postservice.dto.response.CommentResponseDto;
 import com.postservice.dto.response.PostResponseDto;
 import com.postservice.dto.response.QPostResponseDto;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+import static com.postservice.persistence.QComment.comment;
 import static com.postservice.persistence.QPost.post;
 
 @Repository
@@ -16,7 +21,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
 
     @Override
     public PostResponseDto getPostDetailsById(Long postId) {
-        return queryFactory
+        PostResponseDto postDto = queryFactory
                 .select(new QPostResponseDto(
                         post.id,
                         post.teamId,
@@ -31,5 +36,25 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .from(post)
                 .where(post.id.eq(postId))
                 .fetchOne();
+
+        Long id = postDto.getId();
+
+        List<CommentResponseDto> commentDtoList = queryFactory
+                .select(Projections.constructor(
+                        CommentResponseDto.class,
+                        comment.id,
+                        post.id,
+                        comment.writerId,
+                        comment.parent.id,
+                        comment.content
+                ))
+                .from(comment)
+                .join(comment.post, post)
+                .where(post.id.eq(id))
+                .orderBy(comment.createdAt.desc())
+                .fetch();
+
+        postDto.setComments(commentDtoList);
+        return postDto;
     }
 }

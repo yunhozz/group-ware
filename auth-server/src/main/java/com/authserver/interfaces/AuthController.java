@@ -38,6 +38,12 @@ public class AuthController {
         return ResponseEntity.ok(userDataResponseDtoList);
     }
 
+    @GetMapping("/users/{userId}/simple")
+    public ResponseEntity<UserSimpleResponseDto> getUserSimpleInfo(@PathVariable String userId) {
+        UserSimpleResponseDto userSimpleResponseDto = userRepository.findUserSimpleInfoByUserId(userId);
+        return ResponseEntity.ok(userSimpleResponseDto);
+    }
+
     @GetMapping("/users/simple")
     public ResponseEntity<List<UserSimpleResponseDto>> getUserSimpleInfoList(@RequestParam List<String> userIds) {
         List<UserSimpleResponseDto> userSimpleResponseDtoList = userRepository.findUserSimpleInfoListByUserIds(userIds);
