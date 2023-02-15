@@ -1,14 +1,22 @@
 package com.postservice.persistence.repository;
 
+import com.postservice.common.enums.PostType;
+import com.postservice.dto.query.CommentCountQueryDto;
+import com.postservice.dto.query.PostDetailsQueryDto;
+import com.postservice.dto.query.PostSimpleQueryDto;
+import com.postservice.dto.query.QCommentCountQueryDto;
+import com.postservice.dto.query.QPostDetailsQueryDto;
+import com.postservice.dto.query.QPostSimpleQueryDto;
 import com.postservice.dto.response.CommentResponseDto;
-import com.postservice.dto.response.PostResponseDto;
-import com.postservice.dto.response.QPostResponseDto;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.postservice.persistence.QComment.comment;
 import static com.postservice.persistence.QPost.post;
@@ -20,9 +28,9 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public PostResponseDto getPostDetailsById(Long postId) {
-        PostResponseDto postDto = queryFactory
-                .select(new QPostResponseDto(
+    public PostDetailsQueryDto getPostDetailsById(Long postId) {
+        PostDetailsQueryDto postDto = queryFactory
+                .select(new QPostDetailsQueryDto(
                         post.id,
                         post.teamId,
                         post.writerId,

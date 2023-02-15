@@ -4,7 +4,7 @@ import com.postservice.application.exception.PostNotFoundException;
 import com.postservice.application.exception.WriterDifferentException;
 import com.postservice.dto.request.PostRequestDto;
 import com.postservice.dto.request.PostUpdateRequestDto;
-import com.postservice.dto.response.PostResponseDto;
+import com.postservice.dto.query.PostDetailsQueryDto;
 import com.postservice.persistence.Post;
 import com.postservice.persistence.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponseDto findPostDetailsById(Long id) {
+    public PostDetailsQueryDto findPostDetailsById(Long id) {
         Post post = findPost(id);
         post.addView();
         return postRepository.getPostDetailsById(post.getId());

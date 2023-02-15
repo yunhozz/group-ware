@@ -5,7 +5,7 @@ import com.postservice.application.exception.WriterDifferentException;
 import com.postservice.common.enums.PostType;
 import com.postservice.dto.request.PostRequestDto;
 import com.postservice.dto.request.PostUpdateRequestDto;
-import com.postservice.dto.response.PostResponseDto;
+import com.postservice.dto.query.PostDetailsQueryDto;
 import com.postservice.persistence.Post;
 import com.postservice.persistence.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -108,15 +108,15 @@ class PostServiceTest {
     void findPostDetailsById() throws Exception {
         // given
         Long postId = 1L;
-        PostResponseDto postResponseDto = new PostResponseDto(
+        PostDetailsQueryDto postDetailsQueryDto = new PostDetailsQueryDto(
                 postId, post.getTeamId(), post.getWriterId(), post.getTitle(), post.getContent(), post.getPostType(), post.getView(),
                 post.getCreatedAt(), post.getModifiedAt());
 
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
-        given(postRepository.getPostDetailsById(post.getId())).willReturn(postResponseDto);
+        given(postRepository.getPostDetailsById(post.getId())).willReturn(postDetailsQueryDto);
 
         // when
-        PostResponseDto result = postService.findPostDetailsById(postId);
+        PostDetailsQueryDto result = postService.findPostDetailsById(postId);
 
         // then
         assertDoesNotThrow(() -> result);
