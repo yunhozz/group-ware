@@ -73,6 +73,10 @@ public class Post extends BaseEntity {
         return writerId.equals(userId);
     }
 
+    public void addView() {
+        view += 1;
+    }
+
     public void delete() {
         if (isDeleted == 'N') {
             isDeleted = 'Y';

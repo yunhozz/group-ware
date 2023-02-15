@@ -18,24 +18,22 @@ public class PostService {
     private final PostRepository postRepository;
 
     @Transactional
-    public PostResponseDto createPost(String writerId, Long teamId, PostRequestDto postRequestDto) {
+    public Long createPost(String writerId, Long teamId, PostRequestDto postRequestDto) {
         Post post = Post.create(writerId, teamId, postRequestDto.getTitle(), postRequestDto.getContent(), postRequestDto.getPostType());
-        Long postId = postRepository.save(post).getId();
-        return postRepository.getPostDetailsById(postId);
+        return postRepository.save(post).getId();
     }
 
     @Transactional
-    public PostResponseDto updateInfo(Long postId, String userId, PostUpdateRequestDto postUpdateRequestDto) {
+    public Long updateInfo(Long postId, String userId, PostUpdateRequestDto postUpdateRequestDto) {
         Post post = findPost(postId);
         validateUserIsWriter(post, userId);
-        Long id = post.updateInfo(postUpdateRequestDto.getTitle(), postUpdateRequestDto.getContent(), postUpdateRequestDto.getPostType());
-
-        return postRepository.getPostDetailsById(id);
+        return post.updateInfo(postUpdateRequestDto.getTitle(), postUpdateRequestDto.getContent(), postUpdateRequestDto.getPostType());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public PostResponseDto findPostDetailsById(Long id) {
         Post post = findPost(id);
+        post.addView();
         return postRepository.getPostDetailsById(post.getId());
     }
 
