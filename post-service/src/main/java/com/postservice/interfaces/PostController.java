@@ -67,13 +67,9 @@ public class PostController {
                 }
             }};
 
-            URI uriForCommentsUserInfo = UriComponentsBuilder.fromUriString("http://localhost:8000/api/auth/users/simple")
-                    .queryParam("userIds", commentWriterIds)
-                    .build().toUri();
-            ResponseEntity<List<UserSimpleResponseDto>> userSimpleDtoOfComments =
-                    restTemplate.exchange(uriForCommentsUserInfo, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
-
+            ResponseEntity<List<UserSimpleResponseDto>> userSimpleDtoOfComments = getResponseOfUserSimpleDtoList(commentWriterIds);
             int idx = 0;
+
             for (CommentResponseDto commentResponseDto : commentDtoList) {
                 UserSimpleResponseDto userInfo = userSimpleDtoOfComments.getBody().get(idx++);
                 commentResponseDto.setUserInfo(userInfo);
@@ -95,13 +91,9 @@ public class PostController {
                 }
             }};
 
-            URI uri = UriComponentsBuilder.fromUriString("http://localhost:8000/api/auth/users/simple")
-                    .queryParam("userIds", writerIds)
-                    .build().toUri();
-            ResponseEntity<List<UserSimpleResponseDto>> userSimpleDtoList =
-                    restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
-
+            ResponseEntity<List<UserSimpleResponseDto>> userSimpleDtoList = getResponseOfUserSimpleDtoList(writerIds);
             int idx = 0;
+
             for (PostSimpleQueryDto postSimpleQueryDto : postSimpleDtoList) {
                 UserSimpleResponseDto userInfo = userSimpleDtoList.getBody().get(idx++);
                 postSimpleQueryDto.setUserInfo(userInfo);
@@ -121,13 +113,9 @@ public class PostController {
                 }
             }};
 
-            URI uri = UriComponentsBuilder.fromUriString("http://localhost:8000/api/auth/users/simple")
-                    .queryParam("userIds", writerIds)
-                    .build().toUri();
-            ResponseEntity<List<UserSimpleResponseDto>> userSimpleDtoList =
-                    restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
-
+            ResponseEntity<List<UserSimpleResponseDto>> userSimpleDtoList = getResponseOfUserSimpleDtoList(writerIds);
             int idx = 0;
+
             for (PostSimpleQueryDto postSimpleQueryDto : postSimpleDtoSlice) {
                 UserSimpleResponseDto userInfo = userSimpleDtoList.getBody().get(idx++);
                 postSimpleQueryDto.setUserInfo(userInfo);
@@ -158,5 +146,12 @@ public class PostController {
         Claims claims = tokenParser.execute(token);
         postService.deletePost(id, claims.getSubject());
         return new ResponseEntity<>("삭제가 완료되었습니다.", HttpStatus.NO_CONTENT);
+    }
+
+    private ResponseEntity<List<UserSimpleResponseDto>> getResponseOfUserSimpleDtoList(List<String> userIds) {
+        URI uriForCommentsUserInfo = UriComponentsBuilder.fromUriString("http://localhost:8000/api/auth/users/simple")
+                .queryParam("userIds", userIds)
+                .build().toUri();
+        return restTemplate.exchange(uriForCommentsUserInfo, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
     }
 }
