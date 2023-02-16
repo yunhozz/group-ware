@@ -149,9 +149,9 @@ public class PostController {
     }
 
     private ResponseEntity<List<UserSimpleResponseDto>> getResponseOfUserSimpleDtoList(List<String> userIds) {
-        URI uriForCommentsUserInfo = UriComponentsBuilder.fromUriString("http://localhost:8000/api/auth/users/simple")
+        URI uri = UriComponentsBuilder.fromUriString("http://localhost:8000/api/auth/users/simple")
                 .queryParam("userIds", userIds)
                 .build().toUri();
-        return restTemplate.exchange(uriForCommentsUserInfo, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
+        return restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
     }
 }
