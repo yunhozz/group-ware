@@ -68,8 +68,8 @@ public class PostService {
     public void deletePost(Long postId, String userId) {
         Post post = findPost(postId);
         validateUserIsWriter(post, userId);
-        deleteFiles(post.getId()); // 기존 파일 리스트 삭제 (bulk)
         post.delete();
+        deleteFiles(post.getId()); // 기존 파일 리스트 삭제 (bulk)
     }
 
     @Transactional
