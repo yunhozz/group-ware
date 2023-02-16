@@ -3,10 +3,11 @@ package com.postservice.application;
 import com.postservice.application.exception.PostNotFoundException;
 import com.postservice.application.exception.WriterDifferentException;
 import com.postservice.common.enums.PostType;
+import com.postservice.dto.query.PostDetailsQueryDto;
 import com.postservice.dto.request.PostRequestDto;
 import com.postservice.dto.request.PostUpdateRequestDto;
-import com.postservice.dto.query.PostDetailsQueryDto;
 import com.postservice.persistence.Post;
+import com.postservice.persistence.repository.FileRepository;
 import com.postservice.persistence.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 
 @ExtendWith(MockitoExtension.class)
 class PostServiceTest {
@@ -33,6 +36,9 @@ class PostServiceTest {
 
     @Mock
     PostRepository postRepository;
+
+    @Mock
+    FileRepository fileRepository;
 
     Post post;
 
@@ -52,7 +58,7 @@ class PostServiceTest {
         given(postRepository.save(any(Post.class))).willReturn(post);
 
         // when
-        Long result = postService.createPost(writerId, teamId, postRequestDto);
+        Long result = postService.createPost(writerId, teamId, postRequestDto, new ArrayList<>());
 
         // then
         assertDoesNotThrow(() -> result);
@@ -67,9 +73,10 @@ class PostServiceTest {
         PostUpdateRequestDto postUpdateRequestDto = new PostUpdateRequestDto("Update Test", "This is update", PostType.NOTICE);
 
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
+        willDoNothing().given(fileRepository).deleteFilesByPostId(post.getId());
 
         // when
-        Long result = postService.updateInfo(postId, writerId, postUpdateRequestDto);
+        Long result = postService.updateInfo(postId, writerId, postUpdateRequestDto, new ArrayList<>());
 
         // then
         assertDoesNotThrow(() -> result);
@@ -86,7 +93,7 @@ class PostServiceTest {
         given(postRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // then
-        assertThrows(PostNotFoundException.class, () -> postService.updateInfo(postId, writerId, postUpdateRequestDto));
+        assertThrows(PostNotFoundException.class, () -> postService.updateInfo(postId, writerId, postUpdateRequestDto, new ArrayList<>()));
     }
 
     @Test
@@ -100,7 +107,7 @@ class PostServiceTest {
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
 
         // then
-        assertThrows(WriterDifferentException.class, () -> postService.updateInfo(postId, userId, postUpdateRequestDto));
+        assertThrows(WriterDifferentException.class, () -> postService.updateInfo(postId, userId, postUpdateRequestDto, new ArrayList<>()));
     }
 
     @Test
@@ -134,6 +141,7 @@ class PostServiceTest {
         Long postId = 1L;
 
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
+        willDoNothing().given(fileRepository).deleteFilesByPostId(post.getId());
 
         // then
         assertDoesNotThrow(() -> postService.deletePost(postId, writerId));
