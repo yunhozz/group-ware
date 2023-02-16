@@ -53,12 +53,12 @@ class PostServiceTest {
         // given
         String writerId = "userId";
         Long teamId = 123L;
-        PostRequestDto postRequestDto = new PostRequestDto("Test", "This is test", PostType.REPORT);
+        PostRequestDto postRequestDto = new PostRequestDto("Test", "This is test", PostType.REPORT, new ArrayList<>());
 
         given(postRepository.save(any(Post.class))).willReturn(post);
 
         // when
-        Long result = postService.createPost(writerId, teamId, postRequestDto, new ArrayList<>());
+        Long result = postService.createPost(writerId, teamId, postRequestDto);
 
         // then
         assertDoesNotThrow(() -> result);
@@ -70,13 +70,13 @@ class PostServiceTest {
         // given
         String writerId = "writerId";
         Long postId = 1L;
-        PostUpdateRequestDto postUpdateRequestDto = new PostUpdateRequestDto("Update Test", "This is update", PostType.NOTICE);
+        PostUpdateRequestDto postUpdateRequestDto = new PostUpdateRequestDto("Update Test", "This is update", PostType.NOTICE, new ArrayList<>());
 
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
         willDoNothing().given(fileRepository).deleteFilesByPostId(post.getId());
 
         // when
-        Long result = postService.updateInfo(postId, writerId, postUpdateRequestDto, new ArrayList<>());
+        Long result = postService.updateInfo(postId, writerId, postUpdateRequestDto);
 
         // then
         assertDoesNotThrow(() -> result);
@@ -88,12 +88,12 @@ class PostServiceTest {
         // given
         String writerId = "writerId";
         Long postId = 1L;
-        PostUpdateRequestDto postUpdateRequestDto = new PostUpdateRequestDto("Update Test", "This is update", PostType.NOTICE);
+        PostUpdateRequestDto postUpdateRequestDto = new PostUpdateRequestDto("Update Test", "This is update", PostType.NOTICE, new ArrayList<>());
 
         given(postRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // then
-        assertThrows(PostNotFoundException.class, () -> postService.updateInfo(postId, writerId, postUpdateRequestDto, new ArrayList<>()));
+        assertThrows(PostNotFoundException.class, () -> postService.updateInfo(postId, writerId, postUpdateRequestDto));
     }
 
     @Test
@@ -102,12 +102,12 @@ class PostServiceTest {
         // given
         String userId = "anonymous";
         Long postId = 1L;
-        PostUpdateRequestDto postUpdateRequestDto = new PostUpdateRequestDto("Update Test", "This is update", PostType.NOTICE);
+        PostUpdateRequestDto postUpdateRequestDto = new PostUpdateRequestDto("Update Test", "This is update", PostType.NOTICE, new ArrayList<>());
 
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
 
         // then
-        assertThrows(WriterDifferentException.class, () -> postService.updateInfo(postId, userId, postUpdateRequestDto, new ArrayList<>()));
+        assertThrows(WriterDifferentException.class, () -> postService.updateInfo(postId, userId, postUpdateRequestDto));
     }
 
     @Test
