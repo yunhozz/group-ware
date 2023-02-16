@@ -9,6 +9,6 @@ server:
 spring:
   profiles:
     active: local
-    include: jwt
+    include: jwt, file
   application:
     name: post-service
