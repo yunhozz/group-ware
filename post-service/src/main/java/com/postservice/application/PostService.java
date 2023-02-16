@@ -36,21 +36,23 @@ public class PostService {
     private String fileDir;
 
     @Transactional
-    public Long createPost(String writerId, Long teamId, PostRequestDto postRequestDto, List<MultipartFile> files) {
+    public Long createPost(String writerId, Long teamId, PostRequestDto postRequestDto) {
         Post post = Post.create(writerId, teamId, postRequestDto.getTitle(), postRequestDto.getContent(), postRequestDto.getPostType());
+        List<MultipartFile> files = postRequestDto.getFiles();
         saveFiles(post, files);
 
         return postRepository.save(post).getId();
     }
 
     @Transactional
-    public Long updateInfo(Long postId, String userId, PostUpdateRequestDto postUpdateRequestDto, List<MultipartFile> files) {
+    public Long updateInfo(Long postId, String userId, PostUpdateRequestDto postUpdateRequestDto) {
         Post post = findPost(postId);
         validateUserIsWriter(post, userId);
+        post.updateInfo(postUpdateRequestDto.getTitle(), postUpdateRequestDto.getContent(), postUpdateRequestDto.getPostType());
 
         deleteFiles(post.getId()); // 기존 파일 리스트 삭제 (bulk)
+        List<MultipartFile> files = postUpdateRequestDto.getFiles();
         saveFiles(post, files);
-        post.updateInfo(postUpdateRequestDto.getTitle(), postUpdateRequestDto.getContent(), postUpdateRequestDto.getPostType());
 
         return post.getId();
     }
@@ -76,7 +78,7 @@ public class PostService {
     }
 
     private void saveFiles(Post post, List<MultipartFile> files) {
-        if (!files.isEmpty()) {
+        if (files != null && !files.isEmpty()) {
             try {
                 List<FileEntity> fileEntityList = new ArrayList<>();
                 for (MultipartFile file : files) {
