@@ -21,9 +21,9 @@ import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -122,7 +122,7 @@ public class PostController {
             }
         }
 
-        return ResponseEntity.ok(postSimpleDtoSlice);
+        return new ResponseEntity<>(postSimpleDtoSlice, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/create")
@@ -131,7 +131,7 @@ public class PostController {
                                            @Valid @ModelAttribute PostRequestDto postRequestDto) {
         Claims claims = tokenParser.execute(token);
         Long postId = postService.createPost(claims.getSubject(), teamId, postRequestDto);
-        return ResponseEntity.ok(postId);
+        return new ResponseEntity<>(postId, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/{id}/update")
@@ -143,7 +143,7 @@ public class PostController {
         return new ResponseEntity<>(postId, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{id}/delete")
+    @DeleteMapping("/{id}/delete")
     public ResponseEntity<String> deletePost(@HeaderToken(role = {Role.ADMIN, Role.USER}) String token, @PathVariable Long id) {
         Claims claims = tokenParser.execute(token);
         postService.deletePost(id, claims.getSubject());
