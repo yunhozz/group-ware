@@ -8,8 +8,8 @@ import com.postservice.common.exception.dto.NotValidResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
@@ -21,9 +21,9 @@ import java.util.List;
 @RestControllerAdvice
 public class PostExceptionHandler {
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponseDto> handleRuntimeException(RuntimeException e) {
-        log.error("handleRuntimeException", e);
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDto> handleRuntimeException(Exception e) {
+        log.error("handleException", e);
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(ErrorCode.INTER_SERVER_ERROR);
         return new ResponseEntity<>(errorResponseDto, HttpStatus.valueOf(errorResponseDto.getStatus()));
     }
@@ -35,9 +35,9 @@ public class PostExceptionHandler {
         return new ResponseEntity<>(errorResponseDto, HttpStatus.valueOf(errorResponseDto.getStatus()));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponseDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        log.error("handleMethodArgumentNotValidException", e);
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<ErrorResponseDto> handleBindException(BindException e) {
+        log.error("handleBindException", e);
         List<FieldError> fieldErrors = e.getFieldErrors();
         List<NotValidResponseDto> notValidResponseDtoList = new ArrayList<>() {{
             for (FieldError fieldError : fieldErrors) {
