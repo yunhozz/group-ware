@@ -34,6 +34,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/notifications")
@@ -80,12 +81,11 @@ public class NotificationController {
         URI uri = UriComponentsBuilder.fromUriString("http://localhost:8000/api/auth/users/simple")
                 .queryParam("userIds", senderIds)
                 .build().toUri();
-        ResponseEntity<List<UserSimpleResponseDto>> userSimpleDtoList =
+        ResponseEntity<Map<String, UserSimpleResponseDto>> userData =
                 restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
 
-        int idx = 0;
         for (NotificationSimpleResponseDto notificationSimpleResponseDto : notificationSimpleDtoList) {
-            UserSimpleResponseDto userInfo = userSimpleDtoList.getBody().get(idx++);
+            UserSimpleResponseDto userInfo = userData.getBody().get(notificationSimpleResponseDto.getSenderId());
             notificationSimpleResponseDto.setUserInfo(userInfo);
         }
 

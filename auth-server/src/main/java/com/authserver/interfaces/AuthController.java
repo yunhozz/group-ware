@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -45,9 +47,17 @@ public class AuthController {
     }
 
     @GetMapping("/users/simple")
-    public ResponseEntity<List<UserSimpleResponseDto>> getUserSimpleInfoList(@RequestParam List<String> userIds) {
+    public ResponseEntity<Map<String, UserSimpleResponseDto>> getUserSimpleInfoListByUserIds(@RequestParam List<String> userIds) {
         List<UserSimpleResponseDto> userSimpleResponseDtoList = userRepository.findUserSimpleInfoListByUserIds(userIds);
-        return ResponseEntity.ok(userSimpleResponseDtoList);
+        Map<String, UserSimpleResponseDto> userData = new HashMap<>();
+
+        for (UserSimpleResponseDto userSimpleResponseDto : userSimpleResponseDtoList) {
+            if (!userData.containsKey(userSimpleResponseDto.getUserId())) {
+                userData.put(userSimpleResponseDto.getUserId(), userSimpleResponseDto);
+            }
+        }
+
+        return ResponseEntity.ok(userData);
     }
 
     @GetMapping("/users/{userId}")

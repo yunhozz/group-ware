@@ -35,6 +35,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -67,11 +68,9 @@ public class PostController {
                 }
             }};
 
-            ResponseEntity<List<UserSimpleResponseDto>> userSimpleDtoOfComments = getResponseOfUserSimpleDtoList(commentWriterIds);
-            int idx = 0;
-
+            ResponseEntity<Map<String, UserSimpleResponseDto>> userData = getResponseOfUserSimpleDtoList(commentWriterIds);
             for (CommentQueryDto commentQueryDto : commentDtoList) {
-                UserSimpleResponseDto userInfo = userSimpleDtoOfComments.getBody().get(idx++);
+                UserSimpleResponseDto userInfo = userData.getBody().get(commentQueryDto.getWriterId());
                 commentQueryDto.setUserInfo(userInfo);
             }
 
@@ -91,11 +90,9 @@ public class PostController {
                 }
             }};
 
-            ResponseEntity<List<UserSimpleResponseDto>> userSimpleDtoList = getResponseOfUserSimpleDtoList(writerIds);
-            int idx = 0;
-
+            ResponseEntity<Map<String, UserSimpleResponseDto>> userData = getResponseOfUserSimpleDtoList(writerIds);
             for (PostSimpleQueryDto postSimpleQueryDto : postSimpleDtoList) {
-                UserSimpleResponseDto userInfo = userSimpleDtoList.getBody().get(idx++);
+                UserSimpleResponseDto userInfo = userData.getBody().get(postSimpleQueryDto.getUserId());
                 postSimpleQueryDto.setUserInfo(userInfo);
             }
         }
@@ -113,11 +110,9 @@ public class PostController {
                 }
             }};
 
-            ResponseEntity<List<UserSimpleResponseDto>> userSimpleDtoList = getResponseOfUserSimpleDtoList(writerIds);
-            int idx = 0;
-
+            ResponseEntity<Map<String, UserSimpleResponseDto>> userData = getResponseOfUserSimpleDtoList(writerIds);
             for (PostSimpleQueryDto postSimpleQueryDto : postSimpleDtoSlice) {
-                UserSimpleResponseDto userInfo = userSimpleDtoList.getBody().get(idx++);
+                UserSimpleResponseDto userInfo = userData.getBody().get(postSimpleQueryDto.getUserId());
                 postSimpleQueryDto.setUserInfo(userInfo);
             }
         }
@@ -150,7 +145,7 @@ public class PostController {
         return new ResponseEntity<>("삭제가 완료되었습니다.", HttpStatus.NO_CONTENT);
     }
 
-    private ResponseEntity<List<UserSimpleResponseDto>> getResponseOfUserSimpleDtoList(List<String> userIds) {
+    private ResponseEntity<Map<String, UserSimpleResponseDto>> getResponseOfUserSimpleDtoList(List<String> userIds) {
         URI uri = UriComponentsBuilder.fromUriString("http://localhost:8000/api/auth/users/simple")
                 .queryParam("userIds", userIds)
                 .build().toUri();
