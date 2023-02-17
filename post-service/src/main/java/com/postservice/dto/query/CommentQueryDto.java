@@ -16,6 +16,7 @@ public class CommentQueryDto {
     private String writerId;
     private Long parentId;
     private String content;
+    @JsonIgnore
     private Boolean isMustDeleted;
     private UserSimpleResponseDto userInfo;
 
