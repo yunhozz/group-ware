@@ -42,7 +42,7 @@ spring:
           uri:
             lb://POST-SERVICE
           predicates:
-            - Path=/api/posts/**
+            - Path=/api/posts/**, /api/comments/**
           filters:
             - AuthorizationHeaderFilter
             - RemoveRequestHeader=Cookie
