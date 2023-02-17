@@ -6,8 +6,6 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Getter
 @NoArgsConstructor
 public class CommentQueryDto {
@@ -20,7 +18,6 @@ public class CommentQueryDto {
     private String content;
     private Boolean isMustDeleted;
     private UserSimpleResponseDto userInfo;
-    private List<CommentQueryDto> children;
 
     @QueryProjection
     public CommentQueryDto(Long id, Long postId, String writerId, Long parentId, String content, Boolean isMustDeleted) {
@@ -34,9 +31,5 @@ public class CommentQueryDto {
 
     public void setUserInfo(UserSimpleResponseDto userInfo) {
         this.userInfo = userInfo;
-    }
-
-    public void setChildren(List<CommentQueryDto> children) {
-        this.children = children;
     }
 }
