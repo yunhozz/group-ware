@@ -12,7 +12,7 @@ import com.postservice.dto.query.QFileQueryDto;
 import com.postservice.dto.query.QPostDetailsQueryDto;
 import com.postservice.dto.query.QPostSimpleQueryDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -60,13 +60,23 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                         post.id,
                         comment.writerId,
                         comment.parent.id,
-                        comment.content
+                        comment.content,
+                        new CaseBuilder()
+                                .when(
+                                        comment.parent.isNotNull().and(comment.isDeleted.eq('Y'))
+                                                .or(comment.parent.isNull().and(comment.children.isEmpty()).and(comment.isDeleted.eq('Y')))
+                                )
+                                .then(true)
+                                .otherwise(false)
                 ))
                 .from(comment)
                 .join(comment.post, post)
                 .where(post.id.eq(id))
                 .orderBy(comment.createdAt.asc())
                 .fetch();
+
+        // 제외 : (대댓글 && 삭제 상태 == 'Y') || (최상위 댓글 && 대댓글 존재 x && 삭제 상태 == 'Y')
+        commentDtoList.removeIf(CommentQueryDto::getIsMustDeleted);
 
         List<FileQueryDto> fileDtoList = queryFactory
                 .select(new QFileQueryDto(

@@ -18,16 +18,18 @@ public class CommentQueryDto {
     private String writerId;
     private Long parentId;
     private String content;
+    private Boolean isMustDeleted;
     private UserSimpleResponseDto userInfo;
     private List<CommentQueryDto> children;
 
     @QueryProjection
-    public CommentQueryDto(Long id, Long postId, String writerId, Long parentId, String content) {
+    public CommentQueryDto(Long id, Long postId, String writerId, Long parentId, String content, Boolean isMustDeleted) {
         this.id = id;
         this.postId = postId;
         this.writerId = writerId;
         this.parentId = parentId;
         this.content = content;
+        this.isMustDeleted = isMustDeleted;
     }
 
     public void setUserInfo(UserSimpleResponseDto userInfo) {

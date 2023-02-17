@@ -1,5 +1,6 @@
 package com.postservice.persistence;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -29,21 +30,25 @@ public class Comment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
+    @Column(length = 100)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Comment parent;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
     private List<Comment> children = new ArrayList<>(); // 대댓글
 
+    private char isDeleted; // Y, N
+
     @Builder
-    private Comment(String writerId, Post post, String content, Comment parent, List<Comment> children) {
+    private Comment(String writerId, Post post, String content, Comment parent, List<Comment> children, char isDeleted) {
         this.writerId = writerId;
         this.post = post;
         this.content = content;
         this.parent = parent;
         this.children = children;
+        this.isDeleted = isDeleted;
     }
 
     public static Comment create(String writerId, Post post, String content) {
@@ -51,18 +56,39 @@ public class Comment extends BaseEntity {
                 .writerId(writerId)
                 .post(post)
                 .content(content)
+                .isDeleted('N')
                 .build();
     }
 
     public static Comment createChild(String writerId, Post post, String content, Comment parent) {
+        if (parent.isDeleted == 'Y') {
+            throw new IllegalStateException("이미 삭제된 댓글입니다.");
+        }
+
         Comment child = Comment.builder()
                 .writerId(writerId)
                 .post(post)
                 .content(content)
                 .parent(parent)
+                .isDeleted('N')
                 .build();
         parent.addChild(child);
         return child;
+    }
+
+    public boolean isUserIsWriter(String userId) {
+        return writerId.equals(userId);
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
+    public void delete() {
+        if (isDeleted == 'N') {
+            content = "[삭제된 댓글입니다]";
+            isDeleted = 'Y';
+        } else throw new IllegalStateException("이미 삭제된 댓글입니다.");
     }
 
     private void addChild(Comment child) {
