@@ -25,14 +25,17 @@ public class FileEntity extends BaseEntity {
 
     private String fileId;
 
+    private String originalName;
+
     private String saveName;
 
     private String savePath;
 
     @Builder
-    private FileEntity(Post post, String fileId, String saveName, String savePath) {
+    private FileEntity(Post post, String fileId, String originalName, String saveName, String savePath) {
         this.post = post;
         this.fileId = fileId;
+        this.originalName = originalName;
         this.saveName = saveName;
         this.savePath = savePath;
     }

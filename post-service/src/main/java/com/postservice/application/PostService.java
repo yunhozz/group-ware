@@ -90,6 +90,7 @@ public class PostService {
                     FileEntity fileEntity = FileEntity.builder()
                             .post(post)
                             .fileId(randomIdUtils.generateFileId())
+                            .originalName(originalName)
                             .saveName(saveName)
                             .savePath(savePath)
                             .build();
