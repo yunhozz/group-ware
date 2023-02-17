@@ -61,8 +61,8 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                         parent.id, // null 허용
                         comment.content,
                         new CaseBuilder()
-                                .when(comment.parent.isNotNull().and(comment.isDeleted.eq('Y'))
-                                        .or(comment.parent.isNull().and(comment.children.isEmpty()).and(comment.isDeleted.eq('Y'))))
+                                .when(parent.isNotNull().and(comment.isDeleted.eq('Y'))
+                                        .or(parent.isNull().and(comment.children.isEmpty()).and(comment.isDeleted.eq('Y'))))
                                 .then(true)
                                 .otherwise(false)
                 ))
