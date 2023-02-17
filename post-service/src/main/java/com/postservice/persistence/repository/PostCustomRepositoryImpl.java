@@ -58,7 +58,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .select(new QCommentQueryDto(
                         comment.id,
                         comment.writerId,
-                        parent.id,
+                        parent.id, // null 허용
                         comment.content,
                         new CaseBuilder()
                                 .when(comment.parent.isNotNull().and(comment.isDeleted.eq('Y'))
@@ -67,7 +67,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                                 .otherwise(false)
                 ))
                 .from(comment)
-                .join(comment.parent, parent)
+                .leftJoin(parent).on(comment.parent.eq(parent))
                 .join(comment.post, post)
                 .where(post.id.eq(postId))
                 .orderBy(comment.createdAt.asc())
