@@ -1,6 +1,5 @@
 package com.postservice.dto.query;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,14 +9,13 @@ import lombok.NoArgsConstructor;
 public class FileQueryDto {
 
     private String fileId;
-    @JsonIgnore
-    private Long postId;
     private String originalName;
+    private String savePath;
 
     @QueryProjection
-    public FileQueryDto(String fileId, Long postId, String originalName) {
+    public FileQueryDto(String fileId, String originalName, String savePath) {
         this.fileId = fileId;
-        this.postId = postId;
         this.originalName = originalName;
+        this.savePath = savePath;
     }
 }

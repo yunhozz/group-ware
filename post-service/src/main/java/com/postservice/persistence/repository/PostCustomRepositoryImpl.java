@@ -11,6 +11,7 @@ import com.postservice.dto.query.QCommentQueryDto;
 import com.postservice.dto.query.QFileQueryDto;
 import com.postservice.dto.query.QPostDetailsQueryDto;
 import com.postservice.dto.query.QPostSimpleQueryDto;
+import com.postservice.persistence.QComment;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -52,26 +53,23 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .where(post.id.eq(postId))
                 .fetchOne();
 
-        Long id = postDto.getId();
-
+        QComment parent = new QComment("parent");
         List<CommentQueryDto> commentDtoList = queryFactory
                 .select(new QCommentQueryDto(
                         comment.id,
-                        post.id,
                         comment.writerId,
-                        comment.parent.id,
+                        parent.id,
                         comment.content,
                         new CaseBuilder()
-                                .when(
-                                        comment.parent.isNotNull().and(comment.isDeleted.eq('Y'))
-                                                .or(comment.parent.isNull().and(comment.children.isEmpty()).and(comment.isDeleted.eq('Y')))
-                                )
+                                .when(comment.parent.isNotNull().and(comment.isDeleted.eq('Y'))
+                                        .or(comment.parent.isNull().and(comment.children.isEmpty()).and(comment.isDeleted.eq('Y'))))
                                 .then(true)
                                 .otherwise(false)
                 ))
                 .from(comment)
+                .join(comment.parent, parent)
                 .join(comment.post, post)
-                .where(post.id.eq(id))
+                .where(post.id.eq(postId))
                 .orderBy(comment.createdAt.asc())
                 .fetch();
 
@@ -81,12 +79,12 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         List<FileQueryDto> fileDtoList = queryFactory
                 .select(new QFileQueryDto(
                         fileEntity.fileId,
-                        post.id,
-                        fileEntity.originalName
+                        fileEntity.originalName,
+                        fileEntity.savePath
                 ))
                 .from(fileEntity)
                 .join(fileEntity.post, post)
-                .where(post.id.eq(id))
+                .where(post.id.eq(postId))
                 .orderBy(fileEntity.createdAt.asc())
                 .fetch();
 

@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 public class CommentQueryDto {
 
     private Long id;
-    private Long postId;
     @JsonIgnore
     private String writerId;
     private Long parentId;
@@ -21,9 +20,8 @@ public class CommentQueryDto {
     private UserSimpleResponseDto userInfo;
 
     @QueryProjection
-    public CommentQueryDto(Long id, Long postId, String writerId, Long parentId, String content, Boolean isMustDeleted) {
+    public CommentQueryDto(Long id, String writerId, Long parentId, String content, Boolean isMustDeleted) {
         this.id = id;
-        this.postId = postId;
         this.writerId = writerId;
         this.parentId = parentId;
         this.content = content;
