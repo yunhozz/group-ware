@@ -5,11 +5,11 @@ import com.postservice.common.annotation.HeaderToken;
 import com.postservice.common.enums.PostType;
 import com.postservice.common.enums.Role;
 import com.postservice.common.util.TokenParser;
+import com.postservice.dto.query.CommentQueryDto;
 import com.postservice.dto.query.PostDetailsQueryDto;
 import com.postservice.dto.query.PostSimpleQueryDto;
 import com.postservice.dto.request.PostRequestDto;
 import com.postservice.dto.request.PostUpdateRequestDto;
-import com.postservice.dto.response.CommentResponseDto;
 import com.postservice.dto.response.UserSimpleResponseDto;
 import com.postservice.persistence.repository.PostRepository;
 import io.jsonwebtoken.Claims;
@@ -50,7 +50,7 @@ public class PostController {
     public ResponseEntity<PostDetailsQueryDto> getPostInfo(@HeaderToken(role = {Role.ADMIN, Role.USER}) String token, @PathVariable Long id) {
         PostDetailsQueryDto postDetailsQueryDto = postService.findPostDetailsById(id);
         String postWriterId = postDetailsQueryDto.getWriterId();
-        List<CommentResponseDto> commentDtoList = postDetailsQueryDto.getComments();
+        List<CommentQueryDto> commentDtoList = postDetailsQueryDto.getComments();
 
         URI uriForPostUserInfo = UriComponentsBuilder.fromUriString("http://localhost:8000/api/auth/users/{writerId}/simple")
                 .build()
@@ -62,7 +62,7 @@ public class PostController {
 
         if (!commentDtoList.isEmpty()) {
             List<String> commentWriterIds = new ArrayList<>() {{
-                for (CommentResponseDto commentResponseDto : commentDtoList) {
+                for (CommentQueryDto commentResponseDto : commentDtoList) {
                     add(commentResponseDto.getWriterId());
                 }
             }};
@@ -70,9 +70,9 @@ public class PostController {
             ResponseEntity<List<UserSimpleResponseDto>> userSimpleDtoOfComments = getResponseOfUserSimpleDtoList(commentWriterIds);
             int idx = 0;
 
-            for (CommentResponseDto commentResponseDto : commentDtoList) {
+            for (CommentQueryDto commentQueryDto : commentDtoList) {
                 UserSimpleResponseDto userInfo = userSimpleDtoOfComments.getBody().get(idx++);
-                commentResponseDto.setUserInfo(userInfo);
+                commentQueryDto.setUserInfo(userInfo);
             }
 
             postDetailsQueryDto.setComments(commentDtoList);

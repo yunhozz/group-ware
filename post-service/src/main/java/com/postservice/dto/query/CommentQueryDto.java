@@ -1,12 +1,16 @@
-package com.postservice.dto.response;
+package com.postservice.dto.query;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.postservice.dto.response.UserSimpleResponseDto;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
-public class CommentResponseDto {
+public class CommentQueryDto {
 
     private Long id;
     private Long postId;
@@ -15,8 +19,10 @@ public class CommentResponseDto {
     private Long parentId;
     private String content;
     private UserSimpleResponseDto userInfo;
+    private List<CommentQueryDto> children;
 
-    public CommentResponseDto(Long id, Long postId, String writerId, Long parentId, String content) {
+    @QueryProjection
+    public CommentQueryDto(Long id, Long postId, String writerId, Long parentId, String content) {
         this.id = id;
         this.postId = postId;
         this.writerId = writerId;
@@ -26,5 +32,9 @@ public class CommentResponseDto {
 
     public void setUserInfo(UserSimpleResponseDto userInfo) {
         this.userInfo = userInfo;
+    }
+
+    public void setChildren(List<CommentQueryDto> children) {
+        this.children = children;
     }
 }
