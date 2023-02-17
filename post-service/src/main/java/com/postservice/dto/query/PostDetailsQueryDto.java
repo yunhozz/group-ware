@@ -2,7 +2,6 @@ package com.postservice.dto.query;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.postservice.common.enums.PostType;
-import com.postservice.dto.response.CommentResponseDto;
 import com.postservice.dto.response.UserSimpleResponseDto;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
@@ -26,7 +25,8 @@ public class PostDetailsQueryDto {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private UserSimpleResponseDto userInfo;
-    private List<CommentResponseDto> comments;
+    private List<CommentQueryDto> comments;
+    private List<FileQueryDto> files;
 
     @QueryProjection
     public PostDetailsQueryDto(Long id, Long teamId, String writerId, String title, String content, PostType postType, Integer view, LocalDateTime createdAt, LocalDateTime modifiedAt) {
@@ -45,7 +45,11 @@ public class PostDetailsQueryDto {
         this.userInfo = userInfo;
     }
 
-    public void setComments(List<CommentResponseDto> comments) {
+    public void setComments(List<CommentQueryDto> comments) {
         this.comments = comments;
+    }
+
+    public void setFiles(List<FileQueryDto> files) {
+        this.files = files;
     }
 }

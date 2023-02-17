@@ -2,14 +2,17 @@ package com.postservice.persistence.repository;
 
 import com.postservice.common.enums.PostType;
 import com.postservice.dto.query.CommentCountQueryDto;
+import com.postservice.dto.query.CommentQueryDto;
+import com.postservice.dto.query.FileQueryDto;
 import com.postservice.dto.query.PostDetailsQueryDto;
 import com.postservice.dto.query.PostSimpleQueryDto;
 import com.postservice.dto.query.QCommentCountQueryDto;
+import com.postservice.dto.query.QCommentQueryDto;
+import com.postservice.dto.query.QFileQueryDto;
 import com.postservice.dto.query.QPostDetailsQueryDto;
 import com.postservice.dto.query.QPostSimpleQueryDto;
-import com.postservice.dto.response.CommentResponseDto;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +25,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.postservice.persistence.QComment.comment;
+import static com.postservice.persistence.QFileEntity.fileEntity;
 import static com.postservice.persistence.QPost.post;
 
 @Repository
@@ -50,9 +54,8 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
 
         Long id = postDto.getId();
 
-        List<CommentResponseDto> commentDtoList = queryFactory
-                .select(Projections.constructor(
-                        CommentResponseDto.class,
+        List<CommentQueryDto> commentDtoList = queryFactory
+                .select(new QCommentQueryDto(
                         comment.id,
                         post.id,
                         comment.writerId,
@@ -62,10 +65,23 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .from(comment)
                 .join(comment.post, post)
                 .where(post.id.eq(id))
-                .orderBy(comment.createdAt.desc())
+                .orderBy(comment.createdAt.asc())
+                .fetch();
+
+        List<FileQueryDto> fileDtoList = queryFactory
+                .select(new QFileQueryDto(
+                        fileEntity.fileId,
+                        post.id,
+                        fileEntity.originalName
+                ))
+                .from(fileEntity)
+                .join(fileEntity.post, post)
+                .where(post.id.eq(id))
+                .orderBy(fileEntity.createdAt.asc())
                 .fetch();
 
         postDto.setComments(commentDtoList);
+        postDto.setFiles(fileDtoList);
         return postDto;
     }
 
