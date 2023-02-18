@@ -9,6 +9,7 @@ import com.postservice.dto.request.PostRequestDto;
 import com.postservice.dto.request.PostUpdateRequestDto;
 import com.postservice.persistence.FileEntity;
 import com.postservice.persistence.Post;
+import com.postservice.persistence.repository.CommentRepository;
 import com.postservice.persistence.repository.FileRepository;
 import com.postservice.persistence.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ import java.util.UUID;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
     private final FileRepository fileRepository;
     private final RandomIdUtils randomIdUtils;
 
@@ -69,7 +71,14 @@ public class PostService {
         Post post = findPost(postId);
         validateUserIsWriter(post, userId);
         post.delete();
-        deleteFiles(post.getId()); // 기존 파일 리스트 삭제 (bulk)
+
+        deleteComments(postId); // 게시물의 댓글 리스트 삭제 (bulk)
+        deleteFiles(postId); // 기존 파일 리스트 삭제 (bulk)
+    }
+
+    @Transactional
+    protected void deleteComments(Long postId) {
+        commentRepository.deleteCommentsByPostId(postId);
     }
 
     @Transactional

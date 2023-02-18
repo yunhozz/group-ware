@@ -18,7 +18,7 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
     void deleteAllByIds(@Param("ids") List<Long> ids);
 
     default void deleteFilesByPostId(Long postId) {
-        List<Long> postIds = findIdsByPostId(postId);
-        deleteAllByIds(postIds);
+        List<Long> ids = findIdsByPostId(postId);
+        deleteAllByIds(ids);
     }
 }
