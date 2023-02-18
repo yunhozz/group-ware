@@ -98,16 +98,13 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         List<PostSimpleQueryDto> postDtoList = queryFactory
                 .select(new QPostSimpleQueryDto(
                         post.id,
-                        post.title,
                         post.writerId,
+                        post.title,
                         post.view,
                         post.createdAt
                 ))
                 .from(post)
-                .where(
-                        postTypeEq(postType),
-                        post.isDeleted.eq('N')
-                )
+                .where(postTypeEq(postType))
                 .orderBy(post.createdAt.desc())
                 .limit(3)
                 .fetch();
@@ -124,16 +121,15 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         List<PostSimpleQueryDto> postDtoList = queryFactory
                 .select(new QPostSimpleQueryDto(
                         post.id,
-                        post.title,
                         post.writerId,
+                        post.title,
                         post.view,
                         post.createdAt
                 ))
                 .from(post)
                 .where(
                         postTypeEq(postType),
-                        postIdLt(cursorId),
-                        post.isDeleted.eq('N')
+                        postIdLt(cursorId)
                 )
                 .orderBy(post.createdAt.desc())
                 .limit(pageable.getPageSize() + 1)
@@ -175,7 +171,8 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .collect(Collectors.groupingBy(CommentCountQueryDto::getPostId));
         postDtoList.forEach(postSimpleQueryDto -> {
             List<CommentCountQueryDto> comments = commentCountDtoListMap.get(postSimpleQueryDto.getId());
-            postSimpleQueryDto.setCommentNum(comments.size());
+            if (comments != null) postSimpleQueryDto.setCommentNum(comments.size());
+            else postSimpleQueryDto.setCommentNum(0);
         });
     }
 

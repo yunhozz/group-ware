@@ -14,7 +14,7 @@ public class PostSimpleQueryDto {
 
     private Long id;
     @JsonIgnore
-    private String userId;
+    private String writerId;
     private String title;
     private Integer view;
     private LocalDateTime createdAt;
@@ -22,9 +22,9 @@ public class PostSimpleQueryDto {
     private UserSimpleResponseDto userInfo;
 
     @QueryProjection
-    public PostSimpleQueryDto(Long id, String userId, String title, Integer view, LocalDateTime createdAt) {
+    public PostSimpleQueryDto(Long id, String writerId, String title, Integer view, LocalDateTime createdAt) {
         this.id = id;
-        this.userId = userId;
+        this.writerId = writerId;
         this.title = title;
         this.view = view;
         this.createdAt = createdAt;

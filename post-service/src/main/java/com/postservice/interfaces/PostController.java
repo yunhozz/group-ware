@@ -86,13 +86,13 @@ public class PostController {
         if (!postSimpleDtoList.isEmpty()) {
             List<String> writerIds = new ArrayList<>() {{
                 for (PostSimpleQueryDto postSimpleQueryDto : postSimpleDtoList) {
-                    add(postSimpleQueryDto.getUserId());
+                    add(postSimpleQueryDto.getWriterId());
                 }
             }};
 
             ResponseEntity<Map<String, UserSimpleResponseDto>> userData = getResponseOfUserSimpleDtoList(writerIds);
             for (PostSimpleQueryDto postSimpleQueryDto : postSimpleDtoList) {
-                UserSimpleResponseDto userInfo = userData.getBody().get(postSimpleQueryDto.getUserId());
+                UserSimpleResponseDto userInfo = userData.getBody().get(postSimpleQueryDto.getWriterId());
                 postSimpleQueryDto.setUserInfo(userInfo);
             }
         }
@@ -106,13 +106,13 @@ public class PostController {
         if (!postSimpleDtoSlice.isEmpty()) {
             List<String> writerIds = new ArrayList<>() {{
                 for (PostSimpleQueryDto postSimpleQueryDto : postSimpleDtoSlice) {
-                    add(postSimpleQueryDto.getUserId());
+                    add(postSimpleQueryDto.getWriterId());
                 }
             }};
 
             ResponseEntity<Map<String, UserSimpleResponseDto>> userData = getResponseOfUserSimpleDtoList(writerIds);
             for (PostSimpleQueryDto postSimpleQueryDto : postSimpleDtoSlice) {
-                UserSimpleResponseDto userInfo = userData.getBody().get(postSimpleQueryDto.getUserId());
+                UserSimpleResponseDto userInfo = userData.getBody().get(postSimpleQueryDto.getWriterId());
                 postSimpleQueryDto.setUserInfo(userInfo);
             }
         }
