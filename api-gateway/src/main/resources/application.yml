@@ -27,6 +27,7 @@ spring:
             - Path=/api/users/**
           filters:
             - AuthorizationHeaderFilter
+            - AuthorizationGuestFilter
             - RemoveRequestHeader=Cookie
 
         - id: notification-service
