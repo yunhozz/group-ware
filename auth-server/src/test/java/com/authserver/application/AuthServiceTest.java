@@ -29,11 +29,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.Duration;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -99,7 +100,7 @@ class AuthServiceTest {
 
         given(userRepository.findByEmail(anyString())).willReturn(Optional.of(user));
         given(encoder.matches(loginRequestDto.getPassword(), user.getPassword())).willReturn(true);
-        given(jwtProvider.createTokenDto(anyString(), any(Role.class))).willReturn(tokenResponseDto);
+        given(jwtProvider.createTokenDto(anyString(), anySet())).willReturn(tokenResponseDto);
         willDoNothing().given(redisUtils).saveValue(user.getUserId(), tokenResponseDto.getRefreshToken(), Duration.ofMillis(tokenResponseDto.getRefreshTokenValidTime()));
 
         // when
@@ -146,7 +147,7 @@ class AuthServiceTest {
 
         given(jwtProvider.getAuthentication(anyString())).willReturn(new UsernamePasswordAuthenticationToken(userPrincipal, "", userPrincipal.getAuthorities()));
         given(redisUtils.getValue(anyString())).willReturn(Optional.of(redisToken));
-        given(jwtProvider.createTokenDto(anyString(), any(Role.class))).willReturn(tokenResponseDto);
+        given(jwtProvider.createTokenDto(anyString(), anySet())).willReturn(tokenResponseDto);
         willDoNothing().given(redisUtils).updateValue(userPrincipal.getUsername(), tokenResponseDto.getRefreshToken());
 
         // when
@@ -196,7 +197,7 @@ class AuthServiceTest {
                 .name("tester")
                 .imageUrl("test.png")
                 .provider(Provider.LOCAL)
-                .role(Role.USER)
+                .roles(Set.of(Role.GUEST, Role.USER))
                 .build();
     }
 }
