@@ -37,3 +37,12 @@ spring:
           filters:
             - AuthorizationHeaderFilter
             - RemoveRequestHeader=Cookie
+
+        - id: post-service
+          uri:
+            lb://POST-SERVICE
+          predicates:
+            - Path=/api/posts/**, /api/comments/**
+          filters:
+            - AuthorizationHeaderFilter
+            - RemoveRequestHeader=Cookie

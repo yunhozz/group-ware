@@ -35,7 +35,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/notifications")
@@ -82,15 +81,13 @@ public class NotificationController {
         URI uri = UriComponentsBuilder.fromUriString("http://localhost:8000/api/auth/users/simple")
                 .queryParam("userIds", senderIds)
                 .build().toUri();
-        ResponseEntity<List<UserSimpleResponseDto>> userSimpleDtoList = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
-        Map<String, List<UserSimpleResponseDto>> userSimpleDtoListMap = userSimpleDtoList.getBody().stream()
-                .collect(Collectors.groupingBy(UserSimpleResponseDto::getUserId));
+        ResponseEntity<Map<String, UserSimpleResponseDto>> userData =
+                restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
 
-        notificationSimpleDtoList.forEach(notificationSimpleResponseDto -> {
-            List<UserSimpleResponseDto> userList = userSimpleDtoListMap.get(notificationSimpleResponseDto.getSenderId());
-            UserSimpleResponseDto userInfo = userList.get(0);
+        for (NotificationSimpleResponseDto notificationSimpleResponseDto : notificationSimpleDtoList) {
+            UserSimpleResponseDto userInfo = userData.getBody().get(notificationSimpleResponseDto.getSenderId());
             notificationSimpleResponseDto.setUserInfo(userInfo);
-        });
+        }
 
         return ResponseEntity.ok(notificationSimpleDtoList);
     }
