@@ -35,22 +35,12 @@ public class HeaderTokenResolver implements HandlerMethodArgumentResolver {
         String auth = (String) tokenParser.execute(token).get("auth");
 
         HeaderToken headerToken = parameter.getParameterAnnotation(HeaderToken.class);
-        Role[] roles = headerToken.role();
+        Role role = headerToken.role();
 
-        if (!isAuthorized(roles, auth)) {
+        if (!auth.contains(role.getAuth())) {
             throw new NotAuthorizedException();
         }
 
         return token;
-    }
-
-    private boolean isAuthorized(Role[] roles, String auth) {
-        for (Role role : roles) {
-            if (role.getAuth().equals(auth)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

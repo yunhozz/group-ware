@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface HeaderToken {
 
-    Role[] role() default {Role.GUEST, Role.USER, Role.ADMIN};
+    Role role() default Role.GUEST;
 }

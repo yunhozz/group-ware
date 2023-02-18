@@ -3,7 +3,6 @@ package com.postservice.interfaces;
 import com.postservice.application.PostService;
 import com.postservice.common.annotation.HeaderToken;
 import com.postservice.common.enums.PostType;
-import com.postservice.common.enums.Role;
 import com.postservice.common.util.TokenParser;
 import com.postservice.dto.query.CommentQueryDto;
 import com.postservice.dto.query.PostDetailsQueryDto;
@@ -48,7 +47,7 @@ public class PostController {
     private final RestTemplate restTemplate;
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostDetailsQueryDto> getPostInfo(@HeaderToken(role = {Role.ADMIN, Role.USER}) String token, @PathVariable Long id) {
+    public ResponseEntity<PostDetailsQueryDto> getPostInfo(@PathVariable Long id) {
         PostDetailsQueryDto postDetailsQueryDto = postService.findPostDetailsById(id);
         String postWriterId = postDetailsQueryDto.getWriterId();
         List<CommentQueryDto> commentDtoList = postDetailsQueryDto.getComments();
@@ -121,25 +120,21 @@ public class PostController {
     }
 
     @PostMapping(value = "/create")
-    public ResponseEntity<Long> createPost(@HeaderToken(role = {Role.ADMIN, Role.USER}) String token,
-                                           @RequestParam(required = false) Long teamId,
-                                           @Valid @ModelAttribute PostRequestDto postRequestDto) {
+    public ResponseEntity<Long> createPost(@HeaderToken String token, @RequestParam(required = false) Long teamId, @Valid @ModelAttribute PostRequestDto postRequestDto) {
         Claims claims = tokenParser.execute(token);
         Long postId = postService.createPost(claims.getSubject(), teamId, postRequestDto);
         return new ResponseEntity<>(postId, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/{id}/update")
-    public ResponseEntity<Long> updatePost(@HeaderToken(role = {Role.ADMIN, Role.USER}) String token,
-                                           @PathVariable Long id,
-                                           @Valid @ModelAttribute PostUpdateRequestDto postUpdateRequestDto) {
+    public ResponseEntity<Long> updatePost(@HeaderToken String token, @PathVariable Long id, @Valid @ModelAttribute PostUpdateRequestDto postUpdateRequestDto) {
         Claims claims = tokenParser.execute(token);
         Long postId = postService.updateInfo(id, claims.getSubject(), postUpdateRequestDto);
         return new ResponseEntity<>(postId, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity<String> deletePost(@HeaderToken(role = {Role.ADMIN, Role.USER}) String token, @PathVariable Long id) {
+    public ResponseEntity<String> deletePost(@HeaderToken String token, @PathVariable Long id) {
         Claims claims = tokenParser.execute(token);
         postService.deletePost(id, claims.getSubject());
         return new ResponseEntity<>("삭제가 완료되었습니다.", HttpStatus.NO_CONTENT);
