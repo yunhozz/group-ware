@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -59,7 +60,7 @@ public class AuthService {
 
         validatePasswordMatch(loginRequestDto, userResponseDto);
 
-        TokenResponseDto tokenResponseDto = jwtProvider.createTokenDto(userResponseDto.getUserId(), userResponseDto.getRole());
+        TokenResponseDto tokenResponseDto = jwtProvider.createTokenDto(userResponseDto.getUserId(), userResponseDto.getRoles());
         saveAccessTokenOnResponse(response, tokenResponseDto);
         redisUtils.saveValue(userResponseDto.getUserId(), tokenResponseDto.getRefreshToken(), Duration.ofMillis(tokenResponseDto.getRefreshTokenValidTime()));
 
@@ -81,7 +82,7 @@ public class AuthService {
 
         validateRefreshToken(token, redisToken);
 
-        TokenResponseDto tokenResponseDto = jwtProvider.createTokenDto(userPrincipal.getUsername(), userPrincipal.getRole());
+        TokenResponseDto tokenResponseDto = jwtProvider.createTokenDto(userPrincipal.getUsername(), userPrincipal.getRoles());
         saveAccessTokenOnResponse(response, tokenResponseDto);
         redisUtils.updateValue(userPrincipal.getUsername(), tokenResponseDto.getRefreshToken());
 
@@ -103,7 +104,7 @@ public class AuthService {
                 .name(joinRequestDto.getName())
                 .imageUrl(joinRequestDto.getImageUrl())
                 .provider(Provider.LOCAL)
-                .role(Role.GUEST)
+                .roles(Set.of(Role.GUEST))
                 .build();
     }
 

@@ -1,9 +1,12 @@
 package com.authserver.dto.response;
 
+import com.authserver.common.enums.Role;
 import com.authserver.persistence.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -21,6 +24,8 @@ public class UserProfileResponseDto {
         name = user.getName();
         imageUrl = user.getImageUrl();
         provider = user.getProvider().getDesc();
-        auth = user.getRole().getAuthority();
+        auth = user.getRoles().stream()
+                .map(Role::getAuthority)
+                .collect(Collectors.joining(","));
     }
 }

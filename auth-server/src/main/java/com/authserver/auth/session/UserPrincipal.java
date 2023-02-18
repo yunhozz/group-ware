@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class UserPrincipal implements UserDetails, OAuth2User {
 
@@ -40,14 +41,18 @@ public class UserPrincipal implements UserDetails, OAuth2User {
         return user.getName();
     }
 
-    public Role getRole() {
-        return user.getRole();
+    public Set<Role> getRoles() {
+        return user.getRoles();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<Role> roles = user.getRoles();
         return new HashSet<>() {{
-            add(new SimpleGrantedAuthority(user.getRole().getAuthority()));
+            for (Role role : roles) {
+                SimpleGrantedAuthority auth = new SimpleGrantedAuthority(role.getAuthority());
+                add(auth);
+            }
         }};
     }
 

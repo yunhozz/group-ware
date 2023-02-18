@@ -14,6 +14,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Getter
 @Table(name = "users")
@@ -37,17 +40,17 @@ public class User extends BaseEntity {
     private Provider provider; // LOCAL, GOOGLE, KAKAO, NAVER
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Set<Role> roles = new HashSet<>();
 
     @Builder
-    private User(String userId, String email, String password, String name, String imageUrl, Provider provider, Role role) {
+    private User(String userId, String email, String password, String name, String imageUrl, Provider provider, Set<Role> roles) {
         this.userId = userId;
         this.email = email;
         this.password = password;
         this.name = name;
         this.imageUrl = imageUrl;
         this.provider = provider;
-        this.role = role;
+        this.roles = roles;
     }
 
     public User updateByProvider(String name, String imageUrl, Provider provider) {

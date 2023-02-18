@@ -27,7 +27,7 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
                         user.email,
                         user.name,
                         user.provider.stringValue(),
-                        user.role.stringValue()
+                        user.roles
                 ))
                 .from(user)
                 .orderBy(user.id.desc())
