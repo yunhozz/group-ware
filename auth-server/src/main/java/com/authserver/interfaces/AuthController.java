@@ -9,6 +9,7 @@ import com.authserver.dto.response.UserProfileResponseDto;
 import com.authserver.dto.response.UserSimpleResponseDto;
 import com.authserver.persistence.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -67,13 +68,13 @@ public class AuthController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<String> join(@RequestBody JoinRequestDto joinRequestDto) {
+    public ResponseEntity<String> join(@Valid @RequestBody JoinRequestDto joinRequestDto) {
         String userId = authService.join(joinRequestDto);
         return new ResponseEntity<>(userId, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+    public ResponseEntity<TokenResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         TokenResponseDto tokenResponseDto = authService.login(loginRequestDto, response);
         return new ResponseEntity<>(tokenResponseDto, HttpStatus.CREATED);
     }

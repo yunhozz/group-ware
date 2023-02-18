@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -19,20 +18,11 @@ public class ErrorResponseDto {
     private Integer status;
     private String code;
     private String message;
-    private List<NotValidResponseDto> validation;
 
     public ErrorResponseDto(ErrorCode errorCode) {
         this.timestamp = LocalDateTime.now();
         this.status = errorCode.getStatus();
         this.code = errorCode.getCode();
         this.message = errorCode.getMessage();
-    }
-
-    public ErrorResponseDto(ErrorCode errorCode, List<NotValidResponseDto> validation) {
-        this.timestamp = LocalDateTime.now();
-        this.status = errorCode.getStatus();
-        this.code = errorCode.getCode();
-        this.message = errorCode.getMessage();
-        this.validation = validation;
     }
 }
