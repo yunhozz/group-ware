@@ -1,4 +1,4 @@
-package com.apigateway.filter;
+package com.apigateway.filter.exception;
 
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.core.io.buffer.DataBuffer;
