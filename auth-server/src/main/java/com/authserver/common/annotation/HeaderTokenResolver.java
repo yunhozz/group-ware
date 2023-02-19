@@ -1,8 +1,5 @@
-package com.userservice.common.annotation;
+package com.authserver.common.annotation;
 
-import com.userservice.common.enums.Role;
-import com.userservice.common.util.TokenParser;
-import com.userservice.exception.NotAuthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +16,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 public class HeaderTokenResolver implements HandlerMethodArgumentResolver {
 
-    private final TokenParser tokenParser;
-
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         boolean hasHeaderTokenAnnotation = parameter.hasParameterAnnotation(HeaderToken.class);
@@ -31,16 +26,6 @@ public class HeaderTokenResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String auth = (String) tokenParser.execute(token).get("auth");
-
-        HeaderToken headerToken = parameter.getParameterAnnotation(HeaderToken.class);
-        Role role = headerToken.role();
-
-        if (!auth.contains(role.getAuth())) {
-            throw new NotAuthorizedException();
-        }
-
-        return token;
+        return request.getHeader(HttpHeaders.AUTHORIZATION);
     }
 }

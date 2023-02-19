@@ -2,6 +2,7 @@ package com.authserver.auth.session;
 
 import com.authserver.common.enums.Role;
 import com.authserver.persistence.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +13,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+@Getter
 public class UserPrincipal implements UserDetails, OAuth2User {
 
     private final User user;

@@ -1,6 +1,7 @@
 package com.authserver.interfaces;
 
 import com.authserver.application.AuthService;
+import com.authserver.common.annotation.HeaderToken;
 import com.authserver.dto.request.JoinRequestDto;
 import com.authserver.dto.request.LoginRequestDto;
 import com.authserver.dto.response.TokenResponseDto;
@@ -11,14 +12,12 @@ import com.authserver.persistence.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -61,6 +60,12 @@ public class AuthController {
         return ResponseEntity.ok(userData);
     }
 
+    @GetMapping("/users/me")
+    public ResponseEntity<UserProfileResponseDto> getMyProfile(@HeaderToken String token) {
+        UserProfileResponseDto userProfileResponseDto = authService.findUserInfoByToken(token);
+        return ResponseEntity.ok(userProfileResponseDto);
+    }
+
     @GetMapping("/users/{userId}")
     public ResponseEntity<UserProfileResponseDto> getUserProfile(@PathVariable String userId) {
         UserProfileResponseDto userProfileResponseDto = authService.findUserInfoByUserId(userId);
@@ -80,13 +85,13 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token) {
+    public ResponseEntity<String> logout(@HeaderToken String token) {
         authService.logout(token);
         return new ResponseEntity<>("로그아웃이 완료되었습니다.", HttpStatus.CREATED);
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<TokenResponseDto> tokenReissue(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String refreshToken, HttpServletResponse response) {
+    public ResponseEntity<TokenResponseDto> tokenReissue(@HeaderToken String refreshToken, HttpServletResponse response) {
         TokenResponseDto tokenResponseDto = authService.tokenReissue(refreshToken, response);
         return new ResponseEntity<>(tokenResponseDto, HttpStatus.CREATED);
     }

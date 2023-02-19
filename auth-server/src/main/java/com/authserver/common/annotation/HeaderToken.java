@@ -1,6 +1,4 @@
-package com.userservice.common.annotation;
-
-import com.userservice.common.enums.Role;
+package com.authserver.common.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,6 +8,4 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface HeaderToken {
-
-    Role role() default Role.GUEST;
 }
