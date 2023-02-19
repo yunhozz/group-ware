@@ -1,0 +1,805 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="38f068b0-6b64-4b73-8785-8259590aefe2" name="Changes" comment="chore: user service 삭제로 인한 설정 변경">
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5.1/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5.1/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5.1/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/user-service/group-ware.user-service.main.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/user-service/group-ware.user-service.test.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="module" />
+    </option>
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/eureka-server">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/notification-service">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/post-service">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/user-service">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/eureka-server">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/user-service">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/post-service">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="group-ware" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="group-ware" type="f1a62948:ProjectNode" />
+                <item name="auth-server" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="group-ware" type="f1a62948:ProjectNode" />
+                <item name="auth-server" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="group-ware" type="f1a62948:ProjectNode" />
+                <item name="auth-server" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="group-ware" type="f1a62948:ProjectNode" />
+                <item name="auth-server" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="other" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="AnnotationType" />
+        <option value="Interface" />
+        <option value="JUnit5 Test Class" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="feat/post-service" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2LYDd0SSSQ1JTqjGPTiHUJRuljr" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+    "jdk.selected.JAVA_MODULE": "17",
+    "last_opened_file_path": "C:/Users/qkrdb/Desktop/project/group-ware/auth-server/src/main/java/com/authserver/common",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2137931",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
+    "spring.configuration.checksum": "1135407547810e00635161745fdcf0f2",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.authserver.common.enums" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\qkrdb\Desktop\project\group-ware\auth-server\src\main\java\com\authserver\common" />
+      <recent name="C:\Users\qkrdb\Desktop\project\group-ware\post-service\src\main\java\com\postservice\common\exception" />
+      <recent name="C:\Users\qkrdb\Desktop\project\group-ware\post-service\src\main\java\com\postservice\common\util" />
+      <recent name="C:\Users\qkrdb\Desktop\project\group-ware\post-service\src\main\java\com\postservice\common\annotation" />
+      <recent name="C:\Users\qkrdb\Desktop\project\group-ware\post-service\src\main\resources" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\qkrdb\Desktop\project\group-ware" />
+      <recent name="C:\Users\qkrdb\Desktop\project\group-ware\user-service\src\main\resources" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.postservice.dto.query" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.postservice.application" />
+      <recent name="com.notificationservice.application" />
+      <recent name="com.authserver.application" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.authserver.common.exception" />
+      <recent name="com.postservice.dto.response" />
+      <recent name="com.postservice.interfaces.dto" />
+      <recent name="com.postservice.common" />
+      <recent name="com.postservice.common.enums" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="Application" />
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+  </component>
+  <component name="RunManager" selected="JUnit.AuthServiceTest">
+    <configuration name="group-ware [:auth-server:clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":auth-server:clean" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="group-ware [:auth-server:compileQuerydsl]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":auth-server:compileQuerydsl" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="group-ware:eureka-server [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/eureka-server" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="AuthServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="group-ware.auth-server.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.authserver.application.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.authserver.application" />
+      <option name="MAIN_CLASS_NAME" value="com.authserver.application.AuthServiceTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ApiGatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="group-ware.api-gateway.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.apigateway.ApiGatewayApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="group-ware.auth-server.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.authserver.AuthServerApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="EurekaServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="group-ware.eureka-server.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.eurekaserver.EurekaServerApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.eurekaserver.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NotificationServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="group-ware.notification-service.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.notificationservice.NotificationServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PostServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="group-ware.post-service.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.postservice.PostServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Gradle.group-ware [:auth-server:clean]" />
+      <item itemvalue="Gradle.group-ware [:auth-server:compileQuerydsl]" />
+      <item itemvalue="Gradle.group-ware:eureka-server [build]" />
+      <item itemvalue="JUnit.AuthServiceTest" />
+      <item itemvalue="Spring Boot.PostServiceApplication" />
+      <item itemvalue="Spring Boot.ApiGatewayApplication" />
+      <item itemvalue="Spring Boot.AuthServerApplication" />
+      <item itemvalue="Spring Boot.NotificationServiceApplication" />
+      <item itemvalue="Spring Boot.EurekaServerApplication" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.EurekaServerApplication" />
+        <item itemvalue="JUnit.AuthServiceTest" />
+        <item itemvalue="Gradle.group-ware [:auth-server:clean]" />
+        <item itemvalue="Gradle.group-ware [:auth-server:compileQuerydsl]" />
+        <item itemvalue="Gradle.group-ware:eureka-server [build]" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="38f068b0-6b64-4b73-8785-8259590aefe2" name="Changes" comment="" />
+      <created>1676039206637</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1676039206637</updated>
+      <workItem from="1676039207642" duration="4899000" />
+      <workItem from="1676072031815" duration="9082000" />
+      <workItem from="1676083329426" duration="2605000" />
+      <workItem from="1676097622350" duration="5002000" />
+      <workItem from="1676108250740" duration="4497000" />
+      <workItem from="1676118681993" duration="26000" />
+      <workItem from="1676162042451" duration="10060000" />
+      <workItem from="1676188409711" duration="12585000" />
+      <workItem from="1676254972311" duration="7055000" />
+      <workItem from="1676262069806" duration="53000" />
+      <workItem from="1676270836045" duration="12715000" />
+      <workItem from="1676293436269" duration="96000" />
+      <workItem from="1676342678985" duration="5136000" />
+      <workItem from="1676347852498" duration="2830000" />
+      <workItem from="1676359369108" duration="11555000" />
+      <workItem from="1676386167399" duration="590000" />
+      <workItem from="1676423277981" duration="604000" />
+      <workItem from="1676441829701" duration="9947000" />
+      <workItem from="1676512436688" duration="3835000" />
+      <workItem from="1676516533790" duration="251000" />
+      <workItem from="1676516896863" duration="55000" />
+      <workItem from="1676532249831" duration="12648000" />
+      <workItem from="1676545076958" duration="141000" />
+      <workItem from="1676591870959" duration="3685000" />
+      <workItem from="1676618774271" duration="12336000" />
+      <workItem from="1676638619850" duration="1349000" />
+      <workItem from="1676645951303" duration="427000" />
+      <workItem from="1676680594418" duration="7570000" />
+      <workItem from="1676701265872" duration="666000" />
+      <workItem from="1676701989492" duration="10338000" />
+      <workItem from="1676764349516" duration="5118000" />
+    </task>
+    <task id="LOCAL-00064" summary="feat: post 관련 persistence 추가">
+      <created>1676369708928</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1676369708928</updated>
+    </task>
+    <task id="LOCAL-00065" summary="feat: token 파싱 관련 클래스 추가&#10;&#10;- HeaderToken annotation, Resolver&#10;- enum Role&#10;- TokenParser">
+      <created>1676369840926</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1676369840926</updated>
+    </task>
+    <task id="LOCAL-00066" summary="feat: post 서비스 레이어 관련 클래스 작성&#10;&#10;- PostService&#10;- Exception&#10;- request/response DTO">
+      <created>1676369988848</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1676369988848</updated>
+    </task>
+    <task id="LOCAL-00067" summary="feat: post 커스텀 리포지토리 생성">
+      <created>1676370325585</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1676370325585</updated>
+    </task>
+    <task id="LOCAL-00068" summary="feat: post 예외 핸들러, 관련 클래스 추가">
+      <created>1676370511271</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1676370511271</updated>
+    </task>
+    <task id="LOCAL-00069" summary="refactor: validation 로직 리팩토링">
+      <created>1676386534735</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1676386534736</updated>
+    </task>
+    <task id="LOCAL-00070" summary="feat: 게시물 조회시 조회수 증가 로직 추가">
+      <created>1676446035537</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1676446035538</updated>
+    </task>
+    <task id="LOCAL-00071" summary="feat: 댓글 관련 persistence 추가, 관련 클래스 추가&#10;&#10;- CommentResponseDto, UserSimpleResponseDto">
+      <created>1676446126417</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1676446126417</updated>
+    </task>
+    <task id="LOCAL-00072" summary="fix: 게시물 단건 조회 쿼리 수정&#10;&#10;- 게시물 조회시 해당 댓글 리스트 조회 쿼리 추가&#10;- 유저 간단 프로필에 대한 단건 조회 쿼리 추가, api 추가">
+      <created>1676446268856</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1676446268856</updated>
+    </task>
+    <task id="LOCAL-00073" summary="test: PostService 에 대한 단위 테스트">
+      <created>1676448899185</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1676448899185</updated>
+    </task>
+    <task id="LOCAL-00074" summary="rename: 쿼리용 dto 이름 변경, 위치 변경">
+      <created>1676451760891</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1676451760891</updated>
+    </task>
+    <task id="LOCAL-00075" summary="fix: 알림 리스트 조회 시 api 로직 수정">
+      <created>1676515713206</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1676515713206</updated>
+    </task>
+    <task id="LOCAL-00076" summary="feat: 간단 게시물 리스트 조회, 무한 스크롤 쿼리 추가">
+      <created>1676516235172</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1676516235172</updated>
+    </task>
+    <task id="LOCAL-00077" summary="feat: 게시물 api 컨트롤러 추가">
+      <created>1676516258213</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1676516258213</updated>
+    </task>
+    <task id="LOCAL-00078" summary="refactor: 유저 리스트 조회 로직 리팩토링">
+      <created>1676516775909</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1676516775909</updated>
+    </task>
+    <task id="LOCAL-00079" summary="style: URI 명칭 수정">
+      <created>1676516942413</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1676516942413</updated>
+    </task>
+    <task id="LOCAL-00080" summary="feat: 파일 관련 persistence 생성, 관련 설정 추가">
+      <created>1676538011336</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1676538011336</updated>
+    </task>
+    <task id="LOCAL-00081" summary="feat: 파일 업로드 관련 로직 추가, 관련 클래스 추가&#10;&#10;- RandomIdUtils, RandomIdGenerator&#10;- FileUploadFailException">
+      <created>1676538102285</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1676538102285</updated>
+    </task>
+    <task id="LOCAL-00082" summary="test: 파일 업로드 로직 추가에 따른 테스트 수정">
+      <created>1676538122183</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1676538122183</updated>
+    </task>
+    <task id="LOCAL-00083" summary="fix: 게시물 생성, 수정 api 의 메소드 변수 수정">
+      <created>1676538197478</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1676538197478</updated>
+    </task>
+    <task id="LOCAL-00084" summary="fix: request dto 안에 multipartFile 포함, 관련 로직 수정">
+      <created>1676544512902</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1676544512902</updated>
+    </task>
+    <task id="LOCAL-00085" summary="fix: MethodArgumentNotValidException 을 포함하는 BindException 을 잡도록 수정">
+      <created>1676544556331</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1676544556331</updated>
+    </task>
+    <task id="LOCAL-00086" summary="test: multipartFile 추가하여 테스트">
+      <created>1676544583449</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1676544583449</updated>
+    </task>
+    <task id="LOCAL-00087" summary="fix: 트랜잭션 고려하여 로직 순서 변경">
+      <created>1676544922485</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1676544922485</updated>
+    </task>
+    <task id="LOCAL-00088" summary="fix: mapping 방식 변경">
+      <created>1676545181000</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1676545181001</updated>
+    </task>
+    <task id="LOCAL-00089" summary="rename: 파일 이름/위치 변경, 관련 import 수정">
+      <created>1676621971273</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1676621971274</updated>
+    </task>
+    <task id="LOCAL-00090" summary="fix: 파일 원본 명 컬럼 추가">
+      <created>1676622043380</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1676622043380</updated>
+    </task>
+    <task id="LOCAL-00091" summary="feat: 파일 dto 추가, 게시물 조회 쿼리 수정">
+      <created>1676622138568</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1676622138568</updated>
+    </task>
+    <task id="LOCAL-00092" summary="chore: gateway path 에 댓글 api 추가">
+      <created>1676629876196</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1676629876196</updated>
+    </task>
+    <task id="LOCAL-00093" summary="fix: 유저의 정보 리스트를 받아오는 방식 수정&#10;&#10;- List -&gt; Map">
+      <created>1676630007823</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1676630007824</updated>
+    </task>
+    <task id="LOCAL-00094" summary="fix: 댓글에 삭제 여부 추가, 관련 로직 수정">
+      <created>1676630087847</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1676630087847</updated>
+    </task>
+    <task id="LOCAL-00095" summary="feat: 댓글 서비스 추가, 관련 파일 추가">
+      <created>1676630133752</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1676630133752</updated>
+    </task>
+    <task id="LOCAL-00096" summary="fix: 필요없는 필드 삭제">
+      <created>1676630759579</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1676630759579</updated>
+    </task>
+    <task id="LOCAL-00097" summary="fix: 삭제 여부 필드 json 무시하도록 수정">
+      <created>1676630889778</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1676630889778</updated>
+    </task>
+    <task id="LOCAL-00098" summary="fix: 쿼리 대상 필드 수정, 관련 로직 리팩토링">
+      <created>1676639253284</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1676639253285</updated>
+    </task>
+    <task id="LOCAL-00099" summary="fix: 댓글 관련 쿼리 조인 방식 수정">
+      <created>1676639559053</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1676639559054</updated>
+    </task>
+    <task id="LOCAL-00100" summary="refactor: caseBuilder 리팩토링">
+      <created>1676639728292</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1676639728292</updated>
+    </task>
+    <task id="LOCAL-00101" summary="fix: default where 절 추가, 쿼리 수정">
+      <created>1676685989645</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1676685989645</updated>
+    </task>
+    <task id="LOCAL-00102" summary="feat: 게시물 삭제 시 관련 댓글 삭제 벌크성 쿼리 추가">
+      <created>1676687825107</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1676687825107</updated>
+    </task>
+    <task id="LOCAL-00103" summary="feat: 댓글 api 컨트롤러 추가">
+      <created>1676687979143</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1676687979143</updated>
+    </task>
+    <task id="LOCAL-00104" summary="fix: 유저의 권한 저장방식 변경, 관련 로직 변경&#10;&#10;- Role -&gt; Set&lt;Role&gt;&#10;- 상위 권한을 가진 유저는 하위 권한을 모두 소유함. ex) 운영자 -&gt; Role.GUEST, Role.USER, Role.ADMIN">
+      <created>1676704649594</created>
+      <option name="number" value="00104" />
+      <option name="presentableId" value="LOCAL-00104" />
+      <option name="project" value="LOCAL" />
+      <updated>1676704649595</updated>
+    </task>
+    <task id="LOCAL-00105" summary="test: 유저 권한 정책 변경에 따른 테스트 수정">
+      <created>1676704672282</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1676704672282</updated>
+    </task>
+    <task id="LOCAL-00106" summary="feat: 권한별 필터 추가, 관련 클래스 추가&#10;&#10;- 운영자, 유저, 게스트 각각에 대한 필터 생성&#10;- 관련 예외 클래스 추가&#10;- TokenResolver 유틸리티 추가">
+      <created>1676710945304</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1676710945304</updated>
+    </task>
+    <task id="LOCAL-00107" summary="chore: 각 서비스에 필요한 필터 수정">
+      <created>1676711024796</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1676711024796</updated>
+    </task>
+    <task id="LOCAL-00108" summary="fix: 유저 회원가입, 로그인 서비스 api 이전, 관련 파일 수정&#10;&#10;- user service -&gt; auth server&#10;- validation gradle 추가, 삭제&#10;- 관련 dto validation 추가, 삭제&#10;- 예외 핸들러 수정">
+      <created>1676711208167</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1676711208167</updated>
+    </task>
+    <task id="LOCAL-00109" summary="fix: HeaderToken 어노테이션 수정, 관련 로직 수정&#10;&#10;- HeaderTokenResolver 권한 확인 로직 수정&#10;- 각 api 의 토큰 파라미터 수정">
+      <created>1676711393906</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1676711393907</updated>
+    </task>
+    <task id="LOCAL-00110" summary="chore: 유저 서비스 필터 추가">
+      <created>1676712320260</created>
+      <option name="number" value="00110" />
+      <option name="presentableId" value="LOCAL-00110" />
+      <option name="project" value="LOCAL" />
+      <updated>1676712320260</updated>
+    </task>
+    <task id="LOCAL-00111" summary="refactor: auth server 와 user service 통합">
+      <created>1676768201061</created>
+      <option name="number" value="00111" />
+      <option name="presentableId" value="LOCAL-00111" />
+      <option name="project" value="LOCAL" />
+      <updated>1676768201062</updated>
+    </task>
+    <task id="LOCAL-00112" summary="chore: user service 삭제로 인한 설정 변경">
+      <created>1676768266851</created>
+      <option name="number" value="00112" />
+      <option name="presentableId" value="LOCAL-00112" />
+      <option name="project" value="LOCAL" />
+      <updated>1676768266851</updated>
+    </task>
+    <option name="localTasksCounter" value="113" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="java:org.springframework.security:spring-security-core" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-core" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.persistence:jakarta.persistence-api" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.validation:jakarta.validation-api" />
+    <option featureType="dependencySupport" implementationName="java:io.projectreactor:reactor-core" />
+    <option featureType="dependencySupport" implementationName="java:com.amazonaws:aws-java-sdk-core" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.data:spring-data-commons" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.cloud:spring-cloud-context" />
+    <option featureType="dependencySupport" implementationName="java:org.hibernate.validator:hibernate-validator" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.ws.rs:jakarta.ws.rs-api" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-webmvc" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
+    <MESSAGE value="fix: mapping 방식 변경" />
+    <MESSAGE value="rename: 파일 이름/위치 변경, 관련 import 수정" />
+    <MESSAGE value="fix: 파일 원본 명 컬럼 추가" />
+    <MESSAGE value="feat: 파일 dto 추가, 게시물 조회 쿼리 수정" />
+    <MESSAGE value="chore: gateway path 에 댓글 api 추가" />
+    <MESSAGE value="fix: 유저의 정보 리스트를 받아오는 방식 수정&#10;&#10;- List -&gt; Map" />
+    <MESSAGE value="fix: 댓글에 삭제 여부 추가, 관련 로직 수정" />
+    <MESSAGE value="feat: 댓글 서비스 추가, 관련 파일 추가" />
+    <MESSAGE value="fix: 필요없는 필드 삭제" />
+    <MESSAGE value="fix: 삭제 여부 필드 json 무시하도록 수정" />
+    <MESSAGE value="fix: 쿼리 대상 필드 수정, 관련 로직 리팩토링" />
+    <MESSAGE value="fix: 댓글 관련 쿼리 조인 방식 수정" />
+    <MESSAGE value="refactor: caseBuilder 리팩토링" />
+    <MESSAGE value="fix: default where 절 추가, 쿼리 수정" />
+    <MESSAGE value="feat: 게시물 삭제 시 관련 댓글 삭제 벌크성 쿼리 추가" />
+    <MESSAGE value="feat: 댓글 api 컨트롤러 추가" />
+    <MESSAGE value="fix: 유저의 권한 저장방식 변경, 관련 로직 변경&#10;&#10;- Role -&gt; Set&lt;Role&gt;&#10;- 상위 권한을 가진 유저는 하위 권한을 모두 소유함. ex) 운영자 -&gt; Role.GUEST, Role.USER, Role.ADMIN" />
+    <MESSAGE value="test: 유저 권한 정책 변경에 따른 테스트 수정" />
+    <MESSAGE value="feat: 권한별 필터 추가, 관련 클래스 추가&#10;&#10;- 운영자, 유저, 게스트 각각에 대한 필터 생성&#10;- 관련 예외 클래스 추가&#10;- TokenResolver 유틸리티 추가" />
+    <MESSAGE value="chore: 각 서비스에 필요한 필터 수정" />
+    <MESSAGE value="fix: 유저 회원가입, 로그인 서비스 api 이전, 관련 파일 수정&#10;&#10;- user service -&gt; auth server&#10;- validation gradle 추가, 삭제&#10;- 관련 dto validation 추가, 삭제&#10;- 예외 핸들러 수정" />
+    <MESSAGE value="fix: HeaderToken 어노테이션 수정, 관련 로직 수정&#10;&#10;- HeaderTokenResolver 권한 확인 로직 수정&#10;- 각 api 의 토큰 파라미터 수정" />
+    <MESSAGE value="chore: 유저 서비스 필터 추가" />
+    <MESSAGE value="refactor: auth server 와 user service 통합" />
+    <MESSAGE value="chore: user service 삭제로 인한 설정 변경" />
+    <option name="LAST_COMMIT_MESSAGE" value="chore: user service 삭제로 인한 설정 변경" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
