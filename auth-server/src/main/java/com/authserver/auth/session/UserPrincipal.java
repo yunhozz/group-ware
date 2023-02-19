@@ -2,6 +2,7 @@ package com.authserver.auth.session;
 
 import com.authserver.common.enums.Role;
 import com.authserver.persistence.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +11,9 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+@Getter
 public class UserPrincipal implements UserDetails, OAuth2User {
 
     private final User user;
@@ -40,14 +43,18 @@ public class UserPrincipal implements UserDetails, OAuth2User {
         return user.getName();
     }
 
-    public Role getRole() {
-        return user.getRole();
+    public Set<Role> getRoles() {
+        return user.getRoles();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<Role> roles = user.getRoles();
         return new HashSet<>() {{
-            add(new SimpleGrantedAuthority(user.getRole().getAuthority()));
+            for (Role role : roles) {
+                SimpleGrantedAuthority auth = new SimpleGrantedAuthority(role.getAuthority());
+                add(auth);
+            }
         }};
     }
 

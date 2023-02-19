@@ -2,7 +2,6 @@ package com.postservice.interfaces;
 
 import com.postservice.application.CommentService;
 import com.postservice.common.annotation.HeaderToken;
-import com.postservice.common.enums.Role;
 import com.postservice.common.util.TokenParser;
 import com.postservice.dto.request.CommentRequestDto;
 import io.jsonwebtoken.Claims;
@@ -27,18 +26,14 @@ public class CommentController {
     private final TokenParser tokenParser;
 
     @PostMapping("/create")
-    public ResponseEntity<Long> createParent(@HeaderToken(role = {Role.ADMIN, Role.USER}) String token,
-                                             @RequestParam Long postId,
-                                             @Valid @RequestBody CommentRequestDto commentRequestDto) {
+    public ResponseEntity<Long> createParent(@HeaderToken String token, @RequestParam Long postId, @Valid @RequestBody CommentRequestDto commentRequestDto) {
         Claims claims = tokenParser.execute(token);
         Long commentId = commentService.makeParent(claims.getSubject(), postId, commentRequestDto.getContent());
         return new ResponseEntity<>(commentId, HttpStatus.CREATED);
     }
 
     @PostMapping("/{id}/create")
-    public ResponseEntity<Long> createChild(@HeaderToken(role = {Role.ADMIN, Role.USER}) String token,
-                                            @PathVariable("id") Long parentId,
-                                            @RequestParam Long postId,
+    public ResponseEntity<Long> createChild(@HeaderToken String token, @PathVariable("id") Long parentId, @RequestParam Long postId,
                                             @Valid @RequestBody CommentRequestDto commentRequestDto) {
         Claims claims = tokenParser.execute(token);
         Long commentId = commentService.makeChild(claims.getSubject(), postId, parentId, commentRequestDto.getContent());
@@ -46,16 +41,14 @@ public class CommentController {
     }
 
     @PatchMapping("/{id}/update")
-    public ResponseEntity<String> updateComment(@HeaderToken(role = {Role.ADMIN, Role.USER}) String token,
-                                                @PathVariable Long id,
-                                                @Valid @RequestBody CommentRequestDto commentRequestDto) {
+    public ResponseEntity<String> updateComment(@HeaderToken String token, @PathVariable Long id, @Valid @RequestBody CommentRequestDto commentRequestDto) {
         Claims claims = tokenParser.execute(token);
         commentService.updateContent(id, claims.getSubject(), commentRequestDto.getContent());
         return new ResponseEntity<>("수정이 완료되었습니다.", HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}/delete")
-    public ResponseEntity<String> deleteComment(@HeaderToken(role = {Role.ADMIN, Role.USER}) String token, @PathVariable Long id) {
+    public ResponseEntity<String> deleteComment(@HeaderToken String token, @PathVariable Long id) {
         Claims claims = tokenParser.execute(token);
         commentService.deleteComment(claims.getSubject(), id);
         return new ResponseEntity<>("삭제가 완료되었습니다.", HttpStatus.CREATED);

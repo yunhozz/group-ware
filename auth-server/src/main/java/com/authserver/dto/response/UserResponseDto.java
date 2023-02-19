@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +21,7 @@ public class UserResponseDto {
     private String name;
     private String imageUrl;
     private Provider provider;
-    private Role role;
+    private Set<Role> roles;
 
     public UserResponseDto(User user) {
         id = user.getId();
@@ -29,6 +31,6 @@ public class UserResponseDto {
         name = user.getName();
         imageUrl = user.getImageUrl();
         provider = user.getProvider();
-        role = user.getRole();
+        roles = user.getRoles();
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -58,7 +59,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
                 .name(provider.getName())
                 .imageUrl(provider.getImageUrl())
                 .provider(provider.getProvider())
-                .role(Role.USER)
+                .roles(Set.of(Role.GUEST))
                 .build();
     }
 }

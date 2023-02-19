@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -59,7 +60,7 @@ public class AuthService {
 
         validatePasswordMatch(loginRequestDto, userResponseDto);
 
-        TokenResponseDto tokenResponseDto = jwtProvider.createTokenDto(userResponseDto.getUserId(), userResponseDto.getRole());
+        TokenResponseDto tokenResponseDto = jwtProvider.createTokenDto(userResponseDto.getUserId(), userResponseDto.getRoles());
         saveAccessTokenOnResponse(response, tokenResponseDto);
         redisUtils.saveValue(userResponseDto.getUserId(), tokenResponseDto.getRefreshToken(), Duration.ofMillis(tokenResponseDto.getRefreshTokenValidTime()));
 
@@ -75,17 +76,22 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public TokenResponseDto tokenReissue(String refreshToken, HttpServletResponse response) {
-        String token = refreshToken.split(" ")[1];
-        UserPrincipal userPrincipal = getUserPrincipal(token);
+        UserPrincipal userPrincipal = getUserPrincipal(refreshToken);
         Optional<Object> redisToken = redisUtils.getValue(userPrincipal.getUsername());
 
-        validateRefreshToken(token, redisToken);
+        validateRefreshToken(refreshToken, redisToken);
 
-        TokenResponseDto tokenResponseDto = jwtProvider.createTokenDto(userPrincipal.getUsername(), userPrincipal.getRole());
+        TokenResponseDto tokenResponseDto = jwtProvider.createTokenDto(userPrincipal.getUsername(), userPrincipal.getRoles());
         saveAccessTokenOnResponse(response, tokenResponseDto);
         redisUtils.updateValue(userPrincipal.getUsername(), tokenResponseDto.getRefreshToken());
 
         return tokenResponseDto;
+    }
+
+    @Transactional(readOnly = true)
+    public UserProfileResponseDto findUserInfoByToken(String token) {
+        UserPrincipal userPrincipal = getUserPrincipal(token);
+        return new UserProfileResponseDto(userPrincipal.getUser());
     }
 
     @Transactional(readOnly = true)
@@ -103,7 +109,7 @@ public class AuthService {
                 .name(joinRequestDto.getName())
                 .imageUrl(joinRequestDto.getImageUrl())
                 .provider(Provider.LOCAL)
-                .role(Role.GUEST)
+                .roles(Set.of(Role.GUEST))
                 .build();
     }
 
@@ -113,7 +119,7 @@ public class AuthService {
     }
 
     private UserPrincipal getUserPrincipal(String token) {
-        Authentication authentication = jwtProvider.getAuthentication(token);
+        Authentication authentication = jwtProvider.getAuthentication(token.split(" ")[1]);
         return (UserPrincipal) authentication.getPrincipal();
     }
 
@@ -134,7 +140,7 @@ public class AuthService {
             throw new RefreshTokenNotFoundException();
         }
 
-        if (!redisToken.get().equals(refreshToken)) {
+        if (!redisToken.get().equals(refreshToken.split(" ")[1])) {
             throw new RefreshTokenDifferentException();
         }
     }

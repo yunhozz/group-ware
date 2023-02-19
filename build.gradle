@@ -76,14 +76,6 @@ project(':auth-server') {
     }
 }
 
-project(':user-service') {
-    bootJar { enabled = true }
-    jar { enabled = false }
-
-    dependencies {
-    }
-}
-
 project(':notification-service') {
     bootJar { enabled = true }
     jar { enabled = false }

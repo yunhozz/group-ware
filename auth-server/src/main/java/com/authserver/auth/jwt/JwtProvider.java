@@ -22,6 +22,8 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -42,9 +44,12 @@ public class JwtProvider {
 
     private final UserDetailsServiceImpl userDetailsService;
 
-    public TokenResponseDto createTokenDto(String userId, Role role) {
+    public TokenResponseDto createTokenDto(String userId, Set<Role> roles) {
         Claims claims = Jwts.claims().setSubject(userId);
-        claims.put("auth", role.getAuthority());
+        String auth = roles.stream()
+                .map(Role::getAuthority)
+                .collect(Collectors.joining(","));
+        claims.put("auth", auth);
 
         String accessToken = createToken(claims, JwtType.ACCESS_TOKEN_TYPE, accessTokenValidTime);
         String refreshToken = createToken(claims, JwtType.REFRESH_TOKEN_TYPE, refreshTokenValidTime);

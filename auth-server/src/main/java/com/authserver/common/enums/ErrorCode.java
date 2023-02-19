@@ -12,6 +12,7 @@ public enum ErrorCode {
     REFRESH_TOKEN_DIFFERENT(400, "A-005", "재발급 토큰 값이 다릅니다."),
     USER_NOT_FOUND(404, "A-006", "해당 유저를 찾을 수 없습니다."),
     REFRESH_TOKEN_NOT_FOUND(404, "A-007", "재발급 토큰이 만료되었거나 찾을 수 없습니다."),
+    NOT_VALID(400, "A-008", "잘못된 요청입니다.")
 
     ;
 

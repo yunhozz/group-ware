@@ -13,9 +13,8 @@
         <module name="group-ware.auth-server.test" />
         <module name="group-ware.eureka-server.test" />
         <module name="group-ware.eureka-server.main" />
-        <module name="com.group-ware.user-service.main" />
+        <module name="group-ware.post-service.test" />
         <module name="group-ware.api-gateway.test" />
-        <module name="com.group-ware.user-service.test" />
       </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
@@ -33,15 +32,10 @@
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.eclipse.jdt/ecj/3.26.0/4837be609a3368a0f7e7cf0dc1bdbc7fe94993de/ecj-3.26.0.jar" />
         </processorPath>
         <module name="group-ware.notification-service.main" />
+        <module name="group-ware.post-service.main" />
         <module name="group-ware.auth-server.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="1.6">
-      <module name="group-ware.api-gateway.querydsl" target="17" />
-      <module name="group-ware.eureka-server.querydsl" target="17" />
-      <module name="group-ware.user-service.main" target="17" />
-      <module name="group-ware.user-service.querydsl" target="17" />
-      <module name="group-ware.user-service.test" target="17" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="17" />
   </component>
 </project>

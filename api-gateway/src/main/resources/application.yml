@@ -20,15 +20,6 @@ spring:
           predicates:
             - Path=/api/auth/**
 
-        - id: user-service
-          uri:
-            lb://USER-SERVICE
-          predicates:
-            - Path=/api/users/**
-          filters:
-            - AuthorizationHeaderFilter
-            - RemoveRequestHeader=Cookie
-
         - id: notification-service
           uri:
             lb://NOTIFICATION-SERVICE
@@ -36,6 +27,7 @@ spring:
             - Path=/api/notifications/**
           filters:
             - AuthorizationHeaderFilter
+            - AuthorizationGuestFilter
             - RemoveRequestHeader=Cookie
 
         - id: post-service
@@ -45,4 +37,5 @@ spring:
             - Path=/api/posts/**, /api/comments/**
           filters:
             - AuthorizationHeaderFilter
+            - AuthorizationUserFilter
             - RemoveRequestHeader=Cookie
