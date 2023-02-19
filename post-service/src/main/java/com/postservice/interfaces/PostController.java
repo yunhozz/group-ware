@@ -52,7 +52,7 @@ public class PostController {
         String postWriterId = postDetailsQueryDto.getWriterId();
         List<CommentQueryDto> commentDtoList = postDetailsQueryDto.getComments();
 
-        URI uriForPostUserInfo = UriComponentsBuilder.fromUriString("http://localhost:8000/api/auth/users/{writerId}/simple")
+        URI uriForPostUserInfo = UriComponentsBuilder.fromUriString("http://localhost:8000/api/users/{writerId}/simple")
                 .build()
                 .expand(postWriterId)
                 .encode().toUri();
@@ -141,7 +141,7 @@ public class PostController {
     }
 
     private ResponseEntity<Map<String, UserSimpleResponseDto>> getResponseOfUserSimpleDtoList(List<String> userIds) {
-        URI uri = UriComponentsBuilder.fromUriString("http://localhost:8000/api/auth/users/simple")
+        URI uri = UriComponentsBuilder.fromUriString("http://localhost:8000/api/users/simple")
                 .queryParam("userIds", userIds)
                 .build().toUri();
         return restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});

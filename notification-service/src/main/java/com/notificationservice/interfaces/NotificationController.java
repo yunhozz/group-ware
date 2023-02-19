@@ -78,7 +78,7 @@ public class NotificationController {
             }
         }};
 
-        URI uri = UriComponentsBuilder.fromUriString("http://localhost:8000/api/auth/users/simple")
+        URI uri = UriComponentsBuilder.fromUriString("http://localhost:8000/api/users/simple")
                 .queryParam("userIds", senderIds)
                 .build().toUri();
         ResponseEntity<Map<String, UserSimpleResponseDto>> userData =
