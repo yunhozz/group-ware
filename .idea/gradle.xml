@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/eureka-server" />
             <option value="$PROJECT_DIR$/notification-service" />
             <option value="$PROJECT_DIR$/post-service" />
+            <option value="$PROJECT_DIR$/team-service" />
           </set>
         </option>
       </GradleProjectSettings>
