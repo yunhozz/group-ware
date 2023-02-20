@@ -46,7 +46,7 @@ public class UserController {
 
     @GetMapping("/{userId}/simple")
     public ResponseEntity<UserSimpleResponseDto> getUserSimpleInfo(@PathVariable String userId) {
-        UserSimpleResponseDto userSimpleResponseDto = userRepository.findUserSimpleInfoByUserId(userId);
+        UserSimpleResponseDto userSimpleResponseDto = authService.findUserSimpleInfoByUserId(userId);
         return ResponseEntity.ok(userSimpleResponseDto);
     }
 

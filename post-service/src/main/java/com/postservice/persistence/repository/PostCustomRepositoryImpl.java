@@ -23,6 +23,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.postservice.persistence.QComment.comment;
@@ -36,7 +37,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public PostDetailsQueryDto getPostDetailsById(Long postId) {
+    public Optional<PostDetailsQueryDto> getPostDetailsById(Long postId) {
         PostDetailsQueryDto postDto = queryFactory
                 .select(new QPostDetailsQueryDto(
                         post.id,
@@ -90,7 +91,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
 
         postDto.setComments(commentDtoList);
         postDto.setFiles(fileDtoList);
-        return postDto;
+        return Optional.of(postDto);
     }
 
     @Override

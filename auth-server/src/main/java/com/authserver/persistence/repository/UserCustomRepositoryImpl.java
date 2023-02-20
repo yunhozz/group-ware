@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.authserver.persistence.QUser.user;
 
@@ -35,8 +36,8 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
     }
 
     @Override
-    public UserSimpleResponseDto findUserSimpleInfoByUserId(String userId) {
-        return queryFactory
+    public Optional<UserSimpleResponseDto> findUserSimpleInfoByUserId(String userId) {
+        UserSimpleResponseDto userSimpleDto = queryFactory
                 .select(new QUserSimpleResponseDto(
                         user.userId,
                         user.name,
@@ -45,6 +46,8 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
                 .from(user)
                 .where(user.userId.eq(userId))
                 .fetchOne();
+
+        return Optional.ofNullable(userSimpleDto);
     }
 
     @Override

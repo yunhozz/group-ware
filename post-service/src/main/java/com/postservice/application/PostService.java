@@ -63,7 +63,8 @@ public class PostService {
     public PostDetailsQueryDto findPostDetailsById(Long id) {
         Post post = findPost(id);
         post.addView();
-        return postRepository.getPostDetailsById(post.getId());
+        return postRepository.getPostDetailsById(post.getId())
+                .orElseThrow(PostNotFoundException::new);
     }
 
     @Transactional
