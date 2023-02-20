@@ -17,6 +17,7 @@ import com.authserver.dto.request.LoginRequestDto;
 import com.authserver.dto.response.TokenResponseDto;
 import com.authserver.dto.response.UserProfileResponseDto;
 import com.authserver.dto.response.UserResponseDto;
+import com.authserver.dto.response.UserSimpleResponseDto;
 import com.authserver.persistence.User;
 import com.authserver.persistence.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -86,6 +87,12 @@ public class AuthService {
         redisUtils.updateValue(userPrincipal.getUsername(), tokenResponseDto.getRefreshToken());
 
         return tokenResponseDto;
+    }
+
+    @Transactional(readOnly = true)
+    public UserSimpleResponseDto findUserSimpleInfoByUserId(String userId) {
+        return userRepository.findUserSimpleInfoByUserId(userId)
+                .orElseThrow(UserNotFoundException::new);
     }
 
     @Transactional(readOnly = true)

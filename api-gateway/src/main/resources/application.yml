@@ -39,3 +39,13 @@ spring:
             - AuthorizationHeaderFilter
             - AuthorizationUserFilter
             - RemoveRequestHeader=Cookie
+
+        - id: team-service
+          uri:
+            lb://TEAM-SERVICE
+          predicates:
+            - Path=/api/teams/**
+          filters:
+            - AuthorizationHeaderFilter
+            - AuthorizationUserFilter
+            - RemoveRequestHeader=Cookie

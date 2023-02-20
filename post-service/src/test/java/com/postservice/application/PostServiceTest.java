@@ -120,7 +120,7 @@ class PostServiceTest {
                 post.getCreatedAt(), post.getModifiedAt());
 
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
-        given(postRepository.getPostDetailsById(post.getId())).willReturn(postDetailsQueryDto);
+        given(postRepository.getPostDetailsById(post.getId())).willReturn(Optional.of(postDetailsQueryDto));
 
         // when
         PostDetailsQueryDto result = postService.findPostDetailsById(postId);

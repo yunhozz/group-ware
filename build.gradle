@@ -91,3 +91,11 @@ project(':post-service') {
     dependencies {
     }
 }
+
+project(':team-service') {
+    bootJar { enabled = true }
+    jar { enabled = false }
+
+    dependencies {
+    }
+}
