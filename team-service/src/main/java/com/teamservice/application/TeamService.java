@@ -8,6 +8,7 @@ import com.teamservice.application.exception.NotLeaderException;
 import com.teamservice.application.exception.TeamNameDuplicateException;
 import com.teamservice.application.exception.TeamNotFoundException;
 import com.teamservice.application.exception.UpdateNotAllowedException;
+import com.teamservice.dto.query.TeamQueryDto;
 import com.teamservice.dto.request.TeamRequestDto;
 import com.teamservice.dto.request.TeamUpdateRequestDto;
 import com.teamservice.persistence.Team;
@@ -67,6 +68,12 @@ public class TeamService {
         TeamUser teamUser = teamUserRepository.findByTeamAndUserId(team, userId)
                 .orElseThrow(NotBelongToTeamException::new);
         teamUserRepository.delete(teamUser);
+    }
+
+    @Transactional(readOnly = true)
+    public TeamQueryDto findTeamInfoById(Long id) {
+        return teamRepository.findTeamById(id)
+                .orElseThrow(TeamNotFoundException::new);
     }
 
     private Team findTeam(Long teamId) {
