@@ -28,4 +28,8 @@ public class TeamUser extends BaseEntity {
         this.team = team;
         this.userId = userId;
     }
+
+    protected void setTeam(Team team) {
+        this.team = team;
+    }
 }

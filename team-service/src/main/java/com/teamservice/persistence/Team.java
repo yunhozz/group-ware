@@ -25,7 +25,10 @@ public class Team extends BaseEntity {
 
     private String imageUrl;
 
-    public Team(String leaderId, String name, String imageUrl) {
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TeamUser> teamUserList = new ArrayList<>();
+
+    private Team(String leaderId, String name, String imageUrl) {
         this.leaderId = leaderId;
         this.name = name;
         this.imageUrl = imageUrl;
