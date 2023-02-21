@@ -1,15 +1,13 @@
 package com.authserver.persistence.repository;
 
-import com.authserver.dto.response.QUserDataResponseDto;
-import com.authserver.dto.response.QUserSimpleResponseDto;
 import com.authserver.dto.response.UserDataResponseDto;
 import com.authserver.dto.response.UserSimpleResponseDto;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.authserver.persistence.QUser.user;
 
@@ -22,7 +20,8 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
     @Override
     public List<UserDataResponseDto> findUserList() {
         return queryFactory
-                .select(new QUserDataResponseDto(
+                .select(Projections.constructor(
+                        UserDataResponseDto.class,
                         user.id,
                         user.userId,
                         user.email,
@@ -36,27 +35,12 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
     }
 
     @Override
-    public Optional<UserSimpleResponseDto> findUserSimpleInfoByUserId(String userId) {
-        UserSimpleResponseDto userSimpleDto = queryFactory
-                .select(new QUserSimpleResponseDto(
-                        user.userId,
-                        user.name,
-                        user.imageUrl
-                ))
-                .from(user)
-                .where(user.userId.eq(userId))
-                .fetchOne();
-
-        return Optional.ofNullable(userSimpleDto);
-    }
-
-    @Override
     public List<UserSimpleResponseDto> findUserSimpleInfoListByUserIds(List<String> userIds) {
         return queryFactory
-                .select(new QUserSimpleResponseDto(
+                .select(Projections.constructor(
+                        UserSimpleResponseDto.class,
                         user.userId,
-                        user.name,
-                        user.imageUrl
+                        user.roles
                 ))
                 .from(user)
                 .where(user.userId.in(userIds))

@@ -1,21 +1,17 @@
 package com.authserver.dto.response;
 
-import com.querydsl.core.annotations.QueryProjection;
+import com.authserver.common.enums.Role;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserSimpleResponseDto {
 
     private String userId;
-    private String name;
-    private String imageUrl;
-
-    @QueryProjection
-    public UserSimpleResponseDto(String userId, String name, String imageUrl) {
-        this.userId = userId;
-        this.name = name;
-        this.imageUrl = imageUrl;
-    }
+    private Set<Role> roles;
 }

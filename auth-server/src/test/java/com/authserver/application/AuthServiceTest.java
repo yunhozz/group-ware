@@ -16,6 +16,7 @@ import com.authserver.dto.request.LoginRequestDto;
 import com.authserver.dto.response.TokenResponseDto;
 import com.authserver.persistence.User;
 import com.authserver.persistence.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -54,6 +55,8 @@ class AuthServiceTest {
     RedisUtils redisUtils;
     @Mock
     RandomIdUtils randomIdUtils;
+    @Mock
+    HttpServletRequest request;
     @Mock
     HttpServletResponse response;
 
@@ -104,7 +107,7 @@ class AuthServiceTest {
         willDoNothing().given(redisUtils).saveValue(user.getUserId(), tokenResponseDto.getRefreshToken(), Duration.ofMillis(tokenResponseDto.getRefreshTokenValidTime()));
 
         // when
-        TokenResponseDto result = authService.login(loginRequestDto, response);
+        TokenResponseDto result = authService.login(loginRequestDto, request, response);
 
         // then
         assertDoesNotThrow(() -> result);
@@ -121,7 +124,7 @@ class AuthServiceTest {
         given(userRepository.findByEmail(anyString())).willReturn(Optional.empty());
 
         // then
-        assertThrows(EmailNotFoundException.class, () -> authService.login(loginRequestDto, response));
+        assertThrows(EmailNotFoundException.class, () -> authService.login(loginRequestDto, request, response));
     }
 
     @Test
@@ -133,7 +136,7 @@ class AuthServiceTest {
         given(encoder.matches(loginRequestDto.getPassword(), user.getPassword())).willReturn(false);
 
         // then
-        assertThrows(PasswordNotMatchException.class, () -> authService.login(loginRequestDto, response));
+        assertThrows(PasswordNotMatchException.class, () -> authService.login(loginRequestDto, request, response));
     }
 
     @Test
