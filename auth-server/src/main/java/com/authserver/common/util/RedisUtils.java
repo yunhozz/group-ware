@@ -14,6 +14,11 @@ public class RedisUtils {
 
     private final RedisTemplate<String, Object> template;
 
+    public void saveValue(String key, Object value) {
+        ValueOperations<String, Object> ops = template.opsForValue();
+        ops.set(key, value);
+    }
+
     public void saveValue(String key, Object value, Duration duration) {
         ValueOperations<String, Object> ops = template.opsForValue();
         ops.set(key, value, duration);
@@ -31,5 +36,9 @@ public class RedisUtils {
 
     public void deleteValue(String key) {
         template.delete(key);
+    }
+
+    public String getMyInfoKey() {
+        return "my-info";
     }
 }

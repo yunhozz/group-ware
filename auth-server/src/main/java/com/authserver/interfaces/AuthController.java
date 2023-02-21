@@ -5,7 +5,6 @@ import com.authserver.common.annotation.HeaderToken;
 import com.authserver.dto.request.JoinRequestDto;
 import com.authserver.dto.request.LoginRequestDto;
 import com.authserver.dto.response.TokenResponseDto;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,14 +29,14 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequestDto, HttpServletRequest request, HttpServletResponse response) {
-        TokenResponseDto tokenResponseDto = authService.login(loginRequestDto, request, response);
+    public ResponseEntity<TokenResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+        TokenResponseDto tokenResponseDto = authService.login(loginRequestDto, response);
         return new ResponseEntity<>(tokenResponseDto, HttpStatus.CREATED);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(@HeaderToken String token, HttpServletRequest request) {
-        authService.logout(token, request);
+    public ResponseEntity<String> logout(@HeaderToken String token) {
+        authService.logout(token);
         return new ResponseEntity<>("로그아웃이 완료되었습니다.", HttpStatus.CREATED);
     }
 
