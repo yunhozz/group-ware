@@ -5,6 +5,10 @@ eureka:
 
 server:
   port: 8090
+  servlet:
+    session:
+      cookie:
+        name: JSESSIONID_AUTH
 
 spring:
   profiles:
