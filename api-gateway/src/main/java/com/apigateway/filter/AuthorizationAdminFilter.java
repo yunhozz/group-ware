@@ -40,9 +40,6 @@ public class AuthorizationAdminFilter extends AbstractGatewayFilterFactory<Autho
                     }
 
                     log.info("[ACCESS TOKEN IS OK]");
-                    request.mutate()
-                            .header(HttpHeaders.AUTHORIZATION, token)
-                            .build();
 
                 } catch (Exception e) {
                     throw new TokenParsingException(e.getLocalizedMessage());
