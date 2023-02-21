@@ -20,7 +20,9 @@ import com.authserver.dto.response.UserResponseDto;
 import com.authserver.dto.response.UserSimpleResponseDto;
 import com.authserver.persistence.User;
 import com.authserver.persistence.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
@@ -54,25 +56,32 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public TokenResponseDto login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
+    public TokenResponseDto login(LoginRequestDto loginRequestDto, HttpServletRequest request, HttpServletResponse response) {
         User user = userRepository.findByEmail(loginRequestDto.getEmail())
                 .orElseThrow(EmailNotFoundException::new);
         UserResponseDto userResponseDto = new UserResponseDto(user);
-
         validatePasswordMatch(loginRequestDto, userResponseDto);
 
         TokenResponseDto tokenResponseDto = jwtProvider.createTokenDto(userResponseDto.getUserId(), userResponseDto.getRoles());
         saveAccessTokenOnResponse(response, tokenResponseDto);
         redisUtils.saveValue(userResponseDto.getUserId(), tokenResponseDto.getRefreshToken(), Duration.ofMillis(tokenResponseDto.getRefreshTokenValidTime()));
 
+        HttpSession session = request.getSession();
+        session.setAttribute("user-info", new UserSimpleResponseDto(userResponseDto.getUserId(), userResponseDto.getRoles()));
+
         return tokenResponseDto;
     }
 
     @Transactional(readOnly = true)
-    public void logout(String token) {
+    public void logout(String token, HttpServletRequest request) {
         UserPrincipal userPrincipal = getUserPrincipal(token);
         redisUtils.deleteValue(userPrincipal.getUsername());
         redisUtils.saveValue(token, "logout", Duration.ofMinutes(10)); // 10 분간 로그아웃 토큰 저장
+
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.removeAttribute("user-info");
+        }
     }
 
     @Transactional(readOnly = true)
@@ -87,12 +96,6 @@ public class AuthService {
         redisUtils.updateValue(userPrincipal.getUsername(), tokenResponseDto.getRefreshToken());
 
         return tokenResponseDto;
-    }
-
-    @Transactional(readOnly = true)
-    public UserSimpleResponseDto findUserSimpleInfoByUserId(String userId) {
-        return userRepository.findUserSimpleInfoByUserId(userId)
-                .orElseThrow(UserNotFoundException::new);
     }
 
     @Transactional(readOnly = true)

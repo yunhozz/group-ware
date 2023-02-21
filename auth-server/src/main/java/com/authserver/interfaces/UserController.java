@@ -44,12 +44,6 @@ public class UserController {
         return ResponseEntity.ok(userProfileResponseDto);
     }
 
-    @GetMapping("/{userId}/simple")
-    public ResponseEntity<UserSimpleResponseDto> getUserSimpleInfo(@PathVariable String userId) {
-        UserSimpleResponseDto userSimpleResponseDto = authService.findUserSimpleInfoByUserId(userId);
-        return ResponseEntity.ok(userSimpleResponseDto);
-    }
-
     @GetMapping("/simple")
     public ResponseEntity<Map<String, UserSimpleResponseDto>> getUserSimpleInfoListByUserIds(@RequestParam List<String> userIds) {
         List<UserSimpleResponseDto> userSimpleResponseDtoList = userRepository.findUserSimpleInfoListByUserIds(userIds);
