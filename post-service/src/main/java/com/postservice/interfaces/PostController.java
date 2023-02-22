@@ -1,9 +1,8 @@
 package com.postservice.interfaces;
 
 import com.postservice.application.PostService;
-import com.postservice.common.annotation.HeaderToken;
 import com.postservice.common.enums.PostType;
-import com.postservice.common.util.TokenParser;
+import com.postservice.common.util.RedisUtils;
 import com.postservice.dto.query.CommentQueryDto;
 import com.postservice.dto.query.PostDetailsQueryDto;
 import com.postservice.dto.query.PostSimpleQueryDto;
@@ -11,7 +10,6 @@ import com.postservice.dto.request.PostRequestDto;
 import com.postservice.dto.request.PostUpdateRequestDto;
 import com.postservice.dto.response.UserSimpleResponseDto;
 import com.postservice.persistence.repository.PostRepository;
-import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
@@ -43,7 +41,7 @@ public class PostController {
 
     private final PostService postService;
     private final PostRepository postRepository;
-    private final TokenParser tokenParser;
+    private final RedisUtils redisUtils;
     private final RestTemplate restTemplate;
 
     @GetMapping("/{id}")
@@ -120,23 +118,23 @@ public class PostController {
     }
 
     @PostMapping(value = "/create")
-    public ResponseEntity<Long> createPost(@HeaderToken String token, @RequestParam(required = false) Long teamId, @Valid @ModelAttribute PostRequestDto postRequestDto) {
-        Claims claims = tokenParser.execute(token);
-        Long postId = postService.createPost(claims.getSubject(), teamId, postRequestDto);
+    public ResponseEntity<Long> createPost(@RequestParam(required = false) Long teamId, @Valid @ModelAttribute PostRequestDto postRequestDto) {
+        UserSimpleResponseDto myInfo = getMyInfoFromRedis();
+        Long postId = postService.createPost(myInfo.getUserId(), teamId, postRequestDto);
         return new ResponseEntity<>(postId, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/{id}/update")
-    public ResponseEntity<Long> updatePost(@HeaderToken String token, @PathVariable Long id, @Valid @ModelAttribute PostUpdateRequestDto postUpdateRequestDto) {
-        Claims claims = tokenParser.execute(token);
-        Long postId = postService.updateInfo(id, claims.getSubject(), postUpdateRequestDto);
+    public ResponseEntity<Long> updatePost(@PathVariable Long id, @Valid @ModelAttribute PostUpdateRequestDto postUpdateRequestDto) {
+        UserSimpleResponseDto myInfo = getMyInfoFromRedis();
+        Long postId = postService.updateInfo(id, myInfo.getUserId(), postUpdateRequestDto);
         return new ResponseEntity<>(postId, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity<String> deletePost(@HeaderToken String token, @PathVariable Long id) {
-        Claims claims = tokenParser.execute(token);
-        postService.deletePost(id, claims.getSubject());
+    public ResponseEntity<String> deletePost(@PathVariable Long id) {
+        UserSimpleResponseDto myInfo = getMyInfoFromRedis();
+        postService.deletePost(id, myInfo.getUserId());
         return new ResponseEntity<>("삭제가 완료되었습니다.", HttpStatus.NO_CONTENT);
     }
 
@@ -145,5 +143,13 @@ public class PostController {
                 .queryParam("userIds", userIds)
                 .build().toUri();
         return restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
+    }
+
+    private UserSimpleResponseDto getMyInfoFromRedis() {
+        try {
+            return redisUtils.getData(redisUtils.getMyInfoKey(), UserSimpleResponseDto.class);
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getLocalizedMessage());
+        }
     }
 }

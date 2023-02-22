@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 public class UserSimpleResponseDto {
 
     private String userId;
-    private String name;
-    private String imageUrl;
+    private String auth;
 }

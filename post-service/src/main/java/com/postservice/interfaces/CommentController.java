@@ -1,10 +1,9 @@
 package com.postservice.interfaces;
 
 import com.postservice.application.CommentService;
-import com.postservice.common.annotation.HeaderToken;
-import com.postservice.common.util.TokenParser;
+import com.postservice.common.util.RedisUtils;
 import com.postservice.dto.request.CommentRequestDto;
-import io.jsonwebtoken.Claims;
+import com.postservice.dto.response.UserSimpleResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,34 +22,42 @@ import org.springframework.web.bind.annotation.RestController;
 public class CommentController {
 
     private final CommentService commentService;
-    private final TokenParser tokenParser;
+    private final RedisUtils redisUtils;
 
     @PostMapping("/create")
-    public ResponseEntity<Long> createParent(@HeaderToken String token, @RequestParam Long postId, @Valid @RequestBody CommentRequestDto commentRequestDto) {
-        Claims claims = tokenParser.execute(token);
-        Long commentId = commentService.makeParent(claims.getSubject(), postId, commentRequestDto.getContent());
+    public ResponseEntity<Long> createParent(@RequestParam Long postId, @Valid @RequestBody CommentRequestDto commentRequestDto) {
+        UserSimpleResponseDto myInfo = getMyInfoFromRedis();
+        Long commentId = commentService.makeParent(myInfo.getUserId(), postId, commentRequestDto.getContent());
         return new ResponseEntity<>(commentId, HttpStatus.CREATED);
     }
 
     @PostMapping("/{id}/create")
-    public ResponseEntity<Long> createChild(@HeaderToken String token, @PathVariable("id") Long parentId, @RequestParam Long postId,
+    public ResponseEntity<Long> createChild(@PathVariable("id") Long parentId, @RequestParam Long postId,
                                             @Valid @RequestBody CommentRequestDto commentRequestDto) {
-        Claims claims = tokenParser.execute(token);
-        Long commentId = commentService.makeChild(claims.getSubject(), postId, parentId, commentRequestDto.getContent());
+        UserSimpleResponseDto myInfo = getMyInfoFromRedis();
+        Long commentId = commentService.makeChild(myInfo.getUserId(), postId, parentId, commentRequestDto.getContent());
         return new ResponseEntity<>(commentId, HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}/update")
-    public ResponseEntity<String> updateComment(@HeaderToken String token, @PathVariable Long id, @Valid @RequestBody CommentRequestDto commentRequestDto) {
-        Claims claims = tokenParser.execute(token);
-        commentService.updateContent(id, claims.getSubject(), commentRequestDto.getContent());
+    public ResponseEntity<String> updateComment(@PathVariable Long id, @Valid @RequestBody CommentRequestDto commentRequestDto) {
+        UserSimpleResponseDto myInfo = getMyInfoFromRedis();
+        commentService.updateContent(id, myInfo.getUserId(), commentRequestDto.getContent());
         return new ResponseEntity<>("수정이 완료되었습니다.", HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}/delete")
-    public ResponseEntity<String> deleteComment(@HeaderToken String token, @PathVariable Long id) {
-        Claims claims = tokenParser.execute(token);
-        commentService.deleteComment(claims.getSubject(), id);
+    public ResponseEntity<String> deleteComment(@PathVariable Long id) {
+        UserSimpleResponseDto myInfo = getMyInfoFromRedis();
+        commentService.deleteComment(myInfo.getUserId(), id);
         return new ResponseEntity<>("삭제가 완료되었습니다.", HttpStatus.CREATED);
+    }
+
+    private UserSimpleResponseDto getMyInfoFromRedis() {
+        try {
+            return redisUtils.getData(redisUtils.getMyInfoKey(), UserSimpleResponseDto.class);
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getLocalizedMessage());
+        }
     }
 }
