@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.authserver.persistence.QUser.user;
 
@@ -32,6 +33,21 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
                 .from(user)
                 .orderBy(user.id.desc())
                 .fetch();
+    }
+
+    @Override
+    public Optional<UserSimpleResponseDto> findUserSimpleInfoByUserId(String userId) {
+        UserSimpleResponseDto userInfo = queryFactory
+                .select(Projections.constructor(
+                        UserSimpleResponseDto.class,
+                        user.userId,
+                        user.roles
+                ))
+                .from(user)
+                .where(user.userId.eq(userId))
+                .fetchOne();
+
+        return Optional.ofNullable(userInfo);
     }
 
     @Override

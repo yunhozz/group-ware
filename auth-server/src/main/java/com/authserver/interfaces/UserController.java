@@ -34,14 +34,20 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<UserProfileResponseDto> getMyProfile(@HeaderToken String token) {
-        UserProfileResponseDto userProfileResponseDto = authService.findUserInfoByToken(token);
+        UserProfileResponseDto userProfileResponseDto = authService.findUserProfileByToken(token);
         return ResponseEntity.ok(userProfileResponseDto);
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserProfileResponseDto> getUserProfile(@PathVariable String userId) {
-        UserProfileResponseDto userProfileResponseDto = authService.findUserInfoByUserId(userId);
+        UserProfileResponseDto userProfileResponseDto = authService.findUserProfileByUserId(userId);
         return ResponseEntity.ok(userProfileResponseDto);
+    }
+
+    @GetMapping("/{userId}/simple")
+    public ResponseEntity<UserSimpleResponseDto> getUserSimpleInfoByUserId(@PathVariable String userId) {
+        UserSimpleResponseDto userInfo = authService.findUserInfoByUserId(userId);
+        return ResponseEntity.ok(userInfo);
     }
 
     @GetMapping("/simple")

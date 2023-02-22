@@ -95,16 +95,22 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public UserProfileResponseDto findUserInfoByToken(String token) {
+    public UserProfileResponseDto findUserProfileByToken(String token) {
         UserPrincipal userPrincipal = getUserPrincipal(token);
         return new UserProfileResponseDto(userPrincipal.getUser());
     }
 
     @Transactional(readOnly = true)
-    public UserProfileResponseDto findUserInfoByUserId(String userId) {
+    public UserProfileResponseDto findUserProfileByUserId(String userId) {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(UserNotFoundException::new);
         return new UserProfileResponseDto(user);
+    }
+
+    @Transactional(readOnly = true)
+    public UserSimpleResponseDto findUserInfoByUserId(String userId) {
+        return userRepository.findUserSimpleInfoByUserId(userId)
+                .orElseThrow(UserNotFoundException::new);
     }
 
     private User buildUser(JoinRequestDto joinRequestDto, String userId) {
