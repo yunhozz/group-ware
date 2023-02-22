@@ -38,7 +38,6 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/users").hasRole("ADMIN")
-                .requestMatchers("/api/users/**").hasRole("GUEST")
                 .anyRequest().permitAll();
 
         security
