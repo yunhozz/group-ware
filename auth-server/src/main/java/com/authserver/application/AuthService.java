@@ -62,8 +62,12 @@ public class AuthService {
 
         TokenResponseDto tokenResponseDto = jwtProvider.createTokenDto(userResponseDto.getUserId(), userResponseDto.getRoles());
         saveAccessTokenOnResponse(response, tokenResponseDto);
-        redisUtils.saveValue(userResponseDto.getUserId(), tokenResponseDto.getRefreshToken(), Duration.ofMillis(tokenResponseDto.getRefreshTokenValidTime()));
-        redisUtils.saveValue(redisUtils.getMyInfoKey(), new UserSimpleResponseDto(userResponseDto.getUserId(), userResponseDto.getRoles()));
+        try {
+            redisUtils.saveValue(userResponseDto.getUserId(), tokenResponseDto.getRefreshToken(), Duration.ofMillis(tokenResponseDto.getRefreshTokenValidTime()));
+            redisUtils.saveData(redisUtils.getMyInfoKey(), new UserSimpleResponseDto(userResponseDto.getUserId(), userResponseDto.getRoles()));
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getLocalizedMessage());
+        }
 
         return tokenResponseDto;
     }
