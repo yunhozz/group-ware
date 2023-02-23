@@ -13,12 +13,12 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class AuthorizationUserFilter extends AbstractGatewayFilterFactory<AuthorizationUserFilter.Config> {
+public class AuthGuestFilter extends AbstractGatewayFilterFactory<AuthGuestFilter.Config> {
 
     private final TokenResolver tokenResolver;
 
-    public AuthorizationUserFilter(TokenResolver tokenResolver) {
-        super(AuthorizationUserFilter.Config.class);
+    public AuthGuestFilter(TokenResolver tokenResolver) {
+        super(Config.class);
         this.tokenResolver = tokenResolver;
     }
 
@@ -27,12 +27,12 @@ public class AuthorizationUserFilter extends AbstractGatewayFilterFactory<Author
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
             List<String> tokens = request.getHeaders().get(HttpHeaders.AUTHORIZATION);
-            log.info("[CHECK USER]");
+            log.info("[CHECK GUEST]");
 
             String token = tokens.get(0).split(" ")[1];
             String auth = tokenResolver.getAuth(token);
 
-            if (!auth.contains("USER")) {
+            if (!auth.contains("GUEST")) {
                 log.error("[ACCESS TOKEN IS NOT AUTHORIZED]");
                 throw new HaveNotAuthorityException(auth);
             }
@@ -41,7 +41,6 @@ public class AuthorizationUserFilter extends AbstractGatewayFilterFactory<Author
             return chain.filter(exchange);
         };
     }
-
 
     public static class Config {
 

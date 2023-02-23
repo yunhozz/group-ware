@@ -27,7 +27,7 @@ spring:
             - Path=/api/notifications/**
           filters:
             - AuthorizationHeaderFilter
-            - AuthorizationGuestFilter
+            - AuthGuestFilter
             - RemoveRequestHeader=Cookie
 
         - id: post-service
@@ -37,7 +37,7 @@ spring:
             - Path=/api/posts/**, /api/comments/**
           filters:
             - AuthorizationHeaderFilter
-            - AuthorizationUserFilter
+            - AuthUserFilter
             - RemoveRequestHeader=Cookie
 
         - id: team-service
@@ -47,5 +47,5 @@ spring:
             - Path=/api/teams/**
           filters:
             - AuthorizationHeaderFilter
-            - AuthorizationUserFilter
+            - AuthUserFilter
             - RemoveRequestHeader=Cookie

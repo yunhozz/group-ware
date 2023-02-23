@@ -13,12 +13,12 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class AuthorizationAdminFilter extends AbstractGatewayFilterFactory<AuthorizationAdminFilter.Config> {
+public class AuthUserFilter extends AbstractGatewayFilterFactory<AuthUserFilter.Config> {
 
     private final TokenResolver tokenResolver;
 
-    public AuthorizationAdminFilter(TokenResolver tokenResolver) {
-        super(Config.class);
+    public AuthUserFilter(TokenResolver tokenResolver) {
+        super(AuthUserFilter.Config.class);
         this.tokenResolver = tokenResolver;
     }
 
@@ -27,12 +27,12 @@ public class AuthorizationAdminFilter extends AbstractGatewayFilterFactory<Autho
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
             List<String> tokens = request.getHeaders().get(HttpHeaders.AUTHORIZATION);
-            log.info("[CHECK ADMIN]");
+            log.info("[CHECK USER]");
 
             String token = tokens.get(0).split(" ")[1];
             String auth = tokenResolver.getAuth(token);
 
-            if (!auth.contains("ADMIN")) {
+            if (!auth.contains("USER")) {
                 log.error("[ACCESS TOKEN IS NOT AUTHORIZED]");
                 throw new HaveNotAuthorityException(auth);
             }
@@ -41,6 +41,7 @@ public class AuthorizationAdminFilter extends AbstractGatewayFilterFactory<Autho
             return chain.filter(exchange);
         };
     }
+
 
     public static class Config {
 
