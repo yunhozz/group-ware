@@ -15,7 +15,9 @@ public enum ErrorCode {
     NOT_LEADER(400, "T-008", "팀 리더만 수정/삭제가 가능합니다."),
     UPDATE_NOT_ALLOWED(400, "T-009", "팀 정보 수정은 24시간에 한번씩 가능합니다."),
     DELETE_NOT_ALLOWED(400, "T-010", "팀 삭제는 생성시간 3일 이후 가능합니다."),
-    NOT_BELONG_TO_TEAM(400, "T-011", "해당 팀에 소속되어 있지 않습니다.")
+    NOT_BELONG_TO_TEAM(400, "T-011", "해당 팀에 소속되어 있지 않습니다."),
+    REQUEST_NOT_FOUND(404, "T-012", "요청 내역을 찾을 수 없습니다."),
+    REQUEST_ON_GOING(400, "T-013", "진행중인 신청건이 존재합니다. 잠시만 기다려주세요.")
 
     ;
 
