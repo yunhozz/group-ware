@@ -21,7 +21,6 @@ import java.util.Set;
 public class OAuth2UserServiceImpl implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final UserRepository userRepository;
-    private final RandomIdUtils randomIdUtils;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -53,7 +52,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
 
     private User buildUser(OAuth2Provider provider) {
         return User.builder()
-                .userId(randomIdUtils.generateUserId())
+                .userId(RandomIdUtils.generateUserId())
                 .email(provider.getEmail())
                 .password(null)
                 .name(provider.getName())

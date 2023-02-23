@@ -9,6 +9,6 @@ server:
 spring:
   profiles:
     active: local
-    include: jwt
+    include: redis
   application:
     name: team-service

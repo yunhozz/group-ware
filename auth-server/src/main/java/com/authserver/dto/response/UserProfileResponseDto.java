@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.stream.Collectors;
+import java.util.Comparator;
 
 @Getter
 @NoArgsConstructor
@@ -25,7 +25,9 @@ public class UserProfileResponseDto {
         imageUrl = user.getImageUrl();
         provider = user.getProvider().getDesc();
         auth = user.getRoles().stream()
-                .map(Role::getAuthority)
-                .collect(Collectors.joining(","));
+                .sorted(Comparator.comparingInt(Role::getOrder))
+                .map(Role::getDesc)
+                .findFirst()
+                .orElse("분류되지 않은 사용자");
     }
 }

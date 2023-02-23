@@ -1,7 +1,6 @@
 package com.notificationservice.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.notificationservice.interfaces.dto.UserSimpleResponseDto;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

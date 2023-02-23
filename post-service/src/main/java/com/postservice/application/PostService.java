@@ -32,7 +32,6 @@ public class PostService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final FileRepository fileRepository;
-    private final RandomIdUtils randomIdUtils;
 
     @Value("${file.directory}")
     private String fileDir;
@@ -99,7 +98,7 @@ public class PostService {
 
                     FileEntity fileEntity = FileEntity.builder()
                             .post(post)
-                            .fileId(randomIdUtils.generateFileId())
+                            .fileId(RandomIdUtils.generateFileId())
                             .originalName(originalName)
                             .saveName(saveName)
                             .savePath(savePath)

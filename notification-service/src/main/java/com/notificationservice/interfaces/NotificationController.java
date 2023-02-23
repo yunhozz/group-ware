@@ -1,14 +1,12 @@
 package com.notificationservice.interfaces;
 
 import com.notificationservice.application.NotificationService;
-import com.notificationservice.common.annotation.HeaderToken;
-import com.notificationservice.common.util.TokenParser;
+import com.notificationservice.common.util.RedisUtils;
 import com.notificationservice.dto.request.NotificationRequestDto;
 import com.notificationservice.dto.response.NotificationResponseDto;
 import com.notificationservice.dto.response.NotificationSimpleResponseDto;
-import com.notificationservice.interfaces.dto.UserSimpleResponseDto;
+import com.notificationservice.dto.response.UserSimpleResponseDto;
 import com.notificationservice.persistence.repository.NotificationRepository;
-import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
@@ -36,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.notificationservice.common.util.RedisUtils.MY_INFO_KEY;
+
 @RestController
 @RequestMapping("/api/notifications")
 @RequiredArgsConstructor
@@ -43,8 +43,7 @@ public class NotificationController {
 
     private final NotificationService notificationService;
     private final NotificationRepository notificationRepository;
-    private final TokenParser tokenParser;
-    private final RestTemplate restTemplate;
+    private final RedisUtils redisUtils;
 
     @GetMapping("/{id}")
     public ResponseEntity<NotificationResponseDto> getNotificationDetails(@PathVariable Long id) {
@@ -53,31 +52,32 @@ public class NotificationController {
     }
 
     @PostMapping(value = "/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<SseEmitter> connect(@HeaderToken String token, @RequestHeader(name = "Last-Event-Id", defaultValue = "") String lastEventId) {
-        Claims claims = tokenParser.execute(token);
-        SseEmitter emitter = notificationService.connect(claims.getSubject(), lastEventId);
+    public ResponseEntity<SseEmitter> connect(@RequestHeader(name = "Last-Event-Id", defaultValue = "") String lastEventId) {
+        UserSimpleResponseDto myInfo = getMyInfoFromRedis();
+        SseEmitter emitter = notificationService.connect(myInfo.getUserId(), lastEventId);
         return new ResponseEntity<>(emitter, HttpStatus.CREATED);
     }
 
     @PostMapping("/send")
-    public ResponseEntity<Long> sendMessageToUser(@HeaderToken String token, @Valid @RequestBody NotificationRequestDto notificationRequestDto) {
-        Claims claims = tokenParser.execute(token);
-        Long notificationId = notificationService.sendMessage(claims.getSubject(), notificationRequestDto);
+    public ResponseEntity<Long> sendMessageToUser(@Valid @RequestBody NotificationRequestDto notificationRequestDto) {
+        UserSimpleResponseDto myInfo = getMyInfoFromRedis();
+        Long notificationId = notificationService.sendMessage(myInfo.getUserId(), notificationRequestDto);
         return new ResponseEntity<>(notificationId, HttpStatus.CREATED);
     }
 
     @PostMapping
-    public ResponseEntity<Slice<NotificationSimpleResponseDto>> getNotificationSimpleList(@HeaderToken String token, @RequestParam(required = false) Boolean check,
+    public ResponseEntity<Slice<NotificationSimpleResponseDto>> getNotificationSimpleList(@RequestParam(required = false) Boolean check,
                                                                                           @RequestParam(required = false) Long cursorId, Pageable pageable) {
-        Claims claims = tokenParser.execute(token);
+        UserSimpleResponseDto myInfo = getMyInfoFromRedis();
         Slice<NotificationSimpleResponseDto> notificationSimpleDtoList =
-                notificationRepository.findSliceByUserIdAndCheckStatus(claims.getSubject(), check, cursorId, pageable);
+                notificationRepository.findSliceByUserIdAndCheckStatus(myInfo.getUserId(), check, cursorId, pageable);
         List<String> senderIds = new ArrayList<>() {{
             for (NotificationSimpleResponseDto notificationSimpleDto : notificationSimpleDtoList) {
                 add(notificationSimpleDto.getSenderId());
             }
         }};
 
+        RestTemplate restTemplate = new RestTemplate();
         URI uri = UriComponentsBuilder.fromUriString("http://localhost:8000/api/users/simple")
                 .queryParam("userIds", senderIds)
                 .build().toUri();
@@ -99,9 +99,17 @@ public class NotificationController {
     }
 
     @DeleteMapping("/checked")
-    public ResponseEntity<String> deleteNotificationListAlreadyChecked(@HeaderToken String token) {
-        Claims claims = tokenParser.execute(token);
-        notificationService.deleteNotificationsAlreadyChecked(claims.getSubject());
+    public ResponseEntity<String> deleteNotificationListAlreadyChecked() {
+        UserSimpleResponseDto myInfo = getMyInfoFromRedis();
+        notificationService.deleteNotificationsAlreadyChecked(myInfo.getUserId());
         return new ResponseEntity<>("읽은 알림을 삭제하였습니다.", HttpStatus.NO_CONTENT);
+    }
+
+    private UserSimpleResponseDto getMyInfoFromRedis() {
+        try {
+            return redisUtils.getData(MY_INFO_KEY, UserSimpleResponseDto.class);
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getLocalizedMessage());
+        }
     }
 }

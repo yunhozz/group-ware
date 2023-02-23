@@ -32,6 +32,8 @@ import java.time.Duration;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.authserver.common.util.RedisUtils.MY_INFO_KEY;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -39,14 +41,12 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
     private final BCryptPasswordEncoder encoder;
-
     private final RedisUtils redisUtils;
-    private final RandomIdUtils randomIdUtils;
 
     @Transactional
     public String join(JoinRequestDto joinRequestDto) {
         validateEmailDuplicated(joinRequestDto);
-        String userId = randomIdUtils.generateUserId();
+        String userId = RandomIdUtils.generateUserId();
         User user = buildUser(joinRequestDto, userId);
         userRepository.save(user);
 
@@ -58,12 +58,16 @@ public class AuthService {
         User user = userRepository.findByEmail(loginRequestDto.getEmail())
                 .orElseThrow(EmailNotFoundException::new);
         UserResponseDto userResponseDto = new UserResponseDto(user);
-
         validatePasswordMatch(loginRequestDto, userResponseDto);
 
         TokenResponseDto tokenResponseDto = jwtProvider.createTokenDto(userResponseDto.getUserId(), userResponseDto.getRoles());
         saveAccessTokenOnResponse(response, tokenResponseDto);
-        redisUtils.saveValue(userResponseDto.getUserId(), tokenResponseDto.getRefreshToken(), Duration.ofMillis(tokenResponseDto.getRefreshTokenValidTime()));
+        try {
+            redisUtils.saveValue(userResponseDto.getUserId(), tokenResponseDto.getRefreshToken(), Duration.ofMillis(tokenResponseDto.getRefreshTokenValidTime()));
+            redisUtils.saveData(MY_INFO_KEY, new UserSimpleResponseDto(userResponseDto.getUserId(), userResponseDto.getRoles()));
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getLocalizedMessage());
+        }
 
         return tokenResponseDto;
     }
@@ -72,13 +76,14 @@ public class AuthService {
     public void logout(String token) {
         UserPrincipal userPrincipal = getUserPrincipal(token);
         redisUtils.deleteValue(userPrincipal.getUsername());
+        redisUtils.deleteValue(MY_INFO_KEY);
         redisUtils.saveValue(token, "logout", Duration.ofMinutes(10)); // 10 분간 로그아웃 토큰 저장
     }
 
     @Transactional(readOnly = true)
     public TokenResponseDto tokenReissue(String refreshToken, HttpServletResponse response) {
         UserPrincipal userPrincipal = getUserPrincipal(refreshToken);
-        Optional<Object> redisToken = redisUtils.getValue(userPrincipal.getUsername());
+        Optional<String> redisToken = redisUtils.getValue(userPrincipal.getUsername());
 
         validateRefreshToken(refreshToken, redisToken);
 
@@ -90,22 +95,22 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public UserSimpleResponseDto findUserSimpleInfoByUserId(String userId) {
-        return userRepository.findUserSimpleInfoByUserId(userId)
-                .orElseThrow(UserNotFoundException::new);
-    }
-
-    @Transactional(readOnly = true)
-    public UserProfileResponseDto findUserInfoByToken(String token) {
+    public UserProfileResponseDto findUserProfileByToken(String token) {
         UserPrincipal userPrincipal = getUserPrincipal(token);
         return new UserProfileResponseDto(userPrincipal.getUser());
     }
 
     @Transactional(readOnly = true)
-    public UserProfileResponseDto findUserInfoByUserId(String userId) {
+    public UserProfileResponseDto findUserProfileByUserId(String userId) {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(UserNotFoundException::new);
         return new UserProfileResponseDto(user);
+    }
+
+    @Transactional(readOnly = true)
+    public UserSimpleResponseDto findUserInfoByUserId(String userId) {
+        return userRepository.findUserSimpleInfoByUserId(userId)
+                .orElseThrow(UserNotFoundException::new);
     }
 
     private User buildUser(JoinRequestDto joinRequestDto, String userId) {
@@ -142,7 +147,7 @@ public class AuthService {
         }
     }
 
-    private void validateRefreshToken(String refreshToken, Optional<Object> redisToken) {
+    private void validateRefreshToken(String refreshToken, Optional<String> redisToken) {
         if (redisToken.isEmpty()) {
             throw new RefreshTokenNotFoundException();
         }

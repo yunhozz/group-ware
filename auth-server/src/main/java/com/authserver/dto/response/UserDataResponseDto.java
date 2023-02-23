@@ -1,7 +1,7 @@
 package com.authserver.dto.response;
 
 import com.authserver.common.enums.Role;
-import com.querydsl.core.annotations.QueryProjection;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +9,7 @@ import java.util.Set;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserDataResponseDto {
 
     private Long id;
@@ -17,14 +18,4 @@ public class UserDataResponseDto {
     private String name;
     private String provider;
     private Set<Role> roles;
-
-    @QueryProjection
-    public UserDataResponseDto(Long id, String userId, String email, String name, String provider, Set<Role> roles) {
-        this.id = id;
-        this.userId = userId;
-        this.email = email;
-        this.name = name;
-        this.provider = provider;
-        this.roles = roles;
-    }
 }

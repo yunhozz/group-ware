@@ -1,4 +1,4 @@
-package com.authserver.config;
+package com.postservice.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;

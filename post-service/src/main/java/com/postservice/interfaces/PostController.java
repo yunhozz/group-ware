@@ -1,9 +1,8 @@
 package com.postservice.interfaces;
 
 import com.postservice.application.PostService;
-import com.postservice.common.annotation.HeaderToken;
 import com.postservice.common.enums.PostType;
-import com.postservice.common.util.TokenParser;
+import com.postservice.common.util.RedisUtils;
 import com.postservice.dto.query.CommentQueryDto;
 import com.postservice.dto.query.PostDetailsQueryDto;
 import com.postservice.dto.query.PostSimpleQueryDto;
@@ -11,7 +10,6 @@ import com.postservice.dto.request.PostRequestDto;
 import com.postservice.dto.request.PostUpdateRequestDto;
 import com.postservice.dto.response.UserSimpleResponseDto;
 import com.postservice.persistence.repository.PostRepository;
-import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
@@ -36,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.postservice.common.util.RedisUtils.MY_INFO_KEY;
+
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
@@ -43,8 +43,7 @@ public class PostController {
 
     private final PostService postService;
     private final PostRepository postRepository;
-    private final TokenParser tokenParser;
-    private final RestTemplate restTemplate;
+    private final RedisUtils redisUtils;
 
     @GetMapping("/{id}")
     public ResponseEntity<PostDetailsQueryDto> getPostInfo(@PathVariable Long id) {
@@ -52,11 +51,11 @@ public class PostController {
         String postWriterId = postDetailsQueryDto.getWriterId();
         List<CommentQueryDto> commentDtoList = postDetailsQueryDto.getComments();
 
+        RestTemplate restTemplate = new RestTemplate();
         URI uriForPostUserInfo = UriComponentsBuilder.fromUriString("http://localhost:8000/api/users/{writerId}/simple")
                 .build()
                 .expand(postWriterId)
                 .encode().toUri();
-
         ResponseEntity<UserSimpleResponseDto> userSimpleDtoOfPost = restTemplate.getForEntity(uriForPostUserInfo, UserSimpleResponseDto.class);
         postDetailsQueryDto.setUserInfo(userSimpleDtoOfPost.getBody());
 
@@ -120,30 +119,39 @@ public class PostController {
     }
 
     @PostMapping(value = "/create")
-    public ResponseEntity<Long> createPost(@HeaderToken String token, @RequestParam(required = false) Long teamId, @Valid @ModelAttribute PostRequestDto postRequestDto) {
-        Claims claims = tokenParser.execute(token);
-        Long postId = postService.createPost(claims.getSubject(), teamId, postRequestDto);
+    public ResponseEntity<Long> createPost(@RequestParam(required = false) Long teamId, @Valid @ModelAttribute PostRequestDto postRequestDto) {
+        UserSimpleResponseDto myInfo = getMyInfoFromRedis();
+        Long postId = postService.createPost(myInfo.getUserId(), teamId, postRequestDto);
         return new ResponseEntity<>(postId, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/{id}/update")
-    public ResponseEntity<Long> updatePost(@HeaderToken String token, @PathVariable Long id, @Valid @ModelAttribute PostUpdateRequestDto postUpdateRequestDto) {
-        Claims claims = tokenParser.execute(token);
-        Long postId = postService.updateInfo(id, claims.getSubject(), postUpdateRequestDto);
+    public ResponseEntity<Long> updatePost(@PathVariable Long id, @Valid @ModelAttribute PostUpdateRequestDto postUpdateRequestDto) {
+        UserSimpleResponseDto myInfo = getMyInfoFromRedis();
+        Long postId = postService.updateInfo(id, myInfo.getUserId(), postUpdateRequestDto);
         return new ResponseEntity<>(postId, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity<String> deletePost(@HeaderToken String token, @PathVariable Long id) {
-        Claims claims = tokenParser.execute(token);
-        postService.deletePost(id, claims.getSubject());
+    public ResponseEntity<String> deletePost(@PathVariable Long id) {
+        UserSimpleResponseDto myInfo = getMyInfoFromRedis();
+        postService.deletePost(id, myInfo.getUserId());
         return new ResponseEntity<>("삭제가 완료되었습니다.", HttpStatus.NO_CONTENT);
     }
 
     private ResponseEntity<Map<String, UserSimpleResponseDto>> getResponseOfUserSimpleDtoList(List<String> userIds) {
+        RestTemplate restTemplate = new RestTemplate();
         URI uri = UriComponentsBuilder.fromUriString("http://localhost:8000/api/users/simple")
                 .queryParam("userIds", userIds)
                 .build().toUri();
         return restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
+    }
+
+    private UserSimpleResponseDto getMyInfoFromRedis() {
+        try {
+            return redisUtils.getData(MY_INFO_KEY, UserSimpleResponseDto.class);
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getLocalizedMessage());
+        }
     }
 }

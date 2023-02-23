@@ -2,7 +2,6 @@ package com.apigateway.filter;
 
 import com.apigateway.common.util.TokenResolver;
 import com.apigateway.filter.exception.HaveNotAuthorityException;
-import com.apigateway.filter.exception.TokenParsingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -14,11 +13,11 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class AuthorizationGuestFilter extends AbstractGatewayFilterFactory<AuthorizationGuestFilter.Config> {
+public class AuthGuestFilter extends AbstractGatewayFilterFactory<AuthGuestFilter.Config> {
 
     private final TokenResolver tokenResolver;
 
-    public AuthorizationGuestFilter(TokenResolver tokenResolver) {
+    public AuthGuestFilter(TokenResolver tokenResolver) {
         super(Config.class);
         this.tokenResolver = tokenResolver;
     }
@@ -30,25 +29,15 @@ public class AuthorizationGuestFilter extends AbstractGatewayFilterFactory<Autho
             List<String> tokens = request.getHeaders().get(HttpHeaders.AUTHORIZATION);
             log.info("[CHECK GUEST]");
 
-            String headerToken = tokens.get(0);
-            tokenResolver.resolve(headerToken).ifPresent(token -> {
-                try {
-                    String auth = tokenResolver.getAuth(token);
-                    if (!auth.contains("GUEST")) {
-                        log.error("[ACCESS TOKEN IS NOT AUTHORIZED]");
-                        throw new HaveNotAuthorityException(auth);
-                    }
+            String token = tokens.get(0).split(" ")[1];
+            String auth = tokenResolver.getAuth(token);
 
-                    log.info("[ACCESS TOKEN IS OK]");
-                    request.mutate()
-                            .header(HttpHeaders.AUTHORIZATION, token)
-                            .build();
+            if (!auth.contains("GUEST")) {
+                log.error("[ACCESS TOKEN IS NOT AUTHORIZED]");
+                throw new HaveNotAuthorityException(auth);
+            }
 
-                } catch (Exception e) {
-                    throw new TokenParsingException(e.getLocalizedMessage());
-                }
-            });
-
+            log.info("[ACCESS TOKEN IS OK]");
             return chain.filter(exchange);
         };
     }

@@ -44,16 +44,22 @@ class AuthServiceTest {
 
     @InjectMocks
     AuthService authService;
+
     @Mock
     UserRepository userRepository;
+
     @Mock
     JwtProvider jwtProvider;
+
     @Mock
     BCryptPasswordEncoder encoder;
+
     @Mock
     RedisUtils redisUtils;
+
     @Mock
     RandomIdUtils randomIdUtils;
+
     @Mock
     HttpServletResponse response;
 
