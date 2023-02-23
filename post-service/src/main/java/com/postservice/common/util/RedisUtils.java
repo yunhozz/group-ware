@@ -16,13 +16,14 @@ import java.util.Optional;
 public class RedisUtils {
 
     private final RedisTemplate<String, Object> template;
+    public static final String MY_INFO_KEY = "my-info";
 
-    public void saveValue(String key, Object value) {
+    public void saveValue(String key, String value) {
         ValueOperations<String, Object> ops = template.opsForValue();
         ops.set(key, value);
     }
 
-    public void saveValue(String key, Object value, Duration duration) {
+    public void saveValue(String key, String value, Duration duration) {
         ValueOperations<String, Object> ops = template.opsForValue();
         ops.set(key, value, duration);
     }
@@ -34,9 +35,9 @@ public class RedisUtils {
         ops.set(key, json);
     }
 
-    public Optional<Object> getValue(String key) {
+    public Optional<String> getValue(String key) {
         ValueOperations<String, Object> ops = template.opsForValue();
-        return Optional.ofNullable(ops.get(key));
+        return Optional.ofNullable((String) ops.get(key));
     }
 
     public <T> T getData(String key, Class<T> clazz) throws JsonProcessingException {
@@ -49,16 +50,12 @@ public class RedisUtils {
         } else return null;
     }
 
-    public void updateValue(String key, Object value) {
+    public void updateValue(String key, String value) {
         ValueOperations<String, Object> ops = template.opsForValue();
         ops.getAndSet(key, value);
     }
 
     public void deleteValue(String key) {
         template.delete(key);
-    }
-
-    public String getMyInfoKey() {
-        return "my-info";
     }
 }

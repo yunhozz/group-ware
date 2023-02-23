@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.notificationservice.common.util.RedisUtils.MY_INFO_KEY;
+
 @RestController
 @RequestMapping("/api/notifications")
 @RequiredArgsConstructor
@@ -42,7 +44,6 @@ public class NotificationController {
     private final NotificationService notificationService;
     private final NotificationRepository notificationRepository;
     private final RedisUtils redisUtils;
-    private final RestTemplate restTemplate;
 
     @GetMapping("/{id}")
     public ResponseEntity<NotificationResponseDto> getNotificationDetails(@PathVariable Long id) {
@@ -76,6 +77,7 @@ public class NotificationController {
             }
         }};
 
+        RestTemplate restTemplate = new RestTemplate();
         URI uri = UriComponentsBuilder.fromUriString("http://localhost:8000/api/users/simple")
                 .queryParam("userIds", senderIds)
                 .build().toUri();
@@ -105,7 +107,7 @@ public class NotificationController {
 
     private UserSimpleResponseDto getMyInfoFromRedis() {
         try {
-            return redisUtils.getData(redisUtils.getMyInfoKey(), UserSimpleResponseDto.class);
+            return redisUtils.getData(MY_INFO_KEY, UserSimpleResponseDto.class);
         } catch (Exception e) {
             throw new IllegalStateException(e.getLocalizedMessage());
         }

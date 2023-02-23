@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.postservice.common.util.RedisUtils.MY_INFO_KEY;
+
 @RestController
 @RequestMapping("/api/comments")
 @RequiredArgsConstructor
@@ -55,7 +57,7 @@ public class CommentController {
 
     private UserSimpleResponseDto getMyInfoFromRedis() {
         try {
-            return redisUtils.getData(redisUtils.getMyInfoKey(), UserSimpleResponseDto.class);
+            return redisUtils.getData(MY_INFO_KEY, UserSimpleResponseDto.class);
         } catch (Exception e) {
             throw new IllegalStateException(e.getLocalizedMessage());
         }

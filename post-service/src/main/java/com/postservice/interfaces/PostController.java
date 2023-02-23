@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.postservice.common.util.RedisUtils.MY_INFO_KEY;
+
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
@@ -42,7 +44,6 @@ public class PostController {
     private final PostService postService;
     private final PostRepository postRepository;
     private final RedisUtils redisUtils;
-    private final RestTemplate restTemplate;
 
     @GetMapping("/{id}")
     public ResponseEntity<PostDetailsQueryDto> getPostInfo(@PathVariable Long id) {
@@ -50,11 +51,11 @@ public class PostController {
         String postWriterId = postDetailsQueryDto.getWriterId();
         List<CommentQueryDto> commentDtoList = postDetailsQueryDto.getComments();
 
+        RestTemplate restTemplate = new RestTemplate();
         URI uriForPostUserInfo = UriComponentsBuilder.fromUriString("http://localhost:8000/api/users/{writerId}/simple")
                 .build()
                 .expand(postWriterId)
                 .encode().toUri();
-
         ResponseEntity<UserSimpleResponseDto> userSimpleDtoOfPost = restTemplate.getForEntity(uriForPostUserInfo, UserSimpleResponseDto.class);
         postDetailsQueryDto.setUserInfo(userSimpleDtoOfPost.getBody());
 
@@ -139,6 +140,7 @@ public class PostController {
     }
 
     private ResponseEntity<Map<String, UserSimpleResponseDto>> getResponseOfUserSimpleDtoList(List<String> userIds) {
+        RestTemplate restTemplate = new RestTemplate();
         URI uri = UriComponentsBuilder.fromUriString("http://localhost:8000/api/users/simple")
                 .queryParam("userIds", userIds)
                 .build().toUri();
@@ -147,7 +149,7 @@ public class PostController {
 
     private UserSimpleResponseDto getMyInfoFromRedis() {
         try {
-            return redisUtils.getData(redisUtils.getMyInfoKey(), UserSimpleResponseDto.class);
+            return redisUtils.getData(MY_INFO_KEY, UserSimpleResponseDto.class);
         } catch (Exception e) {
             throw new IllegalStateException(e.getLocalizedMessage());
         }
