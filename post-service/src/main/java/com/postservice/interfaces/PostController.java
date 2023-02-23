@@ -79,8 +79,8 @@ public class PostController {
     }
 
     @GetMapping("/simple")
-    public ResponseEntity<List<PostSimpleQueryDto>> getSimpleListByType(@RequestParam(required = false) PostType postType) {
-        List<PostSimpleQueryDto> postSimpleDtoList = postRepository.getPostSimpleListByType(postType);
+    public ResponseEntity<List<PostSimpleQueryDto>> getSimpleListByType(@RequestParam(required = false) PostType postType, @RequestParam Long teamId) {
+        List<PostSimpleQueryDto> postSimpleDtoList = postRepository.getPostSimpleListByTypeAndTeamId(postType, teamId);
         if (!postSimpleDtoList.isEmpty()) {
             List<String> writerIds = new ArrayList<>() {{
                 for (PostSimpleQueryDto postSimpleQueryDto : postSimpleDtoList) {
@@ -99,8 +99,9 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<Slice<PostSimpleQueryDto>> getSimplePostSliceByType(@RequestParam PostType postType, @RequestParam(required = false) Long cursorId, Pageable pageable) {
-        Slice<PostSimpleQueryDto> postSimpleDtoSlice = postRepository.getPostSimpleSliceByType(postType, cursorId, pageable);
+    public ResponseEntity<Slice<PostSimpleQueryDto>> getSimplePostSliceByType(@RequestParam PostType postType, @RequestParam Long teamId,
+                                                                              @RequestParam(required = false) Long cursorId, Pageable pageable) {
+        Slice<PostSimpleQueryDto> postSimpleDtoSlice = postRepository.getPostSimpleSliceByTypeAndTeamId(postType, teamId, cursorId, pageable);
         if (!postSimpleDtoSlice.isEmpty()) {
             List<String> writerIds = new ArrayList<>() {{
                 for (PostSimpleQueryDto postSimpleQueryDto : postSimpleDtoSlice) {
@@ -119,7 +120,7 @@ public class PostController {
     }
 
     @PostMapping(value = "/create")
-    public ResponseEntity<Long> createPost(@RequestParam(required = false) Long teamId, @Valid @ModelAttribute PostRequestDto postRequestDto) {
+    public ResponseEntity<Long> createPost(@RequestParam Long teamId, @Valid @ModelAttribute PostRequestDto postRequestDto) {
         UserSimpleResponseDto myInfo = getMyInfoFromRedis();
         Long postId = postService.createPost(myInfo.getUserId(), teamId, postRequestDto);
         return new ResponseEntity<>(postId, HttpStatus.CREATED);

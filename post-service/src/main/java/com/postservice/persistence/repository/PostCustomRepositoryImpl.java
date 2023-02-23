@@ -95,7 +95,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     }
 
     @Override
-    public List<PostSimpleQueryDto> getPostSimpleListByType(PostType postType) {
+    public List<PostSimpleQueryDto> getPostSimpleListByTypeAndTeamId(PostType postType, Long teamId) {
         List<PostSimpleQueryDto> postDtoList = queryFactory
                 .select(new QPostSimpleQueryDto(
                         post.id,
@@ -105,7 +105,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                         post.createdAt
                 ))
                 .from(post)
-                .where(postTypeEq(postType))
+                .where(postTypeEq(postType), post.teamId.eq(teamId))
                 .orderBy(post.createdAt.desc())
                 .limit(3)
                 .fetch();
@@ -118,7 +118,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     }
 
     @Override
-    public Slice<PostSimpleQueryDto> getPostSimpleSliceByType(PostType postType, Long cursorId, Pageable pageable) {
+    public Slice<PostSimpleQueryDto> getPostSimpleSliceByTypeAndTeamId(PostType postType, Long teamId, Long cursorId, Pageable pageable) {
         List<PostSimpleQueryDto> postDtoList = queryFactory
                 .select(new QPostSimpleQueryDto(
                         post.id,
@@ -130,6 +130,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .from(post)
                 .where(
                         postTypeEq(postType),
+                        post.teamId.eq(teamId),
                         postIdLt(cursorId)
                 )
                 .orderBy(post.createdAt.desc())

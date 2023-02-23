@@ -12,6 +12,6 @@ import java.util.Optional;
 public interface PostCustomRepository {
 
     Optional<PostDetailsQueryDto> getPostDetailsById(Long postId);
-    List<PostSimpleQueryDto> getPostSimpleListByType(PostType postType);
-    Slice<PostSimpleQueryDto> getPostSimpleSliceByType(PostType postType, Long cursorId, Pageable pageable);
+    List<PostSimpleQueryDto> getPostSimpleListByTypeAndTeamId(PostType postType, Long teamId);
+    Slice<PostSimpleQueryDto> getPostSimpleSliceByTypeAndTeamId(PostType postType, Long teamId, Long cursorId, Pageable pageable);
 }
