@@ -2,6 +2,7 @@ package com.authserver.interfaces;
 
 import com.authserver.application.AuthService;
 import com.authserver.common.annotation.HeaderToken;
+import com.authserver.dto.response.UserBasicResponseDto;
 import com.authserver.dto.response.UserDataResponseDto;
 import com.authserver.dto.response.UserProfileResponseDto;
 import com.authserver.dto.response.UserSimpleResponseDto;
@@ -45,19 +46,33 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/simple")
-    public ResponseEntity<UserSimpleResponseDto> getUserSimpleInfoByUserId(@PathVariable String userId) {
+    public ResponseEntity<UserSimpleResponseDto> getUserSimpleInfo(@PathVariable String userId) {
         UserSimpleResponseDto userInfo = authService.findUserInfoByUserId(userId);
         return ResponseEntity.ok(userInfo);
     }
 
     @GetMapping("/simple")
-    public ResponseEntity<Map<String, UserSimpleResponseDto>> getUserSimpleInfoListByUserIds(@RequestParam List<String> userIds) {
+    public ResponseEntity<Map<String, UserSimpleResponseDto>> getUserSimpleInfoData(@RequestParam List<String> userIds) {
         List<UserSimpleResponseDto> userSimpleResponseDtoList = userRepository.findUserSimpleInfoListByUserIds(userIds);
         Map<String, UserSimpleResponseDto> userData = new HashMap<>();
 
         for (UserSimpleResponseDto userSimpleResponseDto : userSimpleResponseDtoList) {
             if (!userData.containsKey(userSimpleResponseDto.getUserId())) {
                 userData.put(userSimpleResponseDto.getUserId(), userSimpleResponseDto);
+            }
+        }
+
+        return ResponseEntity.ok(userData);
+    }
+
+    @GetMapping("/basic")
+    public ResponseEntity<Map<String, UserBasicResponseDto>> getUserBasicInfoData(@RequestParam List<String> userIds) {
+        List<UserBasicResponseDto> userBasicResponseDtoList = userRepository.findUserBasicInfoListByUserIds(userIds);
+        Map<String, UserBasicResponseDto> userData = new HashMap<>();
+
+        for (UserBasicResponseDto userBasicResponseDto : userBasicResponseDtoList) {
+            if (!userData.containsKey(userBasicResponseDto.getUserId())) {
+                userData.put(userBasicResponseDto.getUserId(), userBasicResponseDto);
             }
         }
 

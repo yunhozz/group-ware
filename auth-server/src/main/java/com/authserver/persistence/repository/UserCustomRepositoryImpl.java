@@ -1,5 +1,6 @@
 package com.authserver.persistence.repository;
 
+import com.authserver.dto.response.UserBasicResponseDto;
 import com.authserver.dto.response.UserDataResponseDto;
 import com.authserver.dto.response.UserSimpleResponseDto;
 import com.querydsl.core.types.Projections;
@@ -56,6 +57,21 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
                 .select(Projections.constructor(
                         UserSimpleResponseDto.class,
                         user.userId,
+                        user.roles
+                ))
+                .from(user)
+                .where(user.userId.in(userIds))
+                .fetch();
+    }
+
+    @Override
+    public List<UserBasicResponseDto> findUserBasicInfoListByUserIds(List<String> userIds) {
+        return queryFactory
+                .select(Projections.constructor(
+                        UserBasicResponseDto.class,
+                        user.userId,
+                        user.name,
+                        user.imageUrl,
                         user.roles
                 ))
                 .from(user)
