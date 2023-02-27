@@ -44,7 +44,7 @@ spring:
           uri:
             lb://TEAM-SERVICE
           predicates:
-            - Path=/api/teams/**
+            - Path=/api/teams/**, /api/requests/**, /api/members/**
           filters:
             - AuthorizationHeaderFilter
             - AuthUserFilter
