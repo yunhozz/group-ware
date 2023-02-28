@@ -15,6 +15,7 @@ import com.authserver.common.util.RedisUtils;
 import com.authserver.dto.request.JoinRequestDto;
 import com.authserver.dto.request.LoginRequestDto;
 import com.authserver.dto.response.TokenResponseDto;
+import com.authserver.dto.response.UserBasicResponseDto;
 import com.authserver.dto.response.UserProfileResponseDto;
 import com.authserver.dto.response.UserResponseDto;
 import com.authserver.dto.response.UserSimpleResponseDto;
@@ -108,8 +109,14 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public UserSimpleResponseDto findUserInfoByUserId(String userId) {
+    public UserSimpleResponseDto findUserSimpleInfoByUserId(String userId) {
         return userRepository.findUserSimpleInfoByUserId(userId)
+                .orElseThrow(UserNotFoundException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public UserBasicResponseDto findUserBasicInfoByUserId(String userId) {
+        return userRepository.findUserBasicInfoByUserId(userId)
                 .orElseThrow(UserNotFoundException::new);
     }
 

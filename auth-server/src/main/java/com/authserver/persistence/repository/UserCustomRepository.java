@@ -10,7 +10,10 @@ import java.util.Optional;
 public interface UserCustomRepository {
 
     List<UserDataResponseDto> findUserList();
+
     Optional<UserSimpleResponseDto> findUserSimpleInfoByUserId(String userId);
     List<UserSimpleResponseDto> findUserSimpleInfoListByUserIds(List<String> userIds);
+
+    Optional<UserBasicResponseDto> findUserBasicInfoByUserId(String userId);
     List<UserBasicResponseDto> findUserBasicInfoListByUserIds(List<String> userIds);
 }

@@ -65,6 +65,23 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
     }
 
     @Override
+    public Optional<UserBasicResponseDto> findUserBasicInfoByUserId(String userId) {
+        UserBasicResponseDto userInfo = queryFactory
+                .select(Projections.constructor(
+                        UserBasicResponseDto.class,
+                        user.userId,
+                        user.name,
+                        user.imageUrl,
+                        user.roles
+                ))
+                .from(user)
+                .where(user.userId.eq(userId))
+                .fetchOne();
+
+        return Optional.ofNullable(userInfo);
+    }
+
+    @Override
     public List<UserBasicResponseDto> findUserBasicInfoListByUserIds(List<String> userIds) {
         return queryFactory
                 .select(Projections.constructor(
