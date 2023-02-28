@@ -5,6 +5,7 @@ import com.notificationservice.common.util.RedisUtils;
 import com.notificationservice.dto.request.NotificationRequestDto;
 import com.notificationservice.dto.response.NotificationResponseDto;
 import com.notificationservice.dto.response.NotificationSimpleResponseDto;
+import com.notificationservice.dto.response.UserBasicResponseDto;
 import com.notificationservice.dto.response.UserSimpleResponseDto;
 import com.notificationservice.persistence.repository.NotificationRepository;
 import jakarta.validation.Valid;
@@ -78,14 +79,14 @@ public class NotificationController {
         }};
 
         RestTemplate restTemplate = new RestTemplate();
-        URI uri = UriComponentsBuilder.fromUriString("http://localhost:8000/api/users/simple")
+        URI uri = UriComponentsBuilder.fromUriString("http://localhost:8000/api/users/basic")
                 .queryParam("userIds", senderIds)
                 .build().toUri();
-        ResponseEntity<Map<String, UserSimpleResponseDto>> userData =
+        ResponseEntity<Map<String, UserBasicResponseDto>> userData =
                 restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
 
         for (NotificationSimpleResponseDto notificationSimpleResponseDto : notificationSimpleDtoList) {
-            UserSimpleResponseDto userInfo = userData.getBody().get(notificationSimpleResponseDto.getSenderId());
+            UserBasicResponseDto userInfo = userData.getBody().get(notificationSimpleResponseDto.getSenderId());
             notificationSimpleResponseDto.setUserInfo(userInfo);
         }
 

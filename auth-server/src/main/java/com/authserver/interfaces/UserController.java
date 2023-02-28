@@ -47,7 +47,7 @@ public class UserController {
 
     @GetMapping("/{userId}/simple")
     public ResponseEntity<UserSimpleResponseDto> getUserSimpleInfo(@PathVariable String userId) {
-        UserSimpleResponseDto userInfo = authService.findUserInfoByUserId(userId);
+        UserSimpleResponseDto userInfo = authService.findUserSimpleInfoByUserId(userId);
         return ResponseEntity.ok(userInfo);
     }
 
@@ -63,6 +63,12 @@ public class UserController {
         }
 
         return ResponseEntity.ok(userData);
+    }
+
+    @GetMapping("/{userId}/basic")
+    public ResponseEntity<UserBasicResponseDto> getUserBasicInfo(@PathVariable String userId) {
+        UserBasicResponseDto userInfo = authService.findUserBasicInfoByUserId(userId);
+        return ResponseEntity.ok(userInfo);
     }
 
     @GetMapping("/basic")

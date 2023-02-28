@@ -16,7 +16,7 @@ public class NotificationSimpleResponseDto {
     private String senderId;
     private String message;
     private LocalDateTime createdAt;
-    private UserSimpleResponseDto userInfo;
+    private UserBasicResponseDto userInfo;
 
     @QueryProjection
     public NotificationSimpleResponseDto(Long id, String senderId, String message, LocalDateTime createdAt) {
@@ -26,7 +26,7 @@ public class NotificationSimpleResponseDto {
         this.createdAt = createdAt;
     }
 
-    public void setUserInfo(UserSimpleResponseDto userInfo) {
+    public void setUserInfo(UserBasicResponseDto userInfo) {
         this.userInfo = userInfo;
     }
 }
