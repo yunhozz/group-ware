@@ -6,6 +6,7 @@ import com.teamservice.dto.query.TeamQueryDto;
 import com.teamservice.dto.request.TeamRequestDto;
 import com.teamservice.dto.request.TeamUpdateRequestDto;
 import com.teamservice.dto.response.TeamUserResponseDto;
+import com.teamservice.dto.response.UserBasicResponseDto;
 import com.teamservice.dto.response.UserSimpleResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -50,14 +52,14 @@ public class TeamController {
         }};
 
         RestTemplate restTemplate = new RestTemplate();
-        URI uri = UriComponentsBuilder.fromUriString("http://localhost:8000/api/users/simple")
+        URI uri = UriComponentsBuilder.fromUriString("http://localhost:8000/api/users/basic")
                 .queryParam("userIds", userIds)
                 .build().toUri();
-        ResponseEntity<Map<String, UserSimpleResponseDto>> userData =
+        ResponseEntity<Map<String, UserBasicResponseDto>> userData =
                 restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
 
         for (TeamUserResponseDto teamUserResponseDto : teamUserDtoList) {
-            UserSimpleResponseDto userInfo = userData.getBody().get(teamUserResponseDto.getUserId());
+            UserBasicResponseDto userInfo = userData.getBody().get(teamUserResponseDto.getUserId());
             teamUserResponseDto.setUserInfo(userInfo);
         }
 
@@ -71,18 +73,33 @@ public class TeamController {
         return new ResponseEntity<>(teamId, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{id}/info")
     public ResponseEntity<String> updateInfoOfTeam(@PathVariable Long id, @Valid @RequestBody TeamUpdateRequestDto teamUpdateRequestDto) {
         UserSimpleResponseDto myInfo = getMyInfoFromRedis();
         teamService.updateTeamInfo(id, myInfo.getUserId(), teamUpdateRequestDto);
         return new ResponseEntity<>("업데이트를 완료하였습니다.", HttpStatus.CREATED);
     }
 
+    @PatchMapping("/{id}/leader")
+    public ResponseEntity<String> changeLeaderOfTeam(@PathVariable("id") Long teamId, @RequestParam String leaderId) {
+        UserSimpleResponseDto myInfo = getMyInfoFromRedis();
+        teamService.changeLeader(teamId, myInfo.getUserId(), leaderId);
+        return new ResponseEntity<>("팀장을 교체하였습니다.", HttpStatus.CREATED);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteTeam(@PathVariable Long id) {
         UserSimpleResponseDto myInfo = getMyInfoFromRedis();
+        teamService.deleteRequestListByTeamId(id);
         teamService.deleteTeam(id, myInfo.getUserId());
         return new ResponseEntity<>("삭제가 완료되었습니다.", HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/{teamId}/member/{userId}")
+    public ResponseEntity<String> withdrawMember(@PathVariable Long teamId, @PathVariable String userId) {
+        UserSimpleResponseDto myInfo = getMyInfoFromRedis();
+        teamService.withdrawMember(teamId, myInfo.getUserId(), userId);
+        return new ResponseEntity<>("해당 팀원을 추방하였습니다.", HttpStatus.NO_CONTENT);
     }
 
     private UserSimpleResponseDto getMyInfoFromRedis() {
