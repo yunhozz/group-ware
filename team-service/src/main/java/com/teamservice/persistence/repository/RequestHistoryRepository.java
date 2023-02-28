@@ -13,6 +13,7 @@ import java.util.List;
 public interface RequestHistoryRepository extends JpaRepository<RequestHistory, Long>, RequestHistoryCustomRepository {
 
     boolean existsByTeamAndUserId(Team team, String userId);
+    boolean existsByIdAndUserId(Long id, String userId);
 
     @Query("select r.id from RequestHistory r join r.team t where t.id = :teamId")
     List<Long> findIdsByTeamId(@Param("teamId") Long teamId);
@@ -32,8 +33,8 @@ public interface RequestHistoryRepository extends JpaRepository<RequestHistory, 
         deleteListByIds(ids);
     }
 
-    default void deleteUserRequestsInThreeDaysBefore(Long teamId, LocalDateTime now) {
-        List<Long> ids = findIdsByTeamIdAndThreeDaysBefore(teamId, now);
+    default void deleteUserRequestsInThreeDaysBefore(Long teamId, LocalDateTime threshold) {
+        List<Long> ids = findIdsByTeamIdAndThreeDaysBefore(teamId, threshold);
         deleteListByIds(ids);
     }
 }
