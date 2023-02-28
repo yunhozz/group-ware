@@ -12,14 +12,14 @@ public class TeamUserResponseDto {
     private Long teamId;
     @JsonIgnore
     private String userId;
-    private UserSimpleResponseDto userInfo;
+    private UserBasicResponseDto userInfo;
 
     public TeamUserResponseDto(Long teamId, String userId) {
         this.teamId = teamId;
         this.userId = userId;
     }
 
-    public void setUserInfo(UserSimpleResponseDto userInfo) {
+    public void setUserInfo(UserBasicResponseDto userInfo) {
         this.userInfo = userInfo;
     }
 }
