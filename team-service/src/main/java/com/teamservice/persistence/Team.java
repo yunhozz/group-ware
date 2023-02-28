@@ -32,7 +32,7 @@ public class Team extends BaseEntity {
 
     private String imageUrl;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "team", cascade = CascadeType.PERSIST)
     private List<TeamUser> teamUserList = new ArrayList<>();
 
     private Team(String leaderId, String name, String imageUrl) {
