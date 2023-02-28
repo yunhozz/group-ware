@@ -27,10 +27,10 @@ import static org.mockito.BDDMockito.verify;
 import static org.mockito.BDDMockito.willDoNothing;
 
 @ExtendWith(MockitoExtension.class)
-class MemberServiceTest {
+class RequestServiceTest {
 
     @InjectMocks
-    MemberService memberService;
+    RequestService requestService;
 
     @Mock
     TeamRepository teamRepository;
@@ -61,7 +61,7 @@ class MemberServiceTest {
         given(requestHistoryRepository.save(any(RequestHistory.class))).willReturn(RequestHistory.create(userId, team));
 
         // when
-        Long result = memberService.requestToTeam(teamId, userId);
+        Long result = requestService.requestToTeam(teamId, userId);
 
         // then
         assertDoesNotThrow(() -> result);
@@ -80,7 +80,7 @@ class MemberServiceTest {
         given(teamUserRepository.save(any(TeamUser.class))).willReturn(new TeamUser(team, userId));
 
         // then
-        assertDoesNotThrow(() -> memberService.responseToUser(requestId, true));
+        assertDoesNotThrow(() -> requestService.responseToUser(requestId, true));
         assertThat(requestHistory.getStatus()).isEqualTo('Y');
         verify(teamUserRepository, atLeastOnce()).save(any(TeamUser.class));
     }
@@ -97,7 +97,7 @@ class MemberServiceTest {
         willDoNothing().given(requestHistoryRepository).delete(requestHistory);
 
         // then
-        assertDoesNotThrow(() -> memberService.responseToUser(requestId, false));
+        assertDoesNotThrow(() -> requestService.responseToUser(requestId, false));
         verify(requestHistoryRepository, atLeastOnce()).delete(any(RequestHistory.class));
     }
 
@@ -110,27 +110,11 @@ class MemberServiceTest {
         RequestHistory requestHistory = RequestHistory.create(userId, team);
 
         given(requestHistoryRepository.findById(anyLong())).willReturn(Optional.of(requestHistory));
+        given(requestHistoryRepository.existsByIdAndUserId(anyLong(), anyString())).willReturn(true);
         willDoNothing().given(requestHistoryRepository).delete(requestHistory);
 
         // then
-        assertDoesNotThrow(() -> memberService.cancelRequest(requestId));
+        assertDoesNotThrow(() -> requestService.cancelRequest(requestId, userId));
         verify(requestHistoryRepository, atLeastOnce()).delete(any(RequestHistory.class));
-    }
-
-    @Test
-    @DisplayName("팀 탈퇴")
-    void withdrawMember() throws Exception {
-        // given
-        String userId = "userId";
-        Long teamId = 10L;
-        TeamUser teamUser = new TeamUser(team, userId);
-
-        given(teamRepository.getReferenceById(anyLong())).willReturn(team);
-        given(teamUserRepository.findByTeamAndUserId(any(Team.class), anyString())).willReturn(Optional.of(teamUser));
-        willDoNothing().given(teamUserRepository).delete(teamUser);
-
-        // then
-        assertDoesNotThrow(() -> memberService.withdrawMember(teamId, userId));
-        verify(teamUserRepository, atLeastOnce()).delete(any(TeamUser.class));
     }
 }

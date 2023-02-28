@@ -6,8 +6,10 @@ import com.teamservice.application.exception.TeamNameDuplicateException;
 import com.teamservice.dto.request.TeamRequestDto;
 import com.teamservice.dto.request.TeamUpdateRequestDto;
 import com.teamservice.persistence.Team;
+import com.teamservice.persistence.TeamUser;
 import com.teamservice.persistence.repository.RequestHistoryRepository;
 import com.teamservice.persistence.repository.TeamRepository;
+import com.teamservice.persistence.repository.TeamUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,6 +39,9 @@ class TeamServiceTest {
 
     @Mock
     TeamRepository teamRepository;
+
+    @Mock
+    TeamUserRepository teamUserRepository;
 
     @Mock
     RequestHistoryRepository requestHistoryRepository;
@@ -138,5 +143,22 @@ class TeamServiceTest {
         // then
         assertDoesNotThrow(() -> teamService.deleteTeam(teamId, userId));
         verify(teamRepository, atLeastOnce()).delete(any(Team.class));
+    }
+
+    @Test
+    @DisplayName("팀 탈퇴")
+    void withdrawMember() throws Exception {
+        // given
+        String userId = "userId";
+        Long teamId = 10L;
+        TeamUser teamUser = new TeamUser(team, userId);
+
+        given(teamRepository.getReferenceById(anyLong())).willReturn(team);
+        given(teamUserRepository.findByTeamAndUserId(any(Team.class), anyString())).willReturn(Optional.of(teamUser));
+        willDoNothing().given(teamUserRepository).delete(teamUser);
+
+        // then
+        assertDoesNotThrow(() -> teamService.withdrawMember(teamId, team.getLeaderId(), userId));
+        verify(teamUserRepository, atLeastOnce()).delete(any(TeamUser.class));
     }
 }
