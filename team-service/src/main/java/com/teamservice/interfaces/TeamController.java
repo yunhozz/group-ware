@@ -3,14 +3,18 @@ package com.teamservice.interfaces;
 import com.teamservice.application.TeamService;
 import com.teamservice.common.util.RedisUtils;
 import com.teamservice.dto.query.TeamQueryDto;
+import com.teamservice.dto.query.TeamSimpleQueryDto;
 import com.teamservice.dto.request.TeamRequestDto;
 import com.teamservice.dto.request.TeamUpdateRequestDto;
 import com.teamservice.dto.response.TeamUserResponseDto;
 import com.teamservice.dto.response.UserBasicResponseDto;
 import com.teamservice.dto.response.UserSimpleResponseDto;
+import com.teamservice.persistence.repository.TeamRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +43,7 @@ import static com.teamservice.common.util.RedisUtils.MY_INFO_KEY;
 public class TeamController {
 
     private final TeamService teamService;
+    private final TeamRepository teamRepository;
     private final RedisUtils redisUtils;
 
     @GetMapping("/{id}")
@@ -64,6 +69,12 @@ public class TeamController {
         }
 
         return ResponseEntity.ok(teamDto);
+    }
+
+    @PostMapping("/list")
+    public ResponseEntity<Slice<TeamSimpleQueryDto>> getTeamSlice(@RequestParam(required = false) Long cursorId, Pageable pageable) {
+        Slice<TeamSimpleQueryDto> teamSlice = teamRepository.findTeamSlice(cursorId, pageable);
+        return new ResponseEntity<>(teamSlice, HttpStatus.CREATED);
     }
 
     @PostMapping
