@@ -7,8 +7,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserSimpleResponseDto {
+public class UserBasicResponseDto {
 
     private String userId;
+    private String name;
+    private String imageUrl;
     private String auth;
 }

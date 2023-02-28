@@ -1,13 +1,13 @@
 package com.teamservice.application;
 
 import com.teamservice.application.exception.AlreadyCreatedException;
-import com.teamservice.application.exception.AlreadyJoinedException;
 import com.teamservice.application.exception.NotLeaderException;
 import com.teamservice.application.exception.TeamNameDuplicateException;
 import com.teamservice.dto.request.TeamRequestDto;
 import com.teamservice.dto.request.TeamUpdateRequestDto;
 import com.teamservice.persistence.Team;
 import com.teamservice.persistence.TeamUser;
+import com.teamservice.persistence.repository.RequestHistoryRepository;
 import com.teamservice.persistence.repository.TeamRepository;
 import com.teamservice.persistence.repository.TeamUserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,10 +26,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.atLeastOnce;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.verify;
 import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class TeamServiceTest {
@@ -42,6 +42,9 @@ class TeamServiceTest {
 
     @Mock
     TeamUserRepository teamUserRepository;
+
+    @Mock
+    RequestHistoryRepository requestHistoryRepository;
 
     Team team;
 
@@ -97,37 +100,6 @@ class TeamServiceTest {
     }
 
     @Test
-    @DisplayName("팀 참가")
-    void joinTeam() throws Exception {
-        // given
-        String userId = "userId";
-        Long teamId = 10L;
-
-        given(teamRepository.findById(anyLong())).willReturn(Optional.of(team));
-        given(teamUserRepository.existsByTeamAndUserId(any(Team.class), anyString())).willReturn(false);
-        given(teamUserRepository.save(any(TeamUser.class))).willReturn(new TeamUser(team, userId));
-
-        // then
-        assertDoesNotThrow(() -> teamService.joinTeam(teamId, userId));
-        assertThat(team.getTeamUserList()).hasSize(1);
-        verify(teamUserRepository, atLeastOnce()).save(any(TeamUser.class));
-    }
-
-    @Test
-    @DisplayName("팀 참가시 이미 참여한 상태")
-    void joinTeamThrowAlreadyJoinedException() throws Exception {
-        // given
-        String userId = "userId";
-        Long teamId = 10L;
-
-        given(teamRepository.findById(anyLong())).willReturn(Optional.of(team));
-        given(teamUserRepository.existsByTeamAndUserId(any(Team.class), anyString())).willReturn(true);
-
-        // then
-        assertThrows(AlreadyJoinedException.class, () -> teamService.joinTeam(teamId, userId));
-    }
-
-    @Test
     @DisplayName("팀 정보 변경")
     void updateTeamInfo() throws Exception {
         // given
@@ -166,6 +138,7 @@ class TeamServiceTest {
 
         given(teamRepository.findById(anyLong())).willReturn(Optional.of(team));
         willDoNothing().given(teamRepository).delete(team);
+        willDoNothing().given(requestHistoryRepository).deleteListByTeamId(teamId);
 
         // then
         assertDoesNotThrow(() -> teamService.deleteTeam(teamId, userId));
@@ -174,7 +147,7 @@ class TeamServiceTest {
 
     @Test
     @DisplayName("팀 탈퇴")
-    void withdrawFromTeam() throws Exception {
+    void withdrawMember() throws Exception {
         // given
         String userId = "userId";
         Long teamId = 10L;
@@ -185,6 +158,7 @@ class TeamServiceTest {
         willDoNothing().given(teamUserRepository).delete(teamUser);
 
         // then
-        assertDoesNotThrow(() -> teamService.withdrawFromTeam(teamId, userId));
+        assertDoesNotThrow(() -> teamService.withdrawMember(teamId, team.getLeaderId(), userId));
+        verify(teamUserRepository, atLeastOnce()).delete(any(TeamUser.class));
     }
 }

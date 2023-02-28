@@ -1,5 +1,6 @@
 package com.authserver.persistence.repository;
 
+import com.authserver.dto.response.UserBasicResponseDto;
 import com.authserver.dto.response.UserDataResponseDto;
 import com.authserver.dto.response.UserSimpleResponseDto;
 
@@ -11,4 +12,5 @@ public interface UserCustomRepository {
     List<UserDataResponseDto> findUserList();
     Optional<UserSimpleResponseDto> findUserSimpleInfoByUserId(String userId);
     List<UserSimpleResponseDto> findUserSimpleInfoListByUserIds(List<String> userIds);
+    List<UserBasicResponseDto> findUserBasicInfoListByUserIds(List<String> userIds);
 }
