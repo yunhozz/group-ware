@@ -1,7 +1,7 @@
 package com.postservice.dto.query;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.postservice.dto.response.UserSimpleResponseDto;
+import com.postservice.dto.response.UserBasicResponseDto;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,7 @@ public class PostSimpleQueryDto {
     private Integer view;
     private LocalDateTime createdAt;
     private Integer commentNum;
-    private UserSimpleResponseDto userInfo;
+    private UserBasicResponseDto userInfo;
 
     @QueryProjection
     public PostSimpleQueryDto(Long id, String writerId, String title, Integer view, LocalDateTime createdAt) {
@@ -34,7 +34,7 @@ public class PostSimpleQueryDto {
         this.commentNum = commentNum;
     }
 
-    public void setUserInfo(UserSimpleResponseDto userInfo) {
+    public void setUserInfo(UserBasicResponseDto userInfo) {
         this.userInfo = userInfo;
     }
 }

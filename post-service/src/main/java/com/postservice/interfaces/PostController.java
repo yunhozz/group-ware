@@ -8,6 +8,7 @@ import com.postservice.dto.query.PostDetailsQueryDto;
 import com.postservice.dto.query.PostSimpleQueryDto;
 import com.postservice.dto.request.PostRequestDto;
 import com.postservice.dto.request.PostUpdateRequestDto;
+import com.postservice.dto.response.UserBasicResponseDto;
 import com.postservice.dto.response.UserSimpleResponseDto;
 import com.postservice.persistence.repository.PostRepository;
 import jakarta.validation.Valid;
@@ -52,11 +53,11 @@ public class PostController {
         List<CommentQueryDto> commentDtoList = postDetailsQueryDto.getComments();
 
         RestTemplate restTemplate = new RestTemplate();
-        URI uriForPostUserInfo = UriComponentsBuilder.fromUriString("http://localhost:8000/api/users/{writerId}/simple")
+        URI uriForPostUserInfo = UriComponentsBuilder.fromUriString("http://localhost:8000/api/users/{writerId}/basic")
                 .build()
                 .expand(postWriterId)
                 .encode().toUri();
-        ResponseEntity<UserSimpleResponseDto> userSimpleDtoOfPost = restTemplate.getForEntity(uriForPostUserInfo, UserSimpleResponseDto.class);
+        ResponseEntity<UserBasicResponseDto> userSimpleDtoOfPost = restTemplate.getForEntity(uriForPostUserInfo, UserBasicResponseDto.class);
         postDetailsQueryDto.setUserInfo(userSimpleDtoOfPost.getBody());
 
         if (!commentDtoList.isEmpty()) {
@@ -66,9 +67,9 @@ public class PostController {
                 }
             }};
 
-            ResponseEntity<Map<String, UserSimpleResponseDto>> userData = getResponseOfUserSimpleDtoList(commentWriterIds);
+            ResponseEntity<Map<String, UserBasicResponseDto>> userData = getResponseOfUserBasicDtoList(commentWriterIds);
             for (CommentQueryDto commentQueryDto : commentDtoList) {
-                UserSimpleResponseDto userInfo = userData.getBody().get(commentQueryDto.getWriterId());
+                UserBasicResponseDto userInfo = userData.getBody().get(commentQueryDto.getWriterId());
                 commentQueryDto.setUserInfo(userInfo);
             }
 
@@ -88,9 +89,9 @@ public class PostController {
                 }
             }};
 
-            ResponseEntity<Map<String, UserSimpleResponseDto>> userData = getResponseOfUserSimpleDtoList(writerIds);
+            ResponseEntity<Map<String, UserBasicResponseDto>> userData = getResponseOfUserBasicDtoList(writerIds);
             for (PostSimpleQueryDto postSimpleQueryDto : postSimpleDtoList) {
-                UserSimpleResponseDto userInfo = userData.getBody().get(postSimpleQueryDto.getWriterId());
+                UserBasicResponseDto userInfo = userData.getBody().get(postSimpleQueryDto.getWriterId());
                 postSimpleQueryDto.setUserInfo(userInfo);
             }
         }
@@ -109,9 +110,9 @@ public class PostController {
                 }
             }};
 
-            ResponseEntity<Map<String, UserSimpleResponseDto>> userData = getResponseOfUserSimpleDtoList(writerIds);
+            ResponseEntity<Map<String, UserBasicResponseDto>> userData = getResponseOfUserBasicDtoList(writerIds);
             for (PostSimpleQueryDto postSimpleQueryDto : postSimpleDtoSlice) {
-                UserSimpleResponseDto userInfo = userData.getBody().get(postSimpleQueryDto.getWriterId());
+                UserBasicResponseDto userInfo = userData.getBody().get(postSimpleQueryDto.getWriterId());
                 postSimpleQueryDto.setUserInfo(userInfo);
             }
         }
@@ -140,9 +141,9 @@ public class PostController {
         return new ResponseEntity<>("삭제가 완료되었습니다.", HttpStatus.NO_CONTENT);
     }
 
-    private ResponseEntity<Map<String, UserSimpleResponseDto>> getResponseOfUserSimpleDtoList(List<String> userIds) {
+    private ResponseEntity<Map<String, UserBasicResponseDto>> getResponseOfUserBasicDtoList(List<String> userIds) {
         RestTemplate restTemplate = new RestTemplate();
-        URI uri = UriComponentsBuilder.fromUriString("http://localhost:8000/api/users/simple")
+        URI uri = UriComponentsBuilder.fromUriString("http://localhost:8000/api/users/basic")
                 .queryParam("userIds", userIds)
                 .build().toUri();
         return restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});

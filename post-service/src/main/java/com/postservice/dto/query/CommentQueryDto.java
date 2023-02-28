@@ -1,7 +1,7 @@
 package com.postservice.dto.query;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.postservice.dto.response.UserSimpleResponseDto;
+import com.postservice.dto.response.UserBasicResponseDto;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +17,7 @@ public class CommentQueryDto {
     private String content;
     @JsonIgnore
     private Boolean isMustDeleted;
-    private UserSimpleResponseDto userInfo;
+    private UserBasicResponseDto userInfo;
 
     @QueryProjection
     public CommentQueryDto(Long id, String writerId, Long parentId, String content, Boolean isMustDeleted) {
@@ -28,7 +28,7 @@ public class CommentQueryDto {
         this.isMustDeleted = isMustDeleted;
     }
 
-    public void setUserInfo(UserSimpleResponseDto userInfo) {
+    public void setUserInfo(UserBasicResponseDto userInfo) {
         this.userInfo = userInfo;
     }
 }
