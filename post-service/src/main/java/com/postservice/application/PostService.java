@@ -3,8 +3,10 @@ package com.postservice.application;
 import com.postservice.application.exception.FileUploadFailException;
 import com.postservice.application.exception.PostNotFoundException;
 import com.postservice.application.exception.WriterDifferentException;
+import com.postservice.common.enums.PostType;
 import com.postservice.common.util.RandomIdUtils;
 import com.postservice.dto.query.PostDetailsQueryDto;
+import com.postservice.dto.query.PostSimpleQueryDto;
 import com.postservice.dto.request.PostRequestDto;
 import com.postservice.dto.request.PostUpdateRequestDto;
 import com.postservice.persistence.FileEntity;
@@ -15,6 +17,8 @@ import com.postservice.persistence.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -74,6 +78,16 @@ public class PostService {
 
         deleteComments(postId); // 게시물의 댓글 리스트 삭제 (bulk)
         deleteFiles(postId); // 기존 파일 리스트 삭제 (bulk)
+    }
+
+    @Transactional(readOnly = true)
+    public Slice<PostSimpleQueryDto> findSimpleSliceDto(PostType postType, Long teamId, Long cursorId, Pageable pageable) {
+        return postRepository.getPostSimpleSliceByTypeAndTeamId(postType, teamId, cursorId, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostSimpleQueryDto> findSimpleListDto(PostType postType, Long teamId) {
+        return postRepository.getPostSimpleListByTypeAndTeamId(postType, teamId);
     }
 
     @Transactional

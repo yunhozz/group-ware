@@ -4,6 +4,7 @@ import com.teamservice.application.exception.AlreadyJoinedException;
 import com.teamservice.application.exception.NotUserRequestException;
 import com.teamservice.application.exception.RequestNotFoundException;
 import com.teamservice.application.exception.RequestOnGoingException;
+import com.teamservice.dto.query.RequestHistoryQueryDto;
 import com.teamservice.persistence.RequestHistory;
 import com.teamservice.persistence.Team;
 import com.teamservice.persistence.TeamUser;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -56,6 +58,16 @@ public class RequestService {
     @Transactional
     public void deleteUserOldRequests(Long teamId) {
         requestHistoryRepository.deleteUserRequestsInThreeDaysBefore(teamId, LocalDateTime.now().minusDays(3)); // 3 일이 경과한 요청 리스트 삭제
+    }
+
+    @Transactional(readOnly = true)
+    public List<RequestHistoryQueryDto> findListByTeamIdAndLeaderId(Long teamId, String userId) {
+        return requestHistoryRepository.findListByTeamIdAndLeaderId(teamId, userId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<RequestHistoryQueryDto> findListByUserId(String userId) {
+        return requestHistoryRepository.findListByUserId(userId);
     }
 
     private RequestHistory findRequestHistory(Long requestId) {

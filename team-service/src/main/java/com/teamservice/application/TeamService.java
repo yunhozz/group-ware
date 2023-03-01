@@ -8,6 +8,7 @@ import com.teamservice.application.exception.TeamNameDuplicateException;
 import com.teamservice.application.exception.TeamNotFoundException;
 import com.teamservice.application.exception.UpdateNotAllowedException;
 import com.teamservice.dto.query.TeamQueryDto;
+import com.teamservice.dto.query.TeamSimpleQueryDto;
 import com.teamservice.dto.request.TeamRequestDto;
 import com.teamservice.dto.request.TeamUpdateRequestDto;
 import com.teamservice.persistence.Team;
@@ -16,6 +17,8 @@ import com.teamservice.persistence.repository.RequestHistoryRepository;
 import com.teamservice.persistence.repository.TeamRepository;
 import com.teamservice.persistence.repository.TeamUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,6 +78,11 @@ public class TeamService {
     public TeamQueryDto findTeamInfoById(Long id) {
         return teamRepository.findTeamById(id)
                 .orElseThrow(TeamNotFoundException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Slice<TeamSimpleQueryDto> findSimpleSliceDto(Long cursorId, Pageable pageable) {
+        return teamRepository.findTeamSlice(cursorId, pageable);
     }
 
     private Team findTeam(Long teamId) {
