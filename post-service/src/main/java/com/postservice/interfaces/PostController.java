@@ -118,21 +118,21 @@ public class PostController {
         return ResponseEntity.ok(postDetailsQueryDto);
     }
 
-    @PostMapping(value = "/create")
+    @PostMapping
     public ResponseEntity<Long> createPost(@RequestParam Long teamId, @Valid @ModelAttribute PostRequestDto postRequestDto) {
         UserSimpleResponseDto myInfo = getMyInfoFromRedis();
         Long postId = postService.createPost(myInfo.getUserId(), teamId, postRequestDto);
         return new ResponseEntity<>(postId, HttpStatus.CREATED);
     }
 
-    @PostMapping(value = "/{id}/update")
+    @PostMapping("/{id}")
     public ResponseEntity<Long> updatePost(@PathVariable Long id, @Valid @ModelAttribute PostUpdateRequestDto postUpdateRequestDto) {
         UserSimpleResponseDto myInfo = getMyInfoFromRedis();
         Long postId = postService.updateInfo(id, myInfo.getUserId(), postUpdateRequestDto);
         return new ResponseEntity<>(postId, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{id}/delete")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePost(@PathVariable Long id) {
         UserSimpleResponseDto myInfo = getMyInfoFromRedis();
         postService.deletePost(id, myInfo.getUserId());

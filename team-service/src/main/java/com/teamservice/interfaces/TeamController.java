@@ -82,7 +82,7 @@ public class TeamController {
         return new ResponseEntity<>(teamId, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{id}/info")
+    @PatchMapping("/{id}")
     public ResponseEntity<String> updateInfoOfTeam(@PathVariable Long id, @Valid @RequestBody TeamUpdateRequestDto teamUpdateRequestDto) {
         UserSimpleResponseDto myInfo = getMyInfoFromRedis();
         teamService.updateTeamInfo(id, myInfo.getUserId(), teamUpdateRequestDto);

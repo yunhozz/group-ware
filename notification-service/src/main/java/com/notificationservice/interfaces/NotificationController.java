@@ -86,7 +86,7 @@ public class NotificationController {
         return new ResponseEntity<>(emitter, HttpStatus.CREATED);
     }
 
-    @PostMapping("/send")
+    @PostMapping
     public ResponseEntity<Long> sendMessageToUser(@Valid @RequestBody NotificationRequestDto notificationRequestDto) {
         UserSimpleResponseDto myInfo = getMyInfoFromRedis();
         Long notificationId = notificationService.sendMessage(myInfo.getUserId(), notificationRequestDto);

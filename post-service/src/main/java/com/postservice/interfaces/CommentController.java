@@ -26,14 +26,14 @@ public class CommentController {
     private final CommentService commentService;
     private final RedisUtils redisUtils;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<Long> createParent(@RequestParam Long postId, @Valid @RequestBody CommentRequestDto commentRequestDto) {
         UserSimpleResponseDto myInfo = getMyInfoFromRedis();
         Long commentId = commentService.makeParent(myInfo.getUserId(), postId, commentRequestDto.getContent());
         return new ResponseEntity<>(commentId, HttpStatus.CREATED);
     }
 
-    @PostMapping("/{id}/create")
+    @PostMapping("/{id}")
     public ResponseEntity<Long> createChild(@PathVariable("id") Long parentId, @RequestParam Long postId,
                                             @Valid @RequestBody CommentRequestDto commentRequestDto) {
         UserSimpleResponseDto myInfo = getMyInfoFromRedis();
@@ -41,7 +41,7 @@ public class CommentController {
         return new ResponseEntity<>(commentId, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{id}/update")
+    @PatchMapping("/{id}")
     public ResponseEntity<String> updateComment(@PathVariable Long id, @Valid @RequestBody CommentRequestDto commentRequestDto) {
         UserSimpleResponseDto myInfo = getMyInfoFromRedis();
         commentService.updateContent(id, myInfo.getUserId(), commentRequestDto.getContent());
