@@ -55,47 +55,29 @@ subprojects {
 project(':eureka-server') {
     bootJar { enabled = true }
     jar { enabled = false }
-
-    dependencies {
-    }
 }
 
 project(':api-gateway') {
     bootJar { enabled = true }
     jar { enabled = false }
-
-    dependencies {
-    }
 }
 
 project(':auth-server') {
     bootJar { enabled = true }
     jar { enabled = false }
-
-    dependencies {
-    }
 }
 
 project(':notification-service') {
     bootJar { enabled = true }
     jar { enabled = false }
-
-    dependencies {
-    }
 }
 
 project(':post-service') {
     bootJar { enabled = true }
     jar { enabled = false }
-
-    dependencies {
-    }
 }
 
 project(':team-service') {
     bootJar { enabled = true }
     jar { enabled = false }
-
-    dependencies {
-    }
 }
