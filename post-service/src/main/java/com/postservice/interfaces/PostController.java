@@ -10,7 +10,6 @@ import com.postservice.dto.request.PostRequestDto;
 import com.postservice.dto.request.PostUpdateRequestDto;
 import com.postservice.dto.response.UserBasicResponseDto;
 import com.postservice.dto.response.UserSimpleResponseDto;
-import com.postservice.persistence.repository.PostRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
@@ -43,8 +42,48 @@ import static com.postservice.common.util.RedisUtils.MY_INFO_KEY;
 public class PostController {
 
     private final PostService postService;
-    private final PostRepository postRepository;
     private final RedisUtils redisUtils;
+
+    @GetMapping
+    public ResponseEntity<Slice<PostSimpleQueryDto>> getSimplePostSliceByType(@RequestParam PostType postType, @RequestParam Long teamId,
+                                                                              @RequestParam(required = false) Long cursorId, Pageable pageable) {
+        Slice<PostSimpleQueryDto> postSimpleDtoSlice = postService.findSimpleSliceDto(postType, teamId, cursorId, pageable);
+        if (!postSimpleDtoSlice.isEmpty()) {
+            List<String> writerIds = new ArrayList<>() {{
+                for (PostSimpleQueryDto postSimpleQueryDto : postSimpleDtoSlice) {
+                    add(postSimpleQueryDto.getWriterId());
+                }
+            }};
+
+            ResponseEntity<Map<String, UserBasicResponseDto>> userData = getResponseOfUserBasicDtoList(writerIds);
+            for (PostSimpleQueryDto postSimpleQueryDto : postSimpleDtoSlice) {
+                UserBasicResponseDto userInfo = userData.getBody().get(postSimpleQueryDto.getWriterId());
+                postSimpleQueryDto.setUserInfo(userInfo);
+            }
+        }
+
+        return ResponseEntity.ok(postSimpleDtoSlice);
+    }
+
+    @GetMapping("/simple")
+    public ResponseEntity<List<PostSimpleQueryDto>> getSimpleListByType(@RequestParam(required = false) PostType postType, @RequestParam Long teamId) {
+        List<PostSimpleQueryDto> postSimpleDtoList = postService.findSimpleListDto(postType, teamId);
+        if (!postSimpleDtoList.isEmpty()) {
+            List<String> writerIds = new ArrayList<>() {{
+                for (PostSimpleQueryDto postSimpleQueryDto : postSimpleDtoList) {
+                    add(postSimpleQueryDto.getWriterId());
+                }
+            }};
+
+            ResponseEntity<Map<String, UserBasicResponseDto>> userData = getResponseOfUserBasicDtoList(writerIds);
+            for (PostSimpleQueryDto postSimpleQueryDto : postSimpleDtoList) {
+                UserBasicResponseDto userInfo = userData.getBody().get(postSimpleQueryDto.getWriterId());
+                postSimpleQueryDto.setUserInfo(userInfo);
+            }
+        }
+
+        return ResponseEntity.ok(postSimpleDtoList);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<PostDetailsQueryDto> getPostInfo(@PathVariable Long id) {
@@ -77,47 +116,6 @@ public class PostController {
         }
 
         return ResponseEntity.ok(postDetailsQueryDto);
-    }
-
-    @GetMapping("/simple")
-    public ResponseEntity<List<PostSimpleQueryDto>> getSimpleListByType(@RequestParam(required = false) PostType postType, @RequestParam Long teamId) {
-        List<PostSimpleQueryDto> postSimpleDtoList = postRepository.getPostSimpleListByTypeAndTeamId(postType, teamId);
-        if (!postSimpleDtoList.isEmpty()) {
-            List<String> writerIds = new ArrayList<>() {{
-                for (PostSimpleQueryDto postSimpleQueryDto : postSimpleDtoList) {
-                    add(postSimpleQueryDto.getWriterId());
-                }
-            }};
-
-            ResponseEntity<Map<String, UserBasicResponseDto>> userData = getResponseOfUserBasicDtoList(writerIds);
-            for (PostSimpleQueryDto postSimpleQueryDto : postSimpleDtoList) {
-                UserBasicResponseDto userInfo = userData.getBody().get(postSimpleQueryDto.getWriterId());
-                postSimpleQueryDto.setUserInfo(userInfo);
-            }
-        }
-
-        return ResponseEntity.ok(postSimpleDtoList);
-    }
-
-    @PostMapping
-    public ResponseEntity<Slice<PostSimpleQueryDto>> getSimplePostSliceByType(@RequestParam PostType postType, @RequestParam Long teamId,
-                                                                              @RequestParam(required = false) Long cursorId, Pageable pageable) {
-        Slice<PostSimpleQueryDto> postSimpleDtoSlice = postRepository.getPostSimpleSliceByTypeAndTeamId(postType, teamId, cursorId, pageable);
-        if (!postSimpleDtoSlice.isEmpty()) {
-            List<String> writerIds = new ArrayList<>() {{
-                for (PostSimpleQueryDto postSimpleQueryDto : postSimpleDtoSlice) {
-                    add(postSimpleQueryDto.getWriterId());
-                }
-            }};
-
-            ResponseEntity<Map<String, UserBasicResponseDto>> userData = getResponseOfUserBasicDtoList(writerIds);
-            for (PostSimpleQueryDto postSimpleQueryDto : postSimpleDtoSlice) {
-                UserBasicResponseDto userInfo = userData.getBody().get(postSimpleQueryDto.getWriterId());
-                postSimpleQueryDto.setUserInfo(userInfo);
-            }
-        }
-
-        return new ResponseEntity<>(postSimpleDtoSlice, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/create")

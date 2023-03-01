@@ -46,27 +46,7 @@ public class NotificationController {
     private final NotificationRepository notificationRepository;
     private final RedisUtils redisUtils;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<NotificationResponseDto> getNotificationDetails(@PathVariable Long id) {
-        NotificationResponseDto notificationResponseDto = notificationService.getNotificationDto(id);
-        return ResponseEntity.ok(notificationResponseDto);
-    }
-
-    @PostMapping(value = "/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<SseEmitter> connect(@RequestHeader(name = "Last-Event-Id", defaultValue = "") String lastEventId) {
-        UserSimpleResponseDto myInfo = getMyInfoFromRedis();
-        SseEmitter emitter = notificationService.connect(myInfo.getUserId(), lastEventId);
-        return new ResponseEntity<>(emitter, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/send")
-    public ResponseEntity<Long> sendMessageToUser(@Valid @RequestBody NotificationRequestDto notificationRequestDto) {
-        UserSimpleResponseDto myInfo = getMyInfoFromRedis();
-        Long notificationId = notificationService.sendMessage(myInfo.getUserId(), notificationRequestDto);
-        return new ResponseEntity<>(notificationId, HttpStatus.CREATED);
-    }
-
-    @PostMapping
+    @GetMapping
     public ResponseEntity<Slice<NotificationSimpleResponseDto>> getNotificationSimpleList(@RequestParam(required = false) Boolean check,
                                                                                           @RequestParam(required = false) Long cursorId, Pageable pageable) {
         UserSimpleResponseDto myInfo = getMyInfoFromRedis();
@@ -91,6 +71,26 @@ public class NotificationController {
         }
 
         return ResponseEntity.ok(notificationSimpleDtoList);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<NotificationResponseDto> getNotificationDetails(@PathVariable Long id) {
+        NotificationResponseDto notificationResponseDto = notificationService.getNotificationDto(id);
+        return ResponseEntity.ok(notificationResponseDto);
+    }
+
+    @PostMapping(value = "/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public ResponseEntity<SseEmitter> connect(@RequestHeader(name = "Last-Event-Id", defaultValue = "") String lastEventId) {
+        UserSimpleResponseDto myInfo = getMyInfoFromRedis();
+        SseEmitter emitter = notificationService.connect(myInfo.getUserId(), lastEventId);
+        return new ResponseEntity<>(emitter, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/send")
+    public ResponseEntity<Long> sendMessageToUser(@Valid @RequestBody NotificationRequestDto notificationRequestDto) {
+        UserSimpleResponseDto myInfo = getMyInfoFromRedis();
+        Long notificationId = notificationService.sendMessage(myInfo.getUserId(), notificationRequestDto);
+        return new ResponseEntity<>(notificationId, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

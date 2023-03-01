@@ -5,7 +5,6 @@ import com.teamservice.common.util.RedisUtils;
 import com.teamservice.dto.query.RequestHistoryQueryDto;
 import com.teamservice.dto.response.UserBasicResponseDto;
 import com.teamservice.dto.response.UserSimpleResponseDto;
-import com.teamservice.persistence.repository.RequestHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -34,7 +33,6 @@ import static com.teamservice.common.util.RedisUtils.MY_INFO_KEY;
 public class RequestController {
 
     private final RequestService requestService;
-    private final RequestHistoryRepository requestHistoryRepository;
     private final RedisUtils redisUtils;
 
     @GetMapping
@@ -44,7 +42,7 @@ public class RequestController {
 
         if (teamId != null) { // 특정 팀의 유저 가입 요청 리스트 조회
             requestService.deleteUserOldRequests(teamId);
-            requestDtoList = requestHistoryRepository.findListByTeamIdAndLeaderId(teamId, myInfo.getUserId());
+            requestDtoList = requestService.findListByTeamIdAndLeaderId(teamId, myInfo.getUserId());
 
             if (!requestDtoList.isEmpty()) {
                 List<String> userIds = new ArrayList<>() {{
@@ -68,7 +66,7 @@ public class RequestController {
             }
 
         } else { // 특정 유저의 가입 요청 리스트 조회
-            requestDtoList = requestHistoryRepository.findListByUserId(myInfo.getUserId());
+            requestDtoList = requestService.findListByUserId(myInfo.getUserId());
         }
 
         return ResponseEntity.ok(requestDtoList);
