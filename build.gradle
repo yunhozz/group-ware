@@ -49,6 +49,9 @@ subprojects {
         annotationProcessor "org.projectlombok:lombok:1.18.26"
         testCompileOnly 'org.projectlombok:lombok:1.18.26'
         testAnnotationProcessor "org.projectlombok:lombok:1.18.26"
+
+        // SQL parameter
+        implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
     }
 }
 
@@ -78,6 +81,11 @@ project(':post-service') {
 }
 
 project(':team-service') {
+    bootJar { enabled = true }
+    jar { enabled = false }
+}
+
+project(':mail-service') {
     bootJar { enabled = true }
     jar { enabled = false }
 }
