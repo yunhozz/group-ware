@@ -1,4 +1,4 @@
-package com.mailservice.persistence;
+package com.mailservice.persistence.entity.mail;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserMail extends BaseEntity {
+public class UserMail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,4 +23,13 @@ public class UserMail extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Mail mail;
+
+    public UserMail(String userId, Mail mail) {
+        this.userId = userId;
+        this.mail = mail;
+    }
+
+    protected void setMail(Mail mail) {
+        this.mail = mail;
+    }
 }

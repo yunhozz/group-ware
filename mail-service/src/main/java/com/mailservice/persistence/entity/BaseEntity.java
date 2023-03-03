@@ -1,4 +1,4 @@
-package com.mailservice.persistence;
+package com.mailservice.persistence.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
