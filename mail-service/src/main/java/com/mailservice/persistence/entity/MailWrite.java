@@ -21,7 +21,9 @@ public class MailWrite extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String writerId;
+    private String writerEmail;
+
+    private String receiverEmail;
 
     private Long teamId;
 
@@ -31,25 +33,30 @@ public class MailWrite extends BaseEntity {
     private boolean isImportant;
 
     @Builder
-    private MailWrite(String writerId, Long teamId, Mail mail, boolean isImportant) {
-        this.writerId = writerId;
+    private MailWrite(String writerEmail, String receiverEmail, Long teamId, Mail mail, SecuritySetting securitySetting, boolean isImportant) {
+        this.writerEmail = writerEmail;
+        this.receiverEmail = receiverEmail;
         this.teamId = teamId;
         this.mail = mail;
         this.isImportant = isImportant;
     }
 
-    public static MailWrite userWrite(String writerId, Mail mail, boolean isImportant) {
+    // 개인 메일
+    public static MailWrite userWrite(String writerEmail, String receiverEmail, Mail mail, SecuritySetting securitySetting, boolean isImportant) {
         return MailWrite.builder()
-                .writerId(writerId)
+                .writerEmail(writerEmail)
+                .receiverEmail(receiverEmail)
                 .teamId(null)
                 .mail(mail)
                 .isImportant(isImportant)
                 .build();
     }
 
-    public static MailWrite teamLeaderWrite(String leaderId, Long teamId, Mail mail, boolean isImportant) {
+    // 팀 전체 메일
+    public static MailWrite teamLeaderWrite(String leaderEmail, Long teamId, Mail mail, SecuritySetting securitySetting, boolean isImportant) {
         return MailWrite.builder()
-                .writerId(leaderId)
+                .writerEmail(leaderEmail)
+                .receiverEmail(null)
                 .teamId(teamId)
                 .mail(mail)
                 .isImportant(isImportant)

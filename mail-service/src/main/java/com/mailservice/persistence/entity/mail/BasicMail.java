@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BasicMail extends Mail {
 
-    public BasicMail(String writerId, String title, String content) {
+    public BasicMail(String writerEmail, String title, String content) {
         super(title, content, false, false);
-        UserMail userMail = new UserMail(writerId, this);
+        UserMail userMail = new UserMail(writerEmail, this);
         addUserMail(userMail);
     }
 }

@@ -12,9 +12,4 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SpamMail extends Mail {
 
-    public SpamMail(String writerId, String title, String content) {
-        super(title, content, false, false);
-        UserMail userMail = new UserMail(writerId, this);
-        addUserMail(userMail);
-    }
 }
