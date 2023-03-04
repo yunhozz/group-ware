@@ -1,12 +1,14 @@
 package com.mailservice.persistence.entity;
 
 import com.mailservice.persistence.entity.mail.Mail;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +32,9 @@ public class MailWrite extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Mail mail;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private SecuritySetting securitySetting;
+
     private boolean isImportant;
 
     @Builder
@@ -38,6 +43,7 @@ public class MailWrite extends BaseEntity {
         this.receiverEmail = receiverEmail;
         this.teamId = teamId;
         this.mail = mail;
+        this.securitySetting = securitySetting;
         this.isImportant = isImportant;
     }
 
@@ -48,6 +54,7 @@ public class MailWrite extends BaseEntity {
                 .receiverEmail(receiverEmail)
                 .teamId(null)
                 .mail(mail)
+                .securitySetting(securitySetting)
                 .isImportant(isImportant)
                 .build();
     }
@@ -59,6 +66,7 @@ public class MailWrite extends BaseEntity {
                 .receiverEmail(null)
                 .teamId(teamId)
                 .mail(mail)
+                .securitySetting(securitySetting)
                 .isImportant(isImportant)
                 .build();
     }
