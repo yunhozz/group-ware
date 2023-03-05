@@ -1,21 +1,32 @@
 package com.mailservice.application;
 
+import com.mailservice.application.exception.EmailSendFailException;
+import com.mailservice.application.exception.FileDownloadFailException;
+import com.mailservice.application.exception.FileNotFoundException;
+import com.mailservice.application.exception.FileUploadFailException;
 import com.mailservice.dto.request.MailWriteRequestDto;
+import com.mailservice.dto.response.MailResponseDto;
+import com.mailservice.dto.response.MailSimpleResponseDto;
 import com.mailservice.persistence.entity.MailFile;
+import com.mailservice.persistence.entity.MailSecurity;
 import com.mailservice.persistence.entity.MailWrite;
-import com.mailservice.persistence.entity.SecuritySetting;
 import com.mailservice.persistence.entity.mail.BasicMail;
 import com.mailservice.persistence.entity.mail.ImportantMail;
 import com.mailservice.persistence.entity.mail.Mail;
 import com.mailservice.persistence.repository.MailFileRepository;
 import com.mailservice.persistence.repository.MailRepository;
 import com.mailservice.persistence.repository.MailWriteRepository;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,38 +54,56 @@ public class MailService {
     private String fileDir;
 
     @Transactional
-    public Long writeUserMail(String writerEmail, String receiverEmail, MailWriteRequestDto mailWriteRequestDto, MultipartFile[] files) {
-        boolean important = mailWriteRequestDto.isImportant();
-        Mail mail = saveMailByImportance(writerEmail, mailWriteRequestDto, important);
+    public Long writeUserMail(String writerEmail, String receiverEmail, MailWriteRequestDto mailWriteRequestDto) {
+        Mail mail = saveMailByImportance(writerEmail, mailWriteRequestDto);
+        MailSecurity mailSecurity = new MailSecurity(mailWriteRequestDto.getRating(), mailWriteRequestDto.getValidity());
+        MailWrite mailWrite = MailWrite.userWrite(writerEmail, receiverEmail, mail, mailSecurity, mailWriteRequestDto.isImportant());
+        mailWriteRepository.save(mailWrite); // cascade persist : MailSecurity
 
-        SecuritySetting securitySetting = new SecuritySetting(mailWriteRequestDto.getRating(), mailWriteRequestDto.getValidity());
-        MailWrite mailWrite = MailWrite.userWrite(writerEmail, receiverEmail, mail, securitySetting, mailWriteRequestDto.isImportant());
-        mailWriteRepository.save(mailWrite); // cascade persist : SecuritySetting
-
-        uploadFiles(mail, files);
-        sendMail(Set.of(receiverEmail));
-
+        uploadFiles(mail, mailWriteRequestDto.getFiles());
+        sendMail(writerEmail, Set.of(receiverEmail), mailWriteRequestDto);
         return mail.getId();
     }
 
     @Transactional
-    public Long writeTeamMail(String leaderEmail, Long teamId, Set<String> receiverEmails, MailWriteRequestDto mailWriteRequestDto, MultipartFile[] files) {
-        boolean important = mailWriteRequestDto.isImportant();
-        Mail mail = saveMailByImportance(leaderEmail, mailWriteRequestDto, important);
+    public Long writeTeamMail(String leaderEmail, Long teamId, Set<String> receiverEmails, MailWriteRequestDto mailWriteRequestDto) {
+        Mail mail = saveMailByImportance(leaderEmail, mailWriteRequestDto);
+        MailSecurity mailSecurity = new MailSecurity(mailWriteRequestDto.getRating(), mailWriteRequestDto.getValidity());
+        MailWrite mailWrite = MailWrite.teamLeaderWrite(leaderEmail, teamId, mail, mailSecurity, mailWriteRequestDto.isImportant());
+        mailWriteRepository.save(mailWrite); // cascade persist : MailSecurity
 
-        SecuritySetting securitySetting = new SecuritySetting(mailWriteRequestDto.getRating(), mailWriteRequestDto.getValidity());
-        MailWrite mailWrite = MailWrite.teamLeaderWrite(leaderEmail, teamId, mail, securitySetting, mailWriteRequestDto.isImportant());
-        mailWriteRepository.save(mailWrite); // cascade persist : SecuritySetting
-
-        uploadFiles(mail, files);
-        sendMail(receiverEmails);
-
+        uploadFiles(mail, mailWriteRequestDto.getFiles());
+        sendMail(leaderEmail, receiverEmails, mailWriteRequestDto);
         return mail.getId();
     }
 
-    private Mail saveMailByImportance(String writerEmail, MailWriteRequestDto mailWriteRequestDto, boolean important) {
+    @Transactional(readOnly = true)
+    public Resource downloadFile(String fileId) {
+        try {
+            MailFile mailFile = mailFileRepository.findByFileId(fileId)
+                    .orElseThrow(FileNotFoundException::new);
+            Path path = Paths.get(mailFile.getSavePath());
+            return new InputStreamResource(Files.newInputStream(path));
+
+        } catch (IOException e) {
+            throw new FileDownloadFailException();
+        }
+    }
+
+    // TODO: 2023-03-05 메일 리스트 페이지 조회, 세부 내용 조회
+    @Transactional(readOnly = true)
+    public Page<MailSimpleResponseDto> findMailSimplePage(Pageable pageable) {
+        return null;
+    }
+
+    @Transactional(readOnly = true)
+    public MailResponseDto findMailDetailsById(Long id) {
+        return null;
+    }
+
+    private Mail saveMailByImportance(String writerEmail, MailWriteRequestDto mailWriteRequestDto) {
         Mail mail;
-        if (important) {
+        if (mailWriteRequestDto.isImportant()) {
             ImportantMail importantMail = new ImportantMail(writerEmail, mailWriteRequestDto.getTitle(), mailWriteRequestDto.getContent());
             importantMailRepository.save(importantMail); // cascade persist : UserMail
             mail = importantMail;
@@ -108,7 +137,7 @@ public class MailService {
                 try {
                     file.transferTo(new File(savePath));
                 } catch (IOException e) {
-                    throw new IllegalStateException(e.getLocalizedMessage());
+                    throw new FileUploadFailException();
                 }
             }
 
@@ -116,20 +145,28 @@ public class MailService {
         }
     }
 
-    private Resource downloadFile(String fileId) {
+    private void sendMail(String senderEmail, Set<String> emailSet, MailWriteRequestDto mailWriteRequestDto) {
         try {
-            MailFile mailFile = mailFileRepository.findByFileId(fileId)
-                    .orElseThrow(() -> new IllegalStateException("해당 파일을 찾을 수 없습니다."));
-            Path path = Paths.get(mailFile.getSavePath());
-            return new InputStreamResource(Files.newInputStream(path));
+            for (String email : emailSet) {
+                MimeMessage message = mailSender.createMimeMessage();
+                MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
 
-        } catch (IOException e) {
-            throw new IllegalStateException(e.getLocalizedMessage());
+                message.setFrom(senderEmail);
+                message.setRecipients(Message.RecipientType.TO, email);
+                message.setSubject(mailWriteRequestDto.getTitle());
+                message.setText(mailWriteRequestDto.getContent());
+
+                if (mailWriteRequestDto.getFiles() != null) {
+                    for (MultipartFile file : mailWriteRequestDto.getFiles()) {
+                        messageHelper.addAttachment(file.getOriginalFilename(), file);
+                    }
+                }
+
+                mailSender.send(message);
+            }
+
+        } catch (MessagingException e) {
+            throw new EmailSendFailException();
         }
-    }
-
-    // TODO: 2023-03-04 파일 전송 메소드 작성
-    private void sendMail(Set<String> mailSet) {
-        MimeMessage message = mailSender.createMimeMessage();
     }
 }
