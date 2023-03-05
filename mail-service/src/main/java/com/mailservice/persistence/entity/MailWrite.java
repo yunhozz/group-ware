@@ -33,40 +33,40 @@ public class MailWrite extends BaseEntity {
     private Mail mail;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private SecuritySetting securitySetting;
+    private MailSecurity mailSecurity;
 
     private boolean isImportant;
 
     @Builder
-    private MailWrite(String writerEmail, String receiverEmail, Long teamId, Mail mail, SecuritySetting securitySetting, boolean isImportant) {
+    private MailWrite(String writerEmail, String receiverEmail, Long teamId, Mail mail, MailSecurity mailSecurity, boolean isImportant) {
         this.writerEmail = writerEmail;
         this.receiverEmail = receiverEmail;
         this.teamId = teamId;
         this.mail = mail;
-        this.securitySetting = securitySetting;
+        this.mailSecurity = mailSecurity;
         this.isImportant = isImportant;
     }
 
     // 개인 메일
-    public static MailWrite userWrite(String writerEmail, String receiverEmail, Mail mail, SecuritySetting securitySetting, boolean isImportant) {
+    public static MailWrite userWrite(String writerEmail, String receiverEmail, Mail mail, MailSecurity mailSecurity, boolean isImportant) {
         return MailWrite.builder()
                 .writerEmail(writerEmail)
                 .receiverEmail(receiverEmail)
                 .teamId(null)
                 .mail(mail)
-                .securitySetting(securitySetting)
+                .mailSecurity(mailSecurity)
                 .isImportant(isImportant)
                 .build();
     }
 
     // 팀 전체 메일
-    public static MailWrite teamLeaderWrite(String leaderEmail, Long teamId, Mail mail, SecuritySetting securitySetting, boolean isImportant) {
+    public static MailWrite teamLeaderWrite(String leaderEmail, Long teamId, Mail mail, MailSecurity mailSecurity, boolean isImportant) {
         return MailWrite.builder()
                 .writerEmail(leaderEmail)
                 .receiverEmail(null)
                 .teamId(teamId)
                 .mail(mail)
-                .securitySetting(securitySetting)
+                .mailSecurity(mailSecurity)
                 .isImportant(isImportant)
                 .build();
     }
