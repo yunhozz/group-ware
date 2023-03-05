@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SecuritySetting {
+public class MailSecurity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class SecuritySetting {
 
     private LocalDateTime validity; // 하루, 일주일, 한달
 
-    public SecuritySetting(SecurityRating rating, LocalDateTime validity) {
+    public MailSecurity(SecurityRating rating, LocalDateTime validity) {
         this.rating = rating;
         this.validity = validity;
     }
