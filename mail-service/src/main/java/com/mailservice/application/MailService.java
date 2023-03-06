@@ -4,6 +4,7 @@ import com.mailservice.application.exception.EmailSendFailException;
 import com.mailservice.application.exception.FileDownloadFailException;
 import com.mailservice.application.exception.FileNotFoundException;
 import com.mailservice.application.exception.FileUploadFailException;
+import com.mailservice.common.enums.MailValidation;
 import com.mailservice.dto.request.MailWriteRequestDto;
 import com.mailservice.dto.response.MailResponseDto;
 import com.mailservice.dto.response.MailSimpleResponseDto;
@@ -36,6 +37,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -56,7 +58,13 @@ public class MailService {
     @Transactional
     public Long writeUserMail(String writerEmail, String receiverEmail, MailWriteRequestDto mailWriteRequestDto) {
         Mail mail = saveMailByImportance(writerEmail, mailWriteRequestDto);
-        MailSecurity mailSecurity = new MailSecurity(mailWriteRequestDto.getRating(), mailWriteRequestDto.getValidity());
+        LocalDateTime validity = null;
+
+        if (mailWriteRequestDto.getValidation() != null) {
+            validity = calculateMailValidation(mailWriteRequestDto.getValidation());
+        }
+
+        MailSecurity mailSecurity = new MailSecurity(mailWriteRequestDto.getRating(), validity);
         MailWrite mailWrite = MailWrite.userWrite(writerEmail, receiverEmail, mail, mailSecurity, mailWriteRequestDto.isImportant());
         mailWriteRepository.save(mailWrite); // cascade persist : MailSecurity
 
@@ -68,7 +76,13 @@ public class MailService {
     @Transactional
     public Long writeTeamMail(String leaderEmail, Long teamId, Set<String> receiverEmails, MailWriteRequestDto mailWriteRequestDto) {
         Mail mail = saveMailByImportance(leaderEmail, mailWriteRequestDto);
-        MailSecurity mailSecurity = new MailSecurity(mailWriteRequestDto.getRating(), mailWriteRequestDto.getValidity());
+        LocalDateTime validity = null;
+
+        if (mailWriteRequestDto.getValidation() != null) {
+            validity = calculateMailValidation(mailWriteRequestDto.getValidation());
+        }
+
+        MailSecurity mailSecurity = new MailSecurity(mailWriteRequestDto.getRating(), validity);
         MailWrite mailWrite = MailWrite.teamLeaderWrite(leaderEmail, teamId, mail, mailSecurity, mailWriteRequestDto.isImportant());
         mailWriteRepository.save(mailWrite); // cascade persist : MailSecurity
 
@@ -168,5 +182,18 @@ public class MailService {
         } catch (MessagingException e) {
             throw new EmailSendFailException();
         }
+    }
+
+    private LocalDateTime calculateMailValidation(MailValidation validation) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime validateDate = null;
+
+        switch (validation.getDesc()) {
+            case "하루" -> validateDate = now.plusDays(1);
+            case "일주일" -> validateDate = now.plusWeeks(1);
+            case "한달" -> validateDate = now.plusMonths(1);
+        }
+
+        return validateDate;
     }
 }

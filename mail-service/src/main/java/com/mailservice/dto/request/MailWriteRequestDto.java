@@ -1,13 +1,12 @@
 package com.mailservice.dto.request;
 
+import com.mailservice.common.enums.MailValidation;
 import com.mailservice.common.enums.SecurityRating;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -25,7 +24,7 @@ public class MailWriteRequestDto {
 
     private MultipartFile[] files;
 
-    // SecuritySetting
     private SecurityRating rating;
-    private LocalDateTime validity;
+
+    private MailValidation validation;
 }

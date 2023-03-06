@@ -51,18 +51,22 @@ public class UserAuthorizationService {
 
     private String generateRandomCode() {
         Random random = new Random();
-        char[] code = new char[8];
+        char[] codes = new char[8];
 
-        for (int i = 0; i < code.length; i++) {
+        for (int i = 0; i < codes.length; i++) {
             int num = random.nextInt(3); // 0: 숫자, 1: 대문자, 2: 소문자
+            char code = '\0';
+
             switch (num) {
-                case 0 : code[i] = (char) (random.nextInt(10) + '0');
-                case 1 : code[i] = (char) (random.nextInt(26) + 65);
-                case 2 : code[i] = (char) (random.nextInt(26) + 97);
+                case 0 -> code = (char) (random.nextInt(10) + '0');
+                case 1 -> code = (char) (random.nextInt(26) + 65);
+                case 2 -> code = (char) (random.nextInt(26) + 97);
             }
+
+            codes[i] = code;
         }
 
-        return String.valueOf(code);
+        return String.valueOf(codes);
     }
 
     private String createText(String code) {
