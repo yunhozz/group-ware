@@ -1,10 +1,13 @@
 package com.mailservice.application;
 
+import com.mailservice.application.exception.EmailNotFoundException;
 import com.mailservice.application.exception.EmailSendFailException;
 import com.mailservice.application.exception.FileDownloadFailException;
 import com.mailservice.application.exception.FileNotFoundException;
 import com.mailservice.application.exception.FileUploadFailException;
+import com.mailservice.common.enums.MailType;
 import com.mailservice.common.enums.MailValidation;
+import com.mailservice.common.enums.ReadStatus;
 import com.mailservice.dto.request.MailWriteRequestDto;
 import com.mailservice.dto.response.MailResponseDto;
 import com.mailservice.dto.response.MailSimpleResponseDto;
@@ -46,8 +49,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MailService {
 
-    private final MailRepository<BasicMail> basicMailRepository;
-    private final MailRepository<ImportantMail> importantMailRepository;
+    private final MailRepository<Mail> mailRepository;
     private final MailWriteRepository mailWriteRepository;
     private final MailFileRepository mailFileRepository;
     private final JavaMailSender mailSender;
@@ -104,30 +106,27 @@ public class MailService {
         }
     }
 
-    // TODO: 2023-03-05 메일 리스트 페이지 조회, 세부 내용 조회
     @Transactional(readOnly = true)
-    public Page<MailSimpleResponseDto> findMailSimplePage(Pageable pageable) {
-        return null;
+    public Page<MailSimpleResponseDto> findSimpleMailPageByTypeAndReadStatus(MailType mailType, ReadStatus readStatus, Pageable pageable) {
+        return mailRepository.findSimpleMailPageByTypeAndReadStatus(mailType, readStatus, pageable);
     }
 
     @Transactional(readOnly = true)
     public MailResponseDto findMailDetailsById(Long id) {
-        return null;
+        return mailRepository.findMailDetailsById(id)
+                .orElseThrow(EmailNotFoundException::new);
     }
 
     private Mail saveMailByImportance(String writerEmail, MailWriteRequestDto mailWriteRequestDto) {
         Mail mail;
         if (mailWriteRequestDto.isImportant()) {
-            ImportantMail importantMail = new ImportantMail(writerEmail, mailWriteRequestDto.getTitle(), mailWriteRequestDto.getContent());
-            importantMailRepository.save(importantMail); // cascade persist : UserMail
-            mail = importantMail;
+            mail = new ImportantMail(writerEmail, mailWriteRequestDto.getTitle(), mailWriteRequestDto.getContent());
 
         } else {
-            BasicMail basicMail = new BasicMail(writerEmail, mailWriteRequestDto.getTitle(), mailWriteRequestDto.getContent());
-            basicMailRepository.save(basicMail); // cascade persist : UserMail
-            mail = basicMail;
+            mail = new BasicMail(writerEmail, mailWriteRequestDto.getTitle(), mailWriteRequestDto.getContent());
         }
 
+        mailRepository.save(mail); // cascade persist : UserMail
         return mail;
     }
 
