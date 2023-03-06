@@ -14,7 +14,7 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
-public class AuthorizationMailService {
+public class UserAuthorizationService {
 
     private final JavaMailSender mailSender;
     private final RedisUtils redisUtils;
