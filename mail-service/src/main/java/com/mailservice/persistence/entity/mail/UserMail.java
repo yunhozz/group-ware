@@ -24,9 +24,8 @@ public class UserMail {
     @ManyToOne(fetch = FetchType.LAZY)
     private Mail mail;
 
-    public UserMail(String userEmail, Mail mail) {
+    public UserMail(String userEmail) {
         this.userEmail = userEmail;
-        this.mail = mail;
     }
 
     protected void setMail(Mail mail) {

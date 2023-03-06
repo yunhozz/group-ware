@@ -22,7 +22,7 @@ public class ImportantMail extends Mail {
         super(title, content, false, false);
         this.hasRemind = false;
         this.remindTime = null;
-        UserMail userMail = new UserMail(writerEmail, this);
+        UserMail userMail = new UserMail(writerEmail);
         addUserMail(userMail);
     }
 
