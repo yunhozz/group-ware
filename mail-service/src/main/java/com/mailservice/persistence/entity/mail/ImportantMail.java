@@ -18,11 +18,11 @@ public class ImportantMail extends Mail {
 
     private LocalDateTime remindTime;
 
-    public ImportantMail(String writerEmail, String title, String content) {
+    public ImportantMail(String writerId, String title, String content) {
         super(title, content, false, false);
         this.hasRemind = false;
         this.remindTime = null;
-        UserMail userMail = new UserMail(writerEmail);
+        UserMail userMail = new UserMail(writerId);
         addUserMail(userMail);
     }
 

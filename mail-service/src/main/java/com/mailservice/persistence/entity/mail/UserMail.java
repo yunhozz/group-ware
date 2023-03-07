@@ -19,13 +19,13 @@ public class UserMail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String userEmail;
+    private String userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Mail mail;
 
-    public UserMail(String userEmail) {
-        this.userEmail = userEmail;
+    public UserMail(String userId) {
+        this.userId = userId;
     }
 
     protected void setMail(Mail mail) {

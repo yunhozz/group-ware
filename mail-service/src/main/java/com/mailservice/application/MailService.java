@@ -58,8 +58,8 @@ public class MailService {
     private String fileDir;
 
     @Transactional
-    public Long writeUserMail(String writerEmail, String receiverEmail, MailWriteRequestDto mailWriteRequestDto) {
-        Mail mail = saveMailByImportance(writerEmail, mailWriteRequestDto);
+    public Long writeUserMail(String writerId, String writerEmail, String receiverEmail, MailWriteRequestDto mailWriteRequestDto) {
+        Mail mail = saveMailByImportance(writerId, mailWriteRequestDto);
         LocalDateTime validity = null;
 
         if (mailWriteRequestDto.getValidation() != null) {
@@ -76,8 +76,8 @@ public class MailService {
     }
 
     @Transactional
-    public Long writeTeamMail(String leaderEmail, Long teamId, Set<String> receiverEmails, MailWriteRequestDto mailWriteRequestDto) {
-        Mail mail = saveMailByImportance(leaderEmail, mailWriteRequestDto);
+    public Long writeTeamMail(String writerId, String leaderEmail, Long teamId, Set<String> receiverEmails, MailWriteRequestDto mailWriteRequestDto) {
+        Mail mail = saveMailByImportance(writerId, mailWriteRequestDto);
         LocalDateTime validity = null;
 
         if (mailWriteRequestDto.getValidation() != null) {
@@ -114,9 +114,9 @@ public class MailService {
     }
 
     @Transactional(readOnly = true)
-    public Page<MailSimpleResponseDto> findSimpleMailPageByTypeAndReadStatus(MailType mailType, ReadStatus readStatus, Pageable pageable) {
+    public Page<MailSimpleResponseDto> findSimpleMailPageByTypeAndReadStatus(String userId, MailType mailType, ReadStatus readStatus, Pageable pageable) {
         mailRepository.deleteExpiredMailList(LocalDateTime.now()); // soft delete expired mail list
-        return mailRepository.findSimpleMailPageByTypeAndReadStatus(mailType, readStatus, pageable);
+        return mailRepository.findSimpleMailPageByTypeAndReadStatus(userId, mailType, readStatus, pageable);
     }
 
     @Transactional(readOnly = true)
@@ -127,13 +127,13 @@ public class MailService {
         return mailRepository.findMailDetailsById(mail.getId());
     }
 
-    private Mail saveMailByImportance(String writerEmail, MailWriteRequestDto mailWriteRequestDto) {
+    private Mail saveMailByImportance(String writerId, MailWriteRequestDto mailWriteRequestDto) {
         Mail mail;
         if (mailWriteRequestDto.isImportant()) {
-            mail = new ImportantMail(writerEmail, mailWriteRequestDto.getTitle(), mailWriteRequestDto.getContent());
+            mail = new ImportantMail(writerId, mailWriteRequestDto.getTitle(), mailWriteRequestDto.getContent());
 
         } else {
-            mail = new BasicMail(writerEmail, mailWriteRequestDto.getTitle(), mailWriteRequestDto.getContent());
+            mail = new BasicMail(writerId, mailWriteRequestDto.getTitle(), mailWriteRequestDto.getContent());
         }
 
         mailRepository.save(mail); // cascade persist : UserMail
