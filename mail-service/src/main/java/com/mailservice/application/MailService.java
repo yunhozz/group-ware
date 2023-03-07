@@ -113,8 +113,10 @@ public class MailService {
 
     @Transactional(readOnly = true)
     public MailResponseDto findMailDetailsById(Long id) {
-        return mailRepository.findMailDetailsById(id)
+        Mail mail = mailRepository.findById(id)
                 .orElseThrow(EmailNotFoundException::new);
+        mail.read();
+        return mailRepository.findMailDetailsById(mail.getId());
     }
 
     private Mail saveMailByImportance(String writerEmail, MailWriteRequestDto mailWriteRequestDto) {

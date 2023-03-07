@@ -7,10 +7,8 @@ import com.mailservice.dto.response.MailSimpleResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Optional;
-
 public interface MailRepositoryCustom {
 
     Page<MailSimpleResponseDto> findSimpleMailPageByTypeAndReadStatus(MailType mailType, ReadStatus readStatus, Pageable pageable);
-    Optional<MailResponseDto> findMailDetailsById(Long id);
+    MailResponseDto findMailDetailsById(Long id);
 }

@@ -19,7 +19,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.mailservice.persistence.entity.QMailFile.mailFile;
@@ -83,7 +82,7 @@ public class MailRepositoryCustomImpl implements MailRepositoryCustom {
     }
 
     @Override
-    public Optional<MailResponseDto> findMailDetailsById(Long id) {
+    public MailResponseDto findMailDetailsById(Long id) {
         MailResponseDto mailResponseDto = queryFactory
                 .select(Projections.constructor(
                         MailResponseDto.class,
@@ -129,7 +128,7 @@ public class MailRepositoryCustomImpl implements MailRepositoryCustom {
             mailResponseDto.setFileList(fileList);
         }
 
-        return Optional.ofNullable(mailResponseDto);
+        return mailResponseDto;
     }
 
     private BooleanExpression mailTypeBy(MailType mailType) {
