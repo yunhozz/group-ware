@@ -93,6 +93,13 @@ public class MailService {
         return mail.getId();
     }
 
+    @Transactional
+    public void deleteMail(Long id) {
+        Mail mail = mailRepository.findById(id)
+                .orElseThrow(EmailNotFoundException::new);
+        mail.delete();
+    }
+
     @Transactional(readOnly = true)
     public Resource downloadFile(String fileId) {
         try {
@@ -108,6 +115,7 @@ public class MailService {
 
     @Transactional(readOnly = true)
     public Page<MailSimpleResponseDto> findSimpleMailPageByTypeAndReadStatus(MailType mailType, ReadStatus readStatus, Pageable pageable) {
+        mailRepository.deleteExpiredMailList(LocalDateTime.now()); // soft delete expired mail list
         return mailRepository.findSimpleMailPageByTypeAndReadStatus(mailType, readStatus, pageable);
     }
 
