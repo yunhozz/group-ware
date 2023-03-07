@@ -25,6 +25,7 @@ import static com.mailservice.persistence.entity.QMailFile.mailFile;
 import static com.mailservice.persistence.entity.QMailSecurity.mailSecurity;
 import static com.mailservice.persistence.entity.QMailWrite.mailWrite;
 import static com.mailservice.persistence.entity.mail.QMail.mail;
+import static com.mailservice.persistence.entity.mail.QUserMail.userMail;
 
 @Repository
 @RequiredArgsConstructor
@@ -33,7 +34,7 @@ public class MailRepositoryCustomImpl implements MailRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<MailSimpleResponseDto> findSimpleMailPageByTypeAndReadStatus(MailType mailType, ReadStatus readStatus, Pageable pageable) {
+    public Page<MailSimpleResponseDto> findSimpleMailPageByTypeAndReadStatus(String userId, MailType mailType, ReadStatus readStatus, Pageable pageable) {
         List<MailSimpleResponseDto> mailList = queryFactory
                 .select(Projections.constructor(
                         MailSimpleResponseDto.class,
@@ -45,14 +46,18 @@ public class MailRepositoryCustomImpl implements MailRepositoryCustom {
                 ))
                 .from(mailWrite)
                 .join(mailWrite.mail, mail)
+                .leftJoin(userMail).on(userMail.mail.eq(mail))
                 .where(
+                        userMail.userId.eq(userId),
                         mailTypeBy(mailType),
                         readStatusBy(readStatus)
                 )
                 .orderBy(mail.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetch();
+                .fetch()
+                .stream().distinct()
+                .collect(Collectors.toList());
 
         List<Long> mailWriteIds = mailList.stream()
                 .map(MailSimpleResponseDto::getMailWriteId)

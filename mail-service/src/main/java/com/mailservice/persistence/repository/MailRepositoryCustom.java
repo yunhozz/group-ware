@@ -9,6 +9,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface MailRepositoryCustom {
 
-    Page<MailSimpleResponseDto> findSimpleMailPageByTypeAndReadStatus(MailType mailType, ReadStatus readStatus, Pageable pageable);
+    Page<MailSimpleResponseDto> findSimpleMailPageByTypeAndReadStatus(String userId, MailType mailType, ReadStatus readStatus, Pageable pageable);
     MailResponseDto findMailDetailsById(Long id);
 }
